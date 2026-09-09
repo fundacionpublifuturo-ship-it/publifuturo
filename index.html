@@ -825,8 +825,8 @@ let S; // estado global
    navegador (como hasta ahora). En cuanto los reemplaces, todos los
    dispositivos que abran esta misma página verán los mismos datos.
    --------------------------------------------------------------------- */
-const SUPABASE_URL = 'PENDIENTE_CONFIRMAR';
-const SUPABASE_ANON_KEY = 'PENDIENTE_CONFIRMAR';
+const SUPABASE_URL = 'https://adwuxargpzlbypgnbspt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkd3V4YXJncHpsYnlwZ25ic3B0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5ODkzOTEsImV4cCI6MjEwNDU2NTM5MX0.SfWzr_DyX8YmfG--mg__IVB1FiM1YqUslc5_8Oywh-0';
 const CLOUD_ROW_ID = 'main';
 const CLIENT_ID = (() => { let id = sessionStorage.getItem('pf_client_id'); if (!id) { id = 'C' + Math.random().toString(36).slice(2, 10); sessionStorage.setItem('pf_client_id', id); } return id; })();
 const CLOUD_ON = !!(SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes('PENDIENTE_CONFIRMAR') && !SUPABASE_ANON_KEY.includes('PENDIENTE_CONFIRMAR') && window.supabase);
