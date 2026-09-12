@@ -836,6 +836,56 @@ html[data-theme="dark"] .en-pill.kit{background:#3A2E0B;color:#FDE68A}
   .logro-grid{grid-template-columns:1fr}
 }
 
+
+/* ===== Pénsum: selector de clase (lista + panel) ===== */
+.pensum-box{display:grid;grid-template-columns:260px minmax(0,1fr);gap:0;border:1.5px solid var(--border);
+  border-radius:var(--r-xl);overflow:hidden;background:var(--surface)}
+.pen-steps{display:flex;flex-direction:column;background:var(--canvas);border-right:1.5px solid var(--border);padding:10px}
+.pen-step{display:flex;gap:11px;align-items:center;text-align:left;padding:11px 12px;border-radius:var(--r-md);
+  border:1.5px solid transparent;background:transparent;cursor:pointer;transition:.16s var(--ease);width:100%}
+.pen-step:hover{background:var(--surface);border-color:var(--border);transform:translateX(3px)}
+.pen-step.on{background:var(--surface);border-color:var(--cc);box-shadow:var(--e1)}
+.ps-n{flex:none;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:12.5px;font-variant-numeric:tabular-nums;
+  background:color-mix(in srgb,var(--cc) 14%,transparent);color:var(--cc2);transition:.18s}
+.pen-step.on .ps-n{background:var(--cc);color:#fff;transform:scale(1.06)}
+.ps-t{display:flex;flex-direction:column;min-width:0}
+.ps-t b{font-size:13px;font-weight:600;line-height:1.3;color:var(--text)}
+.ps-t em{font-style:normal;font-size:11px;color:var(--muted)}
+.pen-panel{padding:26px 26px 22px;min-height:280px}
+.pen-panel.in{animation:penIn .32s var(--ease)}
+@keyframes penIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.pp-hd{display:flex;gap:14px;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border)}
+.pp-n{flex:none;width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:16px;color:#fff;
+  background:linear-gradient(135deg,var(--cc2),var(--cc));box-shadow:0 8px 20px color-mix(in srgb,var(--cc) 34%,transparent)}
+.pp-hd h4{margin:0 0 3px;font-size:18px}
+.pp-meta{font-size:12.5px;color:var(--muted)}
+.pp-temas{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:9px;margin-bottom:18px}
+.pp-tema{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:var(--r-md);
+  background:var(--canvas);border:1.5px solid var(--border);font-size:13.5px;line-height:1.4;
+  transition:transform .16s var(--ease),border-color .16s,background .16s}
+.pp-tema:hover{transform:translateY(-3px);border-color:var(--cc);background:var(--surface)}
+.pp-e{font-size:16px;line-height:1.25;flex:none;transition:transform .22s var(--ease)}
+.pp-tema:hover .pp-e{transform:scale(1.2) rotate(-8deg)}
+.pp-entregable{background:color-mix(in srgb,var(--cc) 9%,transparent);border-left:3px solid var(--cc);
+  border-radius:12px;padding:12px 15px;font-size:13px;color:var(--text)}
+.pp-nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;padding-top:16px;border-top:1.5px solid var(--border)}
+/* Etiqueta del hero de curso */
+.ch-tag{display:inline-flex;align-items:center;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.28);
+  color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 12px;border-radius:100px;margin-bottom:12px}
+.inc b{line-height:1.45}
+@media (max-width:1023px){
+  .pensum-box{grid-template-columns:1fr}
+  .pen-steps{flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1.5px solid var(--border);gap:8px;scrollbar-width:none}
+  .pen-steps::-webkit-scrollbar{display:none}
+  .pen-step{min-width:186px;flex:none}
+  .pen-step:hover{transform:none}
+  .pen-panel{padding:20px 18px}
+  .pp-temas{grid-template-columns:1fr}
+}
+
 /* ============================================================================
    [S04] RESPONSIVE + ANIMACIONES
    ============================================================================ */
@@ -1643,21 +1693,47 @@ function submitContact(f) { const d = Object.fromEntries(new FormData(f)); if (!
 let acadF = { cat: '', nivel: '', mod: '', q: '' };
 function Academy() { const list = COURSES.filter(c => (!acadF.cat || c.cat === acadF.cat) && (!acadF.nivel || c.nivel.startsWith(acadF.nivel)) && (!acadF.mod || c.modalidad.includes(acadF.mod)) && (!acadF.q || (c.nombre + c.tagline).toLowerCase().includes(acadF.q.toLowerCase()))); const next = GROUPS.filter(g => dayDiff(g.inicio) >= 0).sort((a, b) => a.inicio.localeCompare(b.inicio)).slice(0, 4);
   return pageHd('Academia', 'Seis programas con pénsum público, docente asignado y certificado verificable. Presencial en Ibagué o remoto en vivo desde cualquier lugar de Colombia.') + `<section class="sec"><div class="wrap"><div class="grid split-side" style="gap:32px;align-items:start"><div><div class="filters"><input class="input" placeholder="Buscar curso…" value="${esc(acadF.q)}" oninput="acadF.q=this.value;render()"><select class="select" onchange="acadF.cat=this.value;render()"><option value="">Categoría</option>${['Marketing', 'Integral', 'Publicidad', 'Tecnología'].map(c => `<option ${acadF.cat === c ? 'selected' : ''}>${c}</option>`).join('')}</select><select class="select" onchange="acadF.nivel=this.value;render()"><option value="">Nivel</option>${['Básico', 'Intermedio', 'Avanzado'].map(c => `<option ${acadF.nivel === c ? 'selected' : ''}>${c}</option>`).join('')}</select><select class="select" onchange="acadF.mod=this.value;render()"><option value="">Modalidad</option>${['Presencial', 'Remoto', 'Híbrida'].map(c => `<option ${acadF.mod === c ? 'selected' : ''}>${c}</option>`).join('')}</select><span class="muted small" style="align-self:center">${list.length} programas</span></div><div class="grid g3">${list.length ? list.map(CourseCard).join('') : empty('Sin cursos con esos filtros', 'Quita alguno para ver más opciones.')}</div></div><div class="card sticky"><h4>Próximos inicios</h4>${next.map(g => { const c = courseOf(g.cursoId); const d = dayDiff(g.inicio); const n = groupStudents(g.id).length; return `<div style="padding:12px 0;border-bottom:1px solid var(--border)"><a href="#/academia/${c.slug}"><b class="small">${c.nombre}</b></a><div class="caption">${fdate(g.inicio)} · ${g.modalidad}</div><div class="row between small" style="margin-top:6px"><span class="pill">${d === 0 ? 'Hoy' : 'En ' + d + ' días'}</span><span class="muted">${g.cupo - n} cupos</span></div>${bar(n / g.cupo * 100, n / g.cupo > .8 ? 'warn' : '')}</div>`; }).join('')}</div></div></div></section>`; }
+let pensumIdx = 0;
+function setPensum(n) { pensumIdx = n; const panel = document.getElementById('pen-panel'); if (!panel) return render();
+  const c = COURSES.find(x => x.slug === (location.hash.split('/')[2] || '').split('?')[0]); if (!c) return render();
+  panel.innerHTML = pensumPanel(c, n); panel.classList.remove('in'); void panel.offsetWidth; panel.classList.add('in');
+  document.querySelectorAll('.pen-step').forEach((b, k) => b.classList.toggle('on', k === n)); }
+function pensumPanel(c, n) { const m = c.pensum[n]; const T = ['📌','🧩','⚙️','🎨','📊','🚀','💬','🔧','📱','🎯'];
+  return `<div class="pp-hd"><span class="pp-n">${String(n + 1).padStart(2, '0')}</span><div><h4>${esc(m.n)}</h4><div class="pp-meta">⏱️ <b>${m.h} h</b> · ${m.t.length} temas · ${c.clases === 1 ? 'Módulo' : 'Clase'} ${n + 1} de ${c.pensum.length}</div></div></div>
+  <div class="pp-temas">${m.t.map((t, k) => `<div class="pp-tema"><span class="pp-e">${T[k % T.length]}</span><span>${esc(t)}</span></div>`).join('')}</div>
+  <div class="pp-entregable">🎯 <b>Al terminar esta ${c.clases === 1 ? 'sesión' : 'clase'}:</b> aplicas lo visto en un <b>entregable real</b> de tu propio negocio.</div>
+  <div class="pp-nav">${n > 0 ? `<button class="btn btn-secondary btn-sm" onclick="setPensum(${n - 1})">← Anterior</button>` : '<span></span>'}${n < c.pensum.length - 1 ? `<button class="btn btn-soft btn-sm" onclick="setPensum(${n + 1})">Siguiente →</button>` : `<a class="btn btn-primary btn-sm" href="#/inscripcion/${c.slug}">🚀 Inscribirme</a>`}</div>`; }
 function CourseDetail(r) { const c = COURSES.find(x => x.slug === r.seg[1]); if (!c) return NotFound(); track('ViewContent', { course: c.id });
+  if (pensumIdx >= c.pensum.length) pensumIdx = 0;
   const groups = GROUPS.filter(g => g.cursoId === c.id && dayDiff(g.inicio) >= -1).sort((a, b) => a.inicio.localeCompare(b.inicio));
   const egr = S.students.filter(s => s.cursoId === c.id && (s.estado === 'Certificado' || s.estado === 'Finalizado')).length;
   const total = c.mensual ? c.precio * c.meses : c.precio; const prox = groups[0]; const cupos = prox ? prox.cupo - groupStudents(prox.id).length : null;
-  const LOGRO_E = ['🎯','💡','🚀','📈','🏆','✅','⚡','🔥'];
-  const enrollCard = `<div class="card enroll" style="--c1:${c.color};--c2:${c.color2}"><div class="en-top"><span class="en-e">${c.emoji}</span><div><div class="price num">${fmt(c.precio)}${c.mensual ? '<span class="caption"> /mes · 2 meses</span>' : ''}</div><div class="caption">💰 Contado: <b>${fmt(Math.round(total * .95))}</b> · <b>5 % dcto.</b></div></div></div>${c.cuotas ? `<div class="en-pill">🤝 Hasta <b>${c.cuotas} cuotas</b> sin interés</div>` : ''}${c.kit ? `<div class="en-pill kit">🎁 Incluye <b>Kit Iniciante Digital</b></div>` : ''}${groups.length ? groups.map(g => { const n = groupStudents(g.id).length; const libres = Math.max(0, g.cupo - n); return `<div class="en-grupo"><div class="row between small"><b>📅 ${fdate(g.inicio)}</b><span class="muted">${esc(g.dias)}</span></div><div class="row between caption"><span>🕐 ${esc(g.horario)}</span><span>${libres > 0 ? '<b>' + libres + '</b> cupos' : 'Agotado'}</span></div>${bar(n / g.cupo * 100, n / g.cupo > .8 ? 'warn' : '')}</div>`; }).join('') : '<p class="small muted" style="margin-top:12px">Próximas fechas por anunciar.</p>'}<div class="row" style="margin:14px 0 10px;gap:6px;flex-wrap:wrap">${[['Nequi','💜'],['Daviplata','❤️'],['Bancolombia','💛'],['PSE','💙']].map(([m,e]) => `<span class="badge b-neutral">${e} ${m}</span>`).join('')}</div><a href="#/inscripcion/${c.slug}" class="btn btn-primary" style="width:100%">🚀 Inscribirme</a><a href="${waPF(WA.curso(c))}" target="_blank" rel="noopener" class="btn btn-wa" style="width:100%;margin-top:8px" onclick="track('Lead',{course:'${c.id}'})">${I.wa} Preguntar por WhatsApp</a></div>`;
-  return `<section class="cap-hero curso" style="--c1:${c.color};--c2:${c.color2}"><span class="ch-blob b1"></span><span class="ch-blob b2"></span><div class="wrap ch-in"><a href="#/academia" class="ch-back">← Toda la academia</a><div class="ch-row"><span class="ch-e">${c.emoji}</span><div><span class="badge cc-nivel" style="position:static;display:inline-flex;margin-bottom:10px">${c.cat} · ${c.nivel}</span><h1>${esc(c.nombre)}</h1><p>${c.tagline}</p></div></div><div class="ch-stats">${[['⏱️', c.duracion],['📚', c.clases + (c.clases === 1 ? ' clase' : ' clases')],['🕐', c.horas + ' horas'],['📍', c.modalidad],['🎓', egr + ' egresados']].map(([e, v]) => `<span class="ch-stat">${e} <b>${esc(v)}</b></span>`).join('')}</div>${cupos !== null && cupos > 0 && cupos <= 5 ? `<div class="ch-hot">🔥 <b>¡Últimos ${cupos} cupos!</b> El grupo inicia el ${fdate(prox.inicio)}</div>` : ''}</div></section>
-  <section class="sec"><div class="wrap course-hero split-side"><div class="stack" style="gap:34px">
-  <div class="card" style="background:var(--grad-card);border-left:4px solid ${c.color}"><h3 style="margin-top:0">📖 De qué se trata</h3><p class="muted" style="margin:0;font-size:15.5px">${c.resumen}</p></div>
-  <div><h3>✨ Qué vas a lograr</h3><div class="logro-grid rv-stagger">${c.logros.map((l, i) => `<div class="logro" style="--cc:${c.color}"><span class="lg-e">${LOGRO_E[i % LOGRO_E.length]}</span><span>${l}</span></div>`).join('')}</div></div>
-  <div class="pensum"><div class="row between" style="margin-bottom:14px"><h3 style="margin:0">🗂️ Pénsum</h3><span class="pill" style="background:color-mix(in srgb,${c.color} 14%,transparent);color:${c.color2}">${c.pensum.length} ${c.pensum.length === 1 ? 'módulo' : 'módulos'} · ${c.horas} h</span></div><div class="pen-list">${c.pensum.map((m, i) => `<details class="pen-item" style="--cc:${c.color}" ${i === 0 ? 'open' : ''}><summary><span class="pen-n">${String(i + 1).padStart(2, '0')}</span><span class="pen-t"><b>${esc(m.n)}</b><em>⏱️ ${m.h} h · ${m.t.length} temas</em></span><span class="tog">+</span></summary><div class="pen-body"><div class="pen-topics">${m.t.map(t => `<span class="pen-topic">${esc(t)}</span>`).join('')}</div><div class="pen-deliver">🎯 <b>Entregable:</b> aplicación práctica del módulo</div></div></details>`).join('')}</div></div>
-  <div class="grid g3" style="gap:14px">${[['📋','Requisitos', c.nivel.startsWith('Básico') ? 'Ninguno. Empezamos <b>desde cero</b>.' : 'Manejo <b>básico</b> de redes y computador.'],['🧰','Herramientas', c.cat === 'Tecnología' ? 'Kit de herramientas, software de diagnóstico y <b>casos reales</b>.' : 'Canva, CapCut, ChatGPT, Meta Business y Google Workspace.'],['👥','Para quién', 'Emprendedores, comerciantes, community managers y jóvenes que buscan su <b>primer ingreso digital</b>.']].map(([e, t, d]) => `<div class="card mini-info"><span class="mi-e">${e}</span><h4>${t}</h4><p class="small muted" style="margin:0">${d}</p></div>`).join('')}</div>
-  ${c.kit ? `<div class="kit-box"><span class="kit-e">🎁</span><div><h3 style="margin:0 0 6px">Te llevas el Kit Iniciante Digital</h3><p class="muted" style="margin:0 0 12px">Al terminar el programa recibes <b>gratis</b> los implementos para producir desde el primer día.</p><div class="row" style="gap:8px">${[['🎥','Trípode'],['🎙️','Micrófonos'],['💡','Luz'],['🔌','Accesorios']].map(([e, n]) => `<span class="kit-chip">${e} ${n}</span>`).join('')}</div></div></div>` : ''}
-  <div><h3>🏅 Certificación</h3><p class="muted small">Se certifica con mínimo <b>${S.config.asistenciaMin} % de asistencia</b>, <b>100 % del pénsum</b> cursado y <b>saldo en cero</b>. Cada certificado lleva un <b>código único</b> verificable en línea.</p><div class="cert-shot"><img src="${CERT_IMG}" alt="Certificado PubliFuturo"><div class="cert-badge">✅ <b>Verificable</b> en publifuturo.com/verificar</div></div></div>
-  <div><h3>🎓 Otros programas</h3><div class="grid g3">${COURSES.filter(x => x.id !== c.id).slice(0, 3).map(CourseCard).join('')}</div></div>
+  const LOG_E = ['🎯','💡','🚀','📈','🏆','✅','⚡','🔥'];
+  const otros = COURSES.filter(x => x.id !== c.id && x.cat === c.cat).concat(COURSES.filter(x => x.id !== c.id && x.cat !== c.cat)).slice(0, 3);
+  const enrollCard = `<div class="card enroll" style="--c1:${c.color};--c2:${c.color2}"><div class="en-top"><span class="en-e">${c.emoji}</span><div><div class="price num">${fmt(c.precio)}${c.mensual ? '<span class="caption"> /mes</span>' : ''}</div><div class="caption">💰 Contado: <b>${fmt(Math.round(total * .95))}</b> · <b>5 % dcto.</b></div></div></div>${c.cuotas ? `<div class="en-pill">🤝 Hasta <b>${c.cuotas} cuotas</b> sin interés</div>` : ''}${c.pagoUnico ? `<div class="en-pill">✅ <b>Pago único</b>, sin cuotas</div>` : ''}${c.kit ? `<div class="en-pill kit">🎁 Incluye <b>Kit Iniciante Digital</b></div>` : ''}${groups.length ? groups.map(g => { const n = groupStudents(g.id).length; const libres = Math.max(0, g.cupo - n); return `<div class="en-grupo"><div class="row between small"><b>📅 ${fdate(g.inicio)}</b><span class="muted">${esc(g.dias)}</span></div><div class="row between caption"><span>🕐 ${esc(g.horario)}</span><span>${libres > 0 ? '<b>' + libres + '</b> cupos' : 'Agotado'}</span></div>${bar(n / g.cupo * 100, n / g.cupo > .8 ? 'warn' : '')}</div>`; }).join('') : '<p class="small muted" style="margin-top:12px">Próximas fechas por anunciar.</p>'}<div class="row" style="margin:14px 0 10px;gap:6px;flex-wrap:wrap">${[['Nequi','💜'],['Daviplata','❤️'],['Bancolombia','💛'],['PSE','💙']].map(([m, e]) => `<span class="badge b-neutral">${e} ${m}</span>`).join('')}</div><a href="#/inscripcion/${c.slug}" class="btn btn-primary" style="width:100%">🚀 Inscribirme</a><a href="${waPF(WA.curso(c))}" target="_blank" rel="noopener" class="btn btn-wa" style="width:100%;margin-top:8px" onclick="track('Lead',{course:'${c.id}'})">${I.wa} Preguntar por WhatsApp</a></div>`;
+  return `<section class="cap-hero curso" style="--c1:${c.color};--c2:${c.color2}"><span class="ch-blob b1"></span><span class="ch-blob b2"></span><div class="wrap ch-in"><a href="#/academia" class="ch-back">← Toda la academia</a><div class="ch-row"><span class="ch-e">${c.emoji}</span><div><span class="ch-tag">${c.cat} · ${c.nivel}</span><h1>${esc(c.nombre)}</h1><p>${c.tagline}</p><div class="row" style="margin-top:22px"><a class="btn btn-wa" href="${waPF(WA.curso(c))}" target="_blank" rel="noopener">${I.wa} Preguntar por WhatsApp</a><span class="ch-desde">Desde <b class="num">${fmt(c.precio)}</b></span></div></div></div><div class="ch-stats">${[['⏱️', c.duracion], ['📚', c.clases + (c.clases === 1 ? ' clase' : ' clases')], ['🕐', c.horas + ' horas'], ['📍', c.modalidad], ['🎓', egr + ' egresados']].map(([e, v]) => `<span class="ch-stat">${e} <b>${esc(v)}</b></span>`).join('')}</div>${cupos !== null && cupos > 0 && cupos <= 5 ? `<div class="ch-hot">🔥 <b>¡Últimos ${cupos} cupos!</b> Inicia el ${fdate(prox.inicio)}</div>` : ''}</div></section>
+  <section class="sec"><div class="wrap split-side" style="gap:32px;align-items:start"><div class="stack" style="gap:44px">
+
+  <div><div class="sec-hd" style="margin-bottom:18px"><h2>📖 De qué se trata</h2></div><div class="card" style="background:var(--grad-card);border-left:4px solid ${c.color}"><p class="muted" style="margin:0;font-size:15.5px">${c.resumen}</p></div></div>
+
+  <div><div class="sec-hd" style="margin-bottom:18px"><h2>✨ Qué vas a lograr</h2><p>Esto es lo que sales sabiendo hacer al terminar <b>${esc(c.nombre)}</b>.</p></div>
+  <div class="inc-grid rv-stagger">${c.logros.map((l, i) => `<div class="inc" style="--cc:${c.color}"><span class="inc-e">${LOG_E[i % LOG_E.length]}</span><div><b>${l}</b></div></div>`).join('')}</div></div>
+
+  <div><div class="sec-hd" style="margin-bottom:18px"><h2>🗂️ ${c.clases === 1 ? 'Los módulos de la jornada' : 'Clase por clase'}</h2><p>${c.clases === 1 ? `Una sola jornada de <b>${c.horas} horas</b> dividida en <b>${c.pensum.length} módulos</b>. Toca cada uno para ver qué se ve.` : `<b>${c.pensum.length} clases</b> de <b>${c.pensum[0].h} horas</b>. Toca cada clase para ver el detalle.`}</p></div>
+  <div class="pensum-box" style="--cc:${c.color};--cc2:${c.color2}"><div class="pen-steps">${c.pensum.map((m, i) => `<button class="pen-step ${i === pensumIdx ? 'on' : ''}" onclick="setPensum(${i})"><span class="ps-n">${String(i + 1).padStart(2, '0')}</span><span class="ps-t"><b>${esc(m.n)}</b><em>${m.h} h · ${m.t.length} temas</em></span></button>`).join('')}</div><div class="pen-panel in" id="pen-panel">${pensumPanel(c, pensumIdx)}</div></div></div>
+
+  <div class="grid g2" style="gap:14px"><div class="card" style="border-left:4px solid ${c.color}"><span style="font-size:26px">🎯</span><h3 style="margin-top:8px">¿Para quién es?</h3><p class="muted" style="margin:0">${c.cat === 'Tecnología' ? 'Personas que quieren <b>aprender un oficio técnico rentable</b>, dueños de locales de celulares y técnicos empíricos que quieren <b>formalizar su conocimiento</b>.' : c.cat === 'Semillero' ? 'Quien <b>nunca ha hecho nada digital</b> y quiere empezar sin miedo y sin gastar mucho.' : 'Emprendedores, comerciantes, community managers y jóvenes que buscan su <b>primer ingreso digital</b>.'}</p></div><div class="card" style="background:var(--grad-card)"><span style="font-size:26px">🤝</span><h3 style="margin-top:8px">Cómo funciona</h3><ol class="pasos"><li>Eliges tu <b>grupo y horario</b></li><li>Pagas ${c.pagoUnico ? 'el <b>valor único</b>' : 'el <b>anticipo</b> o de contado con 5 % de descuento'}</li><li>Asistes a las <b>${c.clases} ${c.clases === 1 ? 'jornada' : 'clases'}</b> con acompañamiento</li><li>Recibes tu <b>certificado verificable</b></li></ol></div></div>
+
+  <div class="grid g3" style="gap:14px">${[['📋', 'Requisitos', c.nivel.startsWith('Básico') ? 'Ninguno. Empezamos <b>desde cero</b>.' : 'Manejo <b>básico</b> de redes y computador.'], ['🧰', 'Herramientas', c.cat === 'Tecnología' ? 'Kit de herramientas y <b>equipos reales</b> para practicar.' : 'Canva, CapCut, ChatGPT y Meta Business.'], ['📍', 'Dónde', `${esc(c.modalidad)} · <b>${esc(c.dias)}</b>`]].map(([e, t, d]) => `<div class="card mini-info"><span class="mi-e">${e}</span><h4>${t}</h4><p class="small muted" style="margin:0">${d}</p></div>`).join('')}</div>
+
+  ${c.kit ? `<div class="kit-box"><span class="kit-e">🎁</span><div><h3 style="margin:0 0 6px">Te llevas el Kit Iniciante Digital</h3><p class="muted" style="margin:0 0 12px">Al terminar recibes <b>gratis</b> los implementos para producir desde el primer día.</p><div class="row" style="gap:8px">${[['🎥', 'Trípode'], ['🎙️', 'Micrófonos'], ['💡', 'Luz'], ['🔌', 'Accesorios']].map(([e, n]) => `<span class="kit-chip">${e} ${n}</span>`).join('')}</div></div></div>` : ''}
+
+  <div><div class="sec-hd" style="margin-bottom:18px"><h2>🏅 Tu certificado</h2><p>Se certifica con mínimo <b>${S.config.asistenciaMin} % de asistencia</b>, <b>100 % del pénsum</b> y <b>saldo en cero</b>.</p></div><div class="cert-shot"><img src="${CERT_IMG}" alt="Certificado PubliFuturo"><div class="cert-badge">✅ <b>Verificable</b> en publifuturo.com/verificar</div></div></div>
+
+  <div><div class="sec-hd" style="margin-bottom:18px"><h2>🎓 También te puede servir</h2></div><div class="grid g3">${otros.map(CourseCard).join('')}</div></div>
+
+  <div class="caps-cta"><span>¿Dudas antes de inscribirte? Te resolvemos <b>sin compromiso</b>.</span><a class="btn btn-wa btn-sm" href="${waPF(WA.curso(c))}" target="_blank" rel="noopener">${I.wa} Escribir ahora</a></div>
+
   </div><div class="sticky">${enrollCard}</div></div></section>
   <div class="sticky-cta"><div><b class="num">${fmt(c.precio)}${c.mensual ? '<span class="caption">/mes</span>' : ''}</b><div class="caption">${prox ? '📅 Inicia ' + fdate(prox.inicio) : ''}</div></div><a href="#/inscripcion/${c.slug}" class="btn btn-primary">Inscribirme</a></div>
   <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Course', name: c.nombre, description: c.resumen, provider: { '@type': 'Organization', name: COPY.legal.nombre }, offers: { '@type': 'Offer', price: total, priceCurrency: 'COP' } })}<\/script>`; }
