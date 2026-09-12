@@ -657,6 +657,47 @@ html[data-theme="dark"] .about-num{color:#1B2450}
 .att-sel.a-late{border-color:var(--warning);background:var(--warning-50);color:#B45309;font-weight:700}
 .att-sel.a-no{border-color:var(--danger);background:var(--danger-50);color:var(--danger);font-weight:700}
 
+
+/* ===== "También hacemos" — capacidades compactas ===== */
+.caps-wrap{margin-top:52px;position:relative}
+.caps-hd{text-align:center;max-width:640px;margin:0 auto 26px}
+.caps-hd h3{font-size:clamp(20px,2.4vw,27px);margin:12px 0 0}
+.eyebrow{display:inline-block;font-family:var(--font-body);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:700;background:var(--brand-50);color:var(--brand-600);padding:6px 14px;border-radius:100px}
+.caps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:12px}
+.cap{position:relative;display:flex;flex-direction:column;padding:18px 16px 42px;border-radius:var(--r-lg);background:var(--surface);
+  border:1.5px solid var(--border);color:inherit;overflow:hidden;isolation:isolate;
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s}
+/* halo de color propio de cada capacidad */
+.cap::before{content:'';position:absolute;z-index:-1;inset:-40% -30% auto -30%;height:130%;border-radius:50%;
+  background:radial-gradient(circle,color-mix(in srgb,var(--cc) 55%,transparent),transparent 68%);
+  opacity:0;transform:translateY(24px) scale(.7);transition:opacity .35s var(--ease),transform .45s var(--ease);filter:blur(26px)}
+.cap:hover{transform:translateY(-6px);box-shadow:var(--e3);border-color:var(--cc)}
+.cap:hover::before{opacity:.30;transform:translateY(0) scale(1)}
+.cap-e{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;font-size:24px;
+  background:color-mix(in srgb,var(--cc) 14%,transparent);margin-bottom:12px;
+  transition:transform .3s var(--ease)}
+.cap:hover .cap-e{transform:translateY(-3px) rotate(-7deg) scale(1.07)}
+.cap>b{display:block;font-family:var(--font-display);font-size:15px;font-weight:600;letter-spacing:-.01em;margin-bottom:5px}
+.cap em b{display:inline;font-weight:700;color:var(--text);font-size:inherit;font-family:inherit;margin:0;letter-spacing:0}
+.cap em{font-style:normal;font-size:12.5px;color:var(--muted);line-height:1.5;display:block}
+.cap-go{position:absolute;left:16px;bottom:14px;display:inline-flex;color:var(--cc);opacity:0;transform:translateX(-8px);
+  transition:opacity .25s var(--ease),transform .25s var(--ease)}
+.cap:hover .cap-go{opacity:1;transform:translateX(0)}
+/* línea de acento que se dibuja al pasar */
+.cap::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--cc);
+  transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.cap:hover::after{transform:scaleX(1)}
+.caps-cta{margin-top:22px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;
+  background:var(--surface);border:1.5px dashed var(--border);border-radius:var(--r-lg);padding:16px 22px;font-size:14px}
+@media (max-width:767px){
+  .caps-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .cap{padding:14px 12px 38px}.cap-e{width:40px;height:40px;font-size:21px}
+  .cap>b{font-size:13.5px}.cap em{font-size:11.5px}
+  .caps-cta{flex-direction:column;text-align:center;gap:12px}
+}
+@media (max-width:379px){.caps-grid{grid-template-columns:1fr}}
+
 /* ============================================================================
    [S04] RESPONSIVE + ANIMACIONES
    ============================================================================ */
@@ -1376,6 +1417,18 @@ function NotFound() { return `<div class="wrap" style="padding:160px 20px 80px">
    [S11] SITIO PÚBLICO
    ============================================================================ */
 const TEMAS = ['Marketing Digital','Inteligencia Artificial','Social Media Manager','Canva','CapCut','Campañas','Ventas','Academia','Agencia Social','Emprendimiento','Crecimiento'];
+const CAPS = [
+  { g: 'Contenido', e: '🖼️', n: 'Bancos de imágenes', d: 'Librería visual <b>propia</b> de tu marca', c: '#38BDF8' },
+  { g: 'Contenido', e: '🤖', n: 'Videos con IA', d: 'Piezas <b>profesionales</b> sin rodaje', c: '#7C3AED' },
+  { g: 'Contenido', e: '📱', n: 'Videos orgánicos', d: 'Contenido <b>cercano</b> que genera comunidad', c: '#10B981' },
+  { g: 'Contenido', e: '🎥', n: 'Grabación profesional', d: 'Comerciales y video <b>institucional</b>', c: '#F97316' },
+  { g: 'Crecimiento', e: '🎯', n: 'Campañas publicitarias', d: 'Pauta en <b>Meta, TikTok y Google</b>', c: '#1A57E0' },
+  { g: 'Crecimiento', e: '🧭', n: 'Asesorías personalizadas', d: 'Marketing, ventas y <b>organización</b>', c: '#92400E' },
+  { g: 'Empresa', e: '🔍', n: 'Auditorías empresariales', d: 'Dónde <b>pierdes plata</b> y tiempo', c: '#EF4444' },
+  { g: 'Empresa', e: '✨', n: 'IA para tu empresa', d: 'Inteligencia artificial <b>en tu operación</b>', c: '#5B4BE1' },
+  { g: 'Empresa', e: '⚙️', n: 'Automatización de procesos', d: 'Menos <b>trabajo manual</b>, más resultados', c: '#2DD4BF' },
+  { g: 'Digital', e: '💻', n: 'Aplicativos y páginas web', d: 'Catálogos, tiendas, <b>CRM</b> e inventarios', c: '#0EA5E9' }
+];
 const UNITS_PUBLIC = [
   { slug: 'videos-ia', n: 'Videos con IA', d: 'Piezas de video para redes y pauta producidas con inteligencia artificial.', b: ['Guion, escenas IA y locución', 'Formatos 9:16, 1:1 y 16:9', 'Desde 1 hasta 8 videos por pack'], desde: 150000, ic: 'video', c: 'v' },
   { slug: 'microapps', n: 'Microapps y soluciones web', d: 'Landing pages, catálogos interactivos, menús digitales, CRM y sistemas a la medida.', b: ['Entrega en 2 a 6 semanas', 'Dominio y hosting gestionados', 'Mantenimiento opcional'], desde: 600000, ic: 'code', c: '' },
@@ -1393,7 +1446,9 @@ function Home() {
   <section class="sec"><div class="wrap grid g2 rv" style="align-items:center"><div><h2>Una fundación que enseña haciendo</h2><p class="muted" style="font-size:16px">Somos una entidad sin ánimo de lucro de Ibagué. Formamos en marketing digital, inteligencia artificial y tecnología con clases en vivo, proyectos reales de empresas del Tolima y una unidad técnica aliada donde los estudiantes practican sobre equipos de verdad.</p><p class="muted" style="font-size:16px">Cada programa termina con un entregable que el estudiante puede mostrar, y cada certificado tiene un código público que cualquier empleador puede verificar.</p><a href="#/nosotros" class="btn btn-soft">Conocer la fundación ${I.arrow}</a></div><div class="card" style="background:var(--grad-card)"><h4>Ficha de la entidad</h4><table class="mini-t"><tr><td class="muted">Nombre legal</td><td><b>${COPY.legal.nombre}</b></td></tr><tr><td class="muted">Naturaleza</td><td>${COPY.legal.tipo}</td></tr><tr><td class="muted">Domicilio</td><td>${COPY.legal.domicilio}</td></tr><tr><td class="muted">Objeto social</td><td>${COPY.legal.objeto}</td></tr><tr><td class="muted">Representante legal</td><td>${COPY.legal.directivos[0][0]}</td></tr></table></div></div></section>
   <section class="sec alt mvv"><div class="wrap"><div class="sec-hd"><h2>Misión, visión y valores</h2></div><div class="grid g3 rv-stagger"><div class="card lift"><div class="ico">${I.rocket}</div><h3 style="margin-top:14px">Misión</h3><p class="muted">${COPY.mision}</p></div><div class="card lift"><div class="ico v">${I.globe}</div><h3 style="margin-top:14px">Visión</h3><p class="muted">${COPY.vision}</p></div><div class="card lift"><div class="ico g">${I.heart}</div><h3 style="margin-top:14px">Valores</h3><ul style="padding-left:18px;color:var(--muted)">${COPY.valores.map(v => `<li>${v}</li>`).join('')}</ul></div></div></div></section>
   <section class="sec"><div class="wrap"><div class="grid g2" style="align-items:center"><div class="rv"><h2>Enfoque social</h2><p class="muted" style="font-size:16px">Democratizamos el acceso a la formación digital en el Tolima y en regiones con baja oferta educativa. Cuatro pilares guían cada decisión de la fundación.</p><div style="margin:18px 0 6px"><div class="row between small"><span>Meta 2026 · 400 beneficiarios</span><b class="num">${S.students.length + 240}</b></div>${bar((S.students.length + 240) / 4, 'ok')}</div><a href="#/impacto" class="btn btn-soft" style="margin-top:14px">Ver impacto y becas ${I.arrow}</a></div><div class="grid g2 rv-stagger">${COPY.pilares.map(([t, d], i) => `<div class="card"><div class="ico ${['', 'v', 'c', 'g'][i]}">${[I.heart, I.pin, I.users, I.trend][i]}</div><h4 style="margin-top:12px">${t}</h4><p class="small muted" style="margin:0">${d}</p></div>`).join('')}</div></div></div></section>
-  <section class="sec alt"><div class="wrap"><div class="sec-hd"><h2>Servicios</h2><p>Unidades de negocio que sostienen la fundación y dan trabajo real a los estudiantes.</p></div><div class="grid g3 rv-stagger">${UNITS_PUBLIC.map(u => `<a href="#/${u.slug === 'academia' ? 'academia' : 'servicios/' + u.slug}" class="card svc lift" style="display:block;color:inherit"><div class="ico ${u.c}">${I[u.ic]}</div><h4 style="margin-top:12px">${u.n}</h4><p class="small muted">${u.d}</p><ul>${u.b.map(b => `<li>${b}</li>`).join('')}</ul><div class="row between"><span class="small muted">Desde <b class="num" style="color:var(--text)">${fmt(u.desde)}</b></span><span style="color:var(--brand-600)">${I.arrow}</span></div></a>`).join('')}</div></div></section>
+  <section class="sec alt"><div class="wrap"><div class="sec-hd"><h2>Servicios</h2><p>Unidades de negocio que sostienen la fundación y dan trabajo real a los estudiantes.</p></div><div class="grid g3 rv-stagger">${UNITS_PUBLIC.map(u => `<a href="#/${u.slug === 'academia' ? 'academia' : 'servicios/' + u.slug}" class="card svc lift" style="display:block;color:inherit"><div class="ico ${u.c}">${I[u.ic]}</div><h4 style="margin-top:12px">${u.n}</h4><p class="small muted">${u.d}</p><ul>${u.b.map(b => `<li>${b}</li>`).join('')}</ul><div class="row between"><span class="small muted">Desde <b class="num" style="color:var(--text)">${fmt(u.desde)}</b></span><span style="color:var(--brand-600)">${I.arrow}</span></div></a>`).join('')}</div>
+  <div class="caps-wrap rv"><div class="caps-hd"><span class="eyebrow">TAMBIÉN HACEMOS</span><h3>Todo lo que necesita tu marca, en un solo lugar</h3></div><div class="caps-grid rv-stagger">${CAPS.map(c => `<a class="cap" style="--cc:${c.c}" href="${waPF(WA.servicio(c.n))}" target="_blank" rel="noopener"><span class="cap-e">${c.e}</span><b>${c.n}</b><em>${c.d}</em><span class="cap-go">${I.arrow}</span></a>`).join('')}</div><div class="caps-cta"><span>¿No sabes por dónde empezar? Te lo decimos <b>sin costo</b>.</span><a class="btn btn-wa btn-sm" href="${waPF(WA.general)}" target="_blank" rel="noopener">${I.wa} Hablar con un asesor</a></div></div>
+  </div></section>
   <section class="sec"><div class="wrap"><div class="row between" style="margin-bottom:24px"><div class="sec-hd" style="margin:0"><h2>Cursos de la Academia</h2><p>Programas con pénsum público, docente asignado y cupos en tiempo real.</p></div><a href="#/academia" class="btn btn-secondary">Ver todos</a></div><div class="hscroll rv">${COURSES.map(CourseCard).join('')}</div></div></section>
   <section class="sec alt" id="planes"><div class="wrap"><div class="sec-hd center"><h2>Planes de acompañamiento digital</h2><p>Para negocios que quieren un equipo de marketing sin contratar uno. Cambia entre pago mensual y trimestral.</p></div>${PlansGrid()}</div></section>
   <section class="sec"><div class="wrap"><div class="sec-hd"><h2>Cómo trabajamos</h2></div><div class="timeline"><div class="ln"></div>${[['Diagnóstico', 'Entendemos tu punto de partida y tu meta.'], ['Formación en vivo', 'Clases con docente, en presencial o remoto.'], ['Práctica guiada', 'Cada módulo cierra con un entregable real.'], ['Proyecto real', 'Aplicas lo aprendido a tu negocio o a un aliado.'], ['Certificación', 'Certificado con código verificable en línea.']].map(([t, d], i) => `<div class="st"><b>${i + 1}</b><h4>${t}</h4><p class="small muted">${d}</p></div>`).join('')}</div></div></section>
