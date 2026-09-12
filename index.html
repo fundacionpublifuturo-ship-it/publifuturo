@@ -886,6 +886,57 @@ html[data-theme="dark"] .en-pill.kit{background:#3A2E0B;color:#FDE68A}
   .pp-temas{grid-template-columns:1fr}
 }
 
+
+/* ===== "Cómo trabajamos" rediseñado ===== */
+.metodo{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;position:relative}
+.met{position:relative;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);
+  padding:22px 18px 20px;transition:transform .2s var(--ease),box-shadow .2s,border-color .2s}
+.met:hover{transform:translateY(-6px);box-shadow:var(--e3);border-color:var(--cc)}
+.met-line{position:absolute;top:44px;left:100%;width:14px;height:2px;background:var(--border);z-index:0}
+.met:last-child .met-line{display:none}
+.met-ico{position:relative;display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;
+  border-radius:18px;font-size:26px;margin-bottom:14px;
+  background:color-mix(in srgb,var(--cc) 13%,transparent);transition:transform .28s var(--ease)}
+.met:hover .met-ico{transform:translateY(-3px) rotate(-7deg) scale(1.06)}
+.met-ico i{position:absolute;right:-6px;top:-6px;width:24px;height:24px;border-radius:50%;background:var(--cc);color:#fff;
+  font-style:normal;font-family:var(--font-display);font-weight:800;font-size:12px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px color-mix(in srgb,var(--cc) 45%,transparent)}
+.met h4{margin:0 0 6px;font-size:15.5px}
+.met p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+.met::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--cc);border-radius:0 0 var(--r-lg) var(--r-lg);
+  transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.met:hover::after{transform:scaleX(1)}
+@media (max-width:1023px){.metodo{grid-template-columns:repeat(2,1fr)}.met-line{display:none}}
+@media (max-width:479px){.metodo{grid-template-columns:1fr}}
+/* ===== Testimonios ===== */
+.testi{position:relative;display:flex;flex-direction:column;min-width:310px;max-width:340px;
+  background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:26px 20px 18px;
+  transition:transform .2s var(--ease),box-shadow .2s,border-color .2s;border-top:3px solid var(--cc)}
+.testi:hover{transform:translateY(-5px);box-shadow:var(--e3);border-color:var(--cc);border-top-color:var(--cc)}
+.tq{position:absolute;top:2px;left:16px;font-family:var(--font-display);font-size:62px;line-height:1;
+  color:color-mix(in srgb,var(--cc) 22%,transparent);pointer-events:none}
+.tt{position:relative;margin:0 0 4px;font-size:14.5px;line-height:1.6;color:var(--text)}
+.testi q{quotes:none}
+/* ===== Electro Futuro Academy dentro del bloque ===== */
+.ef-acad-hd{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.ef-acad-hd span{font-size:28px;line-height:1}
+.ef-acad-hd b{display:block;font-size:15px}
+.ef-acad-hd em{font-style:normal;font-size:12.5px;color:var(--muted)}
+.ef-curso{display:flex;flex-direction:column;padding:16px;border-radius:var(--r-lg);color:inherit;
+  background:var(--surface);border:1.5px solid var(--border);border-top:3px solid var(--c1);
+  transition:transform .2s var(--ease),box-shadow .2s,border-color .2s}
+.ef-curso:hover{transform:translateY(-5px);box-shadow:var(--e3);border-color:var(--c1)}
+.efc-e{font-size:28px;line-height:1;margin-bottom:9px;transition:transform .25s var(--ease)}
+.ef-curso:hover .efc-e{transform:scale(1.15) rotate(-8deg)}
+.ef-curso b{font-size:14.5px;line-height:1.35;margin-bottom:3px}
+.ef-curso em{font-style:normal;font-size:12px;color:var(--muted);margin-bottom:12px}
+.efc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.efc-foot .num{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--c2)}
+html[data-theme="dark"] .efc-foot .num{color:var(--c1)}
+.efc-foot s{font-size:11.5px;color:var(--ink-300);font-weight:500;margin-left:6px}
+.efc-go{display:inline-flex;color:var(--c1);transition:transform .2s var(--ease)}
+.ef-curso:hover .efc-go{transform:translateX(4px)}
+
 /* ============================================================================
    [S04] RESPONSIVE + ANIMACIONES
    ============================================================================ */
@@ -1669,8 +1720,8 @@ function Home() {
   </div></section>
   <section class="sec"><div class="wrap"><div class="row between" style="margin-bottom:24px"><div class="sec-hd" style="margin:0"><h2>Cursos de la Academia</h2><p>Programas con pénsum público, docente asignado y cupos en tiempo real.</p></div><a href="#/academia" class="btn btn-secondary">Ver todos</a></div><div class="hscroll rv">${COURSES.map(CourseCard).join('')}</div></div></section>
   <section class="sec alt" id="planes"><div class="wrap"><div class="sec-hd center"><h2>Planes de acompañamiento digital</h2><p>Para negocios que quieren un equipo de marketing sin contratar uno. Cambia entre pago mensual y trimestral.</p></div>${PlansGrid()}</div></section>
-  <section class="sec"><div class="wrap"><div class="sec-hd"><h2>Cómo trabajamos</h2></div><div class="timeline"><div class="ln"></div>${[['Diagnóstico', 'Entendemos tu punto de partida y tu meta.'], ['Formación en vivo', 'Clases con docente, en presencial o remoto.'], ['Práctica guiada', 'Cada módulo cierra con un entregable real.'], ['Proyecto real', 'Aplicas lo aprendido a tu negocio o a un aliado.'], ['Certificación', 'Certificado con código verificable en línea.']].map(([t, d], i) => `<div class="st"><b>${i + 1}</b><h4>${t}</h4><p class="small muted">${d}</p></div>`).join('')}</div></div></section>
-  <section class="sec alt"><div class="wrap"><div class="sec-hd"><h2>Lo que dicen los egresados</h2></div><div class="hscroll rv">${TESTIMONIALS.map(t => `<div class="testi"><q>“${t.q}”</q><div class="row">${avatar(t.n, '', 'v')}<div><b class="small">${t.n}</b><div class="caption">${t.c} · ${t.k}</div></div></div></div>`).join('')}</div></div></section>
+  <section class="sec"><div class="wrap"><div class="sec-hd"><h2>🧭 Cómo trabajamos</h2><p>Cinco pasos, siempre los mismos, desde que llegas hasta que sales <b>certificado y produciendo</b>.</p></div><div class="metodo rv-stagger">${[['🔎', 'Diagnóstico', 'Entendemos tu <b>punto de partida</b> y a dónde quieres llegar.', '#38BDF8'], ['🎥', 'Formación en vivo', 'Clases con <b>docente real</b>, presencial en Ibagué o remoto.', '#1A57E0'], ['🛠️', 'Práctica guiada', 'Cada módulo cierra con un <b>entregable</b> que puedes usar.', '#5B4BE1'], ['🚀', 'Proyecto real', 'Aplicas lo aprendido a <b>tu negocio</b> o al de un aliado.', '#10B981'], ['🏅', 'Certificación', 'Certificado con <b>código verificable</b> en línea.', '#F59E0B']].map(([e, t, d, c], i) => `<div class="met" style="--cc:${c}"><span class="met-line"></span><span class="met-ico">${e}<i>${i + 1}</i></span><h4>${t}</h4><p>${d}</p></div>`).join('')}</div></div></section>
+  <section class="sec alt"><div class="wrap"><div class="sec-hd"><h2>💬 Lo que dicen los egresados</h2><p>Personas reales que ya pasaron por la Academia.</p></div><div class="hscroll rv">${TESTIMONIALS.map((t, i) => `<div class="testi" style="--cc:${['#1A57E0', '#5B4BE1', '#10B981', '#F59E0B', '#EC4899'][i % 5]}"><span class="tq">"</span><p class="tt">${esc(t.q)}</p><div class="row" style="margin-top:auto;padding-top:14px;border-top:1px solid var(--border)">${avatar(t.n, '', ['', 'v', 'c', 'g', 'w'][i % 5])}<div><b class="small">${esc(t.n)}</b><div class="caption">🎓 ${esc(t.c)}${t.k ? ' · ' + esc(t.k) : ''}</div></div></div></div>`).join('')}</div></div></section>
   <section class="sec"><div class="wrap">${EFBlock()}</div></section>
   <section class="sec alt"><div class="wrap"><div class="sec-hd center"><h2>Preguntas frecuentes</h2></div>${FAQBlock()}</div></section>
   <section class="sec" id="contacto"><div class="wrap">${ContactBlock()}</div></section>`;
@@ -1682,7 +1733,11 @@ let planPeriod = 'mensual';
 function PlansGrid() { const tri = planPeriod === 'trimestral'; return `<div class="row" style="justify-content:center;margin-bottom:28px"><div class="tabs"><button class="${!tri ? 'on' : ''}" onclick="planPeriod='mensual';render()">Mensual</button><button class="${tri ? 'on' : ''}" onclick="planPeriod='trimestral';render()">Trimestral · −15 %</button></div></div><div class="grid g4 rv-stagger" style="align-items:stretch">${PLANS.map(p => { const v = tri ? Math.round(p.precio * .85 * 3 / 1000) * 1000 : p.precio; return `<div class="card plan ${p.hot ? 'hot' : ''}" style="--pc:${p.color}">${p.hot ? '<span class="tag">Más elegido</span>' : ''}<div class="plan-emoji">${p.emoji}</div><h4>${p.nombre}</h4><p class="small muted" style="min-height:40px">${p.para}</p><div class="pr num">${fmt(v)}<small> /${tri ? 'trimestre' : 'mes'}</small></div>${tri ? `<div class="caption" style="color:var(--success)">Ahorras ${fmt(p.precio * 3 - v)}</div>` : ''}<ul>${p.inc.map(i => `<li>${i}</li>`).join('')}</ul><a href="${waPF(WA.plan(p))}" target="_blank" rel="noopener" class="btn ${p.hot ? 'btn-primary' : 'btn-secondary'}" style="margin-top:auto" onclick="track('Lead',{plan:'${p.id}'})">Quiero este plan</a></div>`; }).join('')}</div>`; }
 function PlanMatrix() { return `<div class="card" style="margin-top:32px"><div class="card-hd"><h4>📋 Comparativo completo</h4><span class="caption">Todo lo que incluye cada plan</span></div><div class="tbl-wrap"><table class="tbl matrix" style="min-width:760px"><thead><tr><th>Incluye</th>${PLANS.map(p => `<th style="text-align:center;color:${p.color}">${p.emoji} ${p.nombre.replace('Plan ', '')}</th>`).join('')}</tr></thead><tbody>${PLAN_MATRIX.map(row => `<tr><td><b>${row[0]}</b></td>${row.slice(1).map(c => `<td style="text-align:center">${c === '—' ? '<span class="mx-no">—</span>' : c === 'Sí' ? '<span class="mx-yes">✓</span>' : `<b class="mx-val">${c}</b>`}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`; }
 
-function EFBlock() { return `<div class="ef-block rv"><div style="position:relative"><div style="margin-bottom:22px">${LogoEF(40)}</div><span class="badge b-cyan">Aliado oficial</span><h2 style="margin-top:14px">Electro Futuro es nuestro brazo técnico y comercial</h2><p class="muted">Unidad aliada de tecnología y accesorios: comercializa accesorios para celular, cargadores y cables, audífonos, parlantes y holders, power banks, relojes inteligentes, herramientas y repuestos, pantallas, baterías y línea de computación; y opera el servicio técnico especializado en equipos móviles y computación.</p><div class="row"><a href="#/servicios/servicio-tecnico" class="btn btn-primary" style="background:#0E8FA0;box-shadow:0 6px 16px rgba(25,193,214,.3)">Servicio técnico</a><a href="#/servicios/accesorios-mayor" class="btn btn-secondary">Catálogo mayorista</a></div></div><div class="grid g2" style="position:relative"><div class="card"><h4>Qué sostiene la alianza</h4><ul><li>Los estudiantes del curso de Software y Servicio Técnico practican sobre casos y equipos reales.</li><li>El tarifario y el catálogo de repuestos son el material didáctico de la unidad técnica.</li><li>Electro Futuro aporta equipos para práctica y cofinancia becas.</li></ul></div><div class="card"><h4>Beneficios para estudiantes</h4><ul><li>Tarifas preferenciales en repuestos, accesorios y servicio técnico.</li><li>Prioridad en prácticas y vinculación laboral.</li><li>Descuento en el catálogo mayorista para emprender.</li></ul></div></div></div>`; }
+function EFBlock() { const tec = COURSES.filter(c => c.cat === 'Tecnología'); return `<div class="ef-block rv"><div style="position:relative"><div style="margin-bottom:22px">${LogoEF(40)}</div><span class="badge b-cyan">🤝 Aliado oficial</span><h2 style="margin-top:14px">Electro Futuro es nuestro <b>brazo técnico</b></h2><p class="muted">Unidad aliada de tecnología y accesorios: comercializa <b>accesorios para celular</b>, cargadores y cables, audio, power banks, relojes inteligentes, herramientas y repuestos, pantallas, baterías y línea de computación; y opera el <b>servicio técnico</b> especializado en equipos móviles.</p><div class="row"><a href="#/servicios/formacion-tecnica" class="btn btn-primary" style="background:#0E8FA0;box-shadow:0 6px 16px rgba(25,193,214,.3)">🔧 Cursos técnicos</a><a href="#/servicios/accesorios-mayor" class="btn btn-secondary">📦 Catálogo mayorista</a></div></div>
+  <div style="position:relative"><div class="ef-acad-hd"><span>🎓</span><div><b>Electro Futuro Academy</b><em>Los dos programas técnicos se dictan aquí, con práctica sobre equipos reales</em></div></div>
+  <div class="grid g2" style="gap:12px;margin-bottom:16px">${tec.map(c => `<a href="#/academia/${c.slug}" class="ef-curso" style="--c1:${c.color};--c2:${c.color2}"><span class="efc-e">${c.emoji}</span><b>${esc(c.nombre)}</b><em>${esc(c.duracion)}</em><div class="efc-foot"><span class="num">${fmt(c.precio)}${c.precioAntes ? `<s>${fmt(c.precioAntes)}</s>` : ''}</span><span class="efc-go">${I.arrow}</span></div></a>`).join('')}</div>
+  <div class="grid g2" style="gap:12px"><div class="card"><h4>🔗 Qué sostiene la alianza</h4><ul><li>Los estudiantes practican sobre <b>casos y equipos reales</b>.</li><li>El <b>catálogo de repuestos</b> es el material didáctico.</li><li>Electro Futuro aporta equipos y <b>cofinancia becas</b>.</li></ul></div><div class="card"><h4>🎁 Beneficios para estudiantes</h4><ul><li>Tarifas preferenciales en <b>repuestos y accesorios</b>.</li><li>Prioridad en <b>prácticas</b> y vinculación laboral.</li><li>Descuento en el <b>catálogo mayorista</b> para emprender.</li></ul></div></div></div></div>`; }
+
 let faqTab = 'Academia';
 const FAQ_ICONS = { 'Academia': '🎓', 'Pagos y certificados': '💳', 'Servicios': '💡', 'Fundación': '❤️' };
 function setFaqTab(k){ faqTab = k; const cont = document.getElementById('faq-list'); if (cont) { cont.innerHTML = faqList(); document.querySelectorAll('.faq-side button').forEach(b => b.classList.toggle('on', b.dataset.k === k)); } else render(); }
