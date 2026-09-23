@@ -579,7 +579,7 @@ html[data-theme="dark"] .cert-badge{background:rgba(20,26,61,.95);color:#E8ECF8}
 
 
 /* ===== Plataformas de streaming (item 33) ===== */
-.plat-tile{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:11px;
+.plat-tile{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:11px;
   font-family:var(--font-display);font-weight:800;font-size:14px;letter-spacing:-.02em;flex:none;box-shadow:var(--e1)}
 .plat-tile.lg{width:56px;height:56px;border-radius:16px;font-size:20px}
 .plat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:10px;margin-bottom:20px}
@@ -1001,6 +1001,36 @@ html[data-theme="dark"] .efc-foot .num{color:var(--c1)}
   .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:55;background:var(--surface);border-top:1px solid var(--border);padding:12px 16px calc(12px + var(--sab));display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:var(--e3)}
 }
 @media (min-width:768px){.sticky-cta{display:none}}
+
+/* ===== MOBILE COMPACTO ===== */
+@media (max-width:767px){
+  .ph h1{font-size:22px;margin-bottom:4px}.ph p{font-size:13px;margin-bottom:12px}
+  .kpis{gap:8px}.kpis .card{padding:12px 14px}.kpis .card b{font-size:22px}.kpis .card span{font-size:11px}
+  .card{padding:16px}.card h3,.card h4{font-size:14.5px}
+  .sec{padding:28px 0}.tbl th,.tbl td{padding:7px 8px;font-size:12.5px}
+  .tabs button{font-size:12px;padding:7px 12px}
+  .field label{font-size:12.5px}.input,.select,.textarea{font-size:14px;padding:10px 12px}
+  .btn{min-height:40px;font-size:13.5px;padding:0 16px}
+  .btn-sm,.btn-xs{min-height:34px;font-size:12px;padding:0 12px}
+  .inc{padding:12px;gap:10px}.inc-e{font-size:22px}.inc b{font-size:13px}.inc em{font-size:11.5px}
+  .about-card{padding:16px}.ae{font-size:24px;margin-bottom:6px}
+  .course-card .cc-cover{height:120px;padding:12px}.cc-emoji{font-size:34px}
+  .cap-hero{padding-top:calc(80px + var(--sat,0px));padding-bottom:32px}
+  .cap-hero h1,.srv-hero h1{font-size:24px}.cap-hero p,.srv-hero p{font-size:14px}
+  .ch-stat{font-size:11px;padding:5px 10px}.ch-e,.sh-e{font-size:40px}
+  .hero-logo{height:210px}.hero-logo img{width:66%}.hl-chip{font-size:10px;padding:5px 9px}
+  .stat-band{padding:18px;gap:8px}.stat-band b{font-size:24px}
+  .page-hd{padding:88px 0 36px}.page-hd h1{font-size:clamp(1.5rem,4vw,2rem)}
+  .sticky-cta{padding:10px 14px}.sticky-cta b{font-size:16px}
+  .enroll .price{font-size:24px}.en-pill{padding:7px 11px;font-size:11.5px}
+  .kit-box{padding:16px}.kit-e{font-size:34px}
+  .grp-hd h2{font-size:17px}.grp-e{font-size:22px}
+  .srv{padding:14px 12px 40px}.srv-e{width:42px;height:42px;font-size:21px}
+  .srv>b{font-size:13.5px}.srv em{font-size:11.5px}
+  .met{padding:16px 14px}.met-ico{width:46px;height:46px;font-size:22px}
+  .sub-row{gap:8px;padding:8px 0}
+}
+
 </style>
 </head>
 <body>
@@ -1379,7 +1409,7 @@ const TESTIMONIALS = [{ n: 'Mariana Gómez', c: 'Espinal', k: 'Crecimiento Digit
 const USERS = [
   { id: 'U1', role: 'student', nombre: 'Estudiante', perfil: 'Estudiante', sub: 'Portal del estudiante', ref: 'E001', correo: 'estudiante@publifuturo.co', user: '3stud14nt3' },
   { id: 'U2', role: 'teacher', nombre: 'Docente', perfil: 'Docente', sub: 'Portal del docente', ref: 'T1', correo: 'docente@publifuturo.co', user: 'd0c3nt3' },
-  { id: 'U3', role: 'admin', nombre: 'Comercial', perfil: 'Asesor Comercial', sub: 'Pipeline y unidades de negocio', ref: 'A1', correo: 'comercial@publifuturo.co', user: 'c0m3rc14l', units: ['semilleros', 'crecimiento-digital', 'master-digital-360', 'curso-express-remoto', 'marketing-ia-meta-ads', 'software-servicio-tecnico', 'videos-ia', 'microapps', 'streaming', 'accesorios-mayor'] },
+  { id: 'U3', role: 'admin', nombre: 'Comercial', perfil: 'Asesor Comercial', sub: 'Pipeline y unidades de negocio', ref: 'A1', correo: 'comercial@publifuturo.co', user: 'c0m3rc14l', units: ['semilleros', 'crecimiento-digital', 'master-digital-360', 'curso-express-remoto', 'marketing-ia-meta-ads', 'software-servicio-tecnico', 'videos-ia', 'microapps', 'streaming', 'accesorios-mayor', 'asesorias', 'bancos-imagenes', 'videos-organicos', 'grabacion-profesional', 'campanas', 'auditorias', 'ia-empresarial', 'automatizacion'] },
   { id: 'U4', role: 'finance', nombre: 'Cartera', perfil: 'Cartera', sub: 'Cartera y tesorería', ref: 'F1', correo: 'cartera@publifuturo.co', user: 'c4rt3r4' },
   { id: 'U5', role: 'superadmin', nombre: 'Gerencia', perfil: 'Gerencia', sub: 'Control global de la fundación', ref: 'S1', correo: 'gerencia@publifuturo.co', user: 'pr3s1d3nt3' }
 ];
@@ -1393,10 +1423,10 @@ function baseState(vacio) {
   const sessions = buildSessions();
   const cfg = { asistenciaMin: 80, comAsesor: 10, comDocente: 12, cupo: 20, anio: 2026, saldoMinimo: 2500000, plantillas: { pago: 'Hola *{nombre}*, te saluda *PubliFuturo* 👋\n\nTe recordamos que tu cuota de *{valor}* vence el *{fecha}*. 💳\n\nPuedes pagar por *Nequi* o *Bancolombia*. ¡Gracias! 🙌', clase: 'Hola *{nombre}* 👋\n\nTu clase de *{curso}* es *hoy* a las *{hora}* ⏰\n\n🔗 Enlace: {link}', renov: 'Hola *{nombre}* 👋\n\nTu *{servicio}* vence el *{fecha}* 📺\n\n¿Renovamos por *{valor}*? ✅', lead: '¡Hola *{nombre}*! 👋\n\nSoy *{asesor}* de *PubliFuturo*. Vi tu interés en *{interes}* 🚀\n\n¿Te cuento cómo funciona?', entrega: 'Hola *{nombre}* 👋\n\nTu equipo *{equipo}* ya está *listo para entregar* ✅\n\nSaldo pendiente: *{valor}*' } };
   const users = USERS.map(u => ({ ...u, activo: true }));
-  if (vacio) return { v: 6, sessions, students: [], payments: [], attendance: [], submissions: [], leads: [], microapps: [], videos: [], streaming: [], wholesale: [], accSales: [], accGar: [], accProv: [], expenses: [], donations: [], scholarships: [], subs: [], certs: {}, attended: {}, audit: [{ fecha: new Date().toLocaleString('es-CO', { hour12: false }).slice(0, 16), usuario: 'Sistema', accion: 'Plataforma iniciada en limpio', entidad: 'Sistema', id: '-', antes: '', despues: '' }], users, config: cfg, notes: {} };
+  if (vacio) return { v: 6, sessions, students: [], payments: [], attendance: [], submissions: [], leads: [], microapps: [], videos: [], streaming: [], wholesale: [], accSales: [], accGar: [], accProv: [], expenses: [], donations: [], scholarships: [], subs: [], bancosimagenes:[],videosorganicos:[],grabacionprofesional:[],campanas:[],auditorias:[],iaempresarial:[],automatizacion:[], certs: {}, attended: {}, audit: [{ fecha: new Date().toLocaleString('es-CO', { hour12: false }).slice(0, 16), usuario: 'Sistema', accion: 'Plataforma iniciada en limpio', entidad: 'Sistema', id: '-', antes: '', despues: '' }], users, config: cfg, notes: {} };
   const { students, payments } = buildStudents(); const attendance = buildAttendance(students, sessions);
   const accProv = buildAccProv(); const accInv = buildAccInv(); const accSales = buildAccSales(accInv);
-  return { v: 6, sessions, students, payments, attendance, submissions: buildSubmissions(students), leads: buildLeads(), microapps: buildMicroapps(), videos: buildVideos(), streaming: buildStreaming(), wholesale: buildWholesale(), accSales, accGar: buildAccGar(accSales), accProv, expenses: buildExpenses(), donations: DONATIONS, scholarships: SCHOLARSHIPS, subs: buildSubs(), certs: {}, attended: {}, audit: [{ fecha: new Date().toLocaleString('es-CO', { hour12: false }).slice(0, 16), usuario: 'Sistema', accion: 'Datos de demostración cargados', entidad: 'Sistema', id: '-', antes: '', despues: '' }], users, config: cfg, notes: {} };
+  return { v: 6, sessions, students, payments, attendance, submissions: buildSubmissions(students), leads: buildLeads(), microapps: buildMicroapps(), videos: buildVideos(), streaming: buildStreaming(), wholesale: buildWholesale(), accSales, accGar: buildAccGar(accSales), accProv, expenses: buildExpenses(), donations: DONATIONS, scholarships: SCHOLARSHIPS, subs: buildSubs(), bancosimagenes:[],videosorganicos:[],grabacionprofesional:[],campanas:[],auditorias:[],iaempresarial:[],automatizacion:[], certs: {}, attended: {}, audit: [{ fecha: new Date().toLocaleString('es-CO', { hour12: false }).slice(0, 16), usuario: 'Sistema', accion: 'Datos de demostración cargados', entidad: 'Sistema', id: '-', antes: '', despues: '' }], users, config: cfg, notes: {} };
 }
 function buildSubs() {
   const items = [['APK','microapps','Mantenimiento página web',80000],['APK','microapps','Hosting + soporte catálogo',120000],['APK','microapps','CRM personalizado',250000],['VIA','videos-ia','Plan 4 videos IA mensual',480000],['ASE','asesorias','Asesoría mensual de marketing',350000],['STM','streaming','Combo streaming familiar',60000],['APK','microapps','Tienda virtual + soporte',180000],['VIA','videos-ia','Plan 8 videos IA mensual',880000]];
@@ -1634,7 +1664,7 @@ const ROLE_OF = { estudiante: 'student', docente: 'teacher', admin: 'admin', car
 const ROLE_LABEL = { student: 'Portal del Estudiante', teacher: 'Portal del Docente', admin: 'Admin · Pipeline Comercial PubliFuturo', finance: 'Cartera Financiera', superadmin: 'SuperAdmin · Control global' };
 let scrollY0 = 0;
 function render() {
-  if (S && !S.subs) S.subs = [];
+  if (S && !S.subs) S.subs = []; ['bancosimagenes','videosorganicos','grabacionprofesional','campanas','auditorias','iaempresarial','automatizacion'].forEach(k=>{if(S&&!S[k])S[k]=[];});
   const r = route(); const app = $('#app'); const first = r.seg[0];
   const priv = ROLE_OF[first];
   if (priv) { const s = session(); if (!s) { app.innerHTML = Login('Inicia sesión para entrar a ' + ROLE_LABEL[priv] + '.'); return; } if (s.role !== priv && s.role !== 'superadmin') { app.innerHTML = Login(`Tu perfil (${ROLE_LABEL[s.role]}) no tiene acceso a ${ROLE_LABEL[priv]}.`); return; } app.innerHTML = Shell(priv, r); afterRender(); return; }
@@ -2048,6 +2078,39 @@ const CURSO_SECTIONS_ALL = [
 const sinProgresoUnidad = slug => COURSES.filter(c => c.unidad === slug).every(c => c.sinProgreso);
 const seccionesCurso = slug => CURSO_SECTIONS_ALL.filter(s => !(s.id === 'progreso' && sinProgresoUnidad(slug)));
 const courseUnit = (slug, extra = {}) => ({ slug, ic: 'cap', col: 'students', filter: s => s.unidad === slug, cols: [{ k: 'nombre', l: 'Estudiante', clip: true }, { k: 'grupoId', l: 'Grupo', v: s => groupOf(s.grupoId).nombre, clip: true }, { k: 'ciudad', l: 'Ciudad' }, { k: 'precioFinal', l: 'Valor', money: true, v: s => fmt(s.precioFinal) }, { k: 'saldo', l: 'Saldo', money: true, v: s => fmt(s.saldo) }, { k: 'estado', l: 'Estado', r: s => sBadge(s.estado) }, { k: 'fuente', l: 'Origen' }], filters: [{ k: 'estado', l: 'Estado' }, { k: 'fuente', l: 'Origen' }], kpis: rows => [['Inscritos', rows.length], ['Ventas', fmt(sum(rows, 'precioFinal'))], ['Recaudado', fmt(sum(rows, 'pagado'))], ['Por cobrar', fmt(sum(rows, 'saldo'))]], open: s => openStudent(s.id), sections: seccionesCurso(slug), ...extra });
+
+function serviceUnit(slug, cfg) {
+  return { slug, n:cfg.n, d:cfg.d, ic:cfg.ic||'card', col:slug.replace(/-/g,''),
+    cols:[{k:'id',l:'ID'},{k:'cliente',l:'Cliente',clip:true},{k:'servicio',l:'Servicio',clip:true},{k:'estado',l:'Estado',r:r=>sBadge(r.estado)},{k:'fechaInicio',l:'Inicio',v:r=>fdate(r.fechaInicio)},{k:'entrega',l:'Entrega',v:r=>r.entrega?fdate(r.entrega):'—'},{k:'precio',l:'Precio',money:true,v:r=>fmt(r.precio)},{k:'saldo',l:'Saldo',money:true,v:r=>fmt(r.saldo)}],
+    filters:[{k:'estado',l:'Estado'}],
+    kpis:rows=>[['Proyectos',rows.length],['En ejecución',rows.filter(r=>r.estado!=='Entregado'&&r.estado!=='Cancelado').length],['Ventas',fmt(sum(rows,'precio'))],['Pendiente',fmt(sum(rows,'saldo'))]],
+    create:()=>newSvcProj(slug,cfg), crearLabel:cfg.crearLabel||'Nuevo proyecto',
+    open:r=>openGeneric(slug.replace(/-/g,''),r.id),
+    sections:[{id:'dashboard',label:'Dashboard',render:rows=>svcDash(rows)},{id:'contabilidad',label:'Contabilidad',render:rows=>svcCont(rows)}],
+    kanban:{field:'estado',stages:['Nuevo','En proceso','En revisión','Aprobado','Entregado'],title:r=>r.cliente,sub:r=>r.servicio+(r.entrega?' · '+fdate(r.entrega):'')}
+  };
+}
+function newSvcProj(slug,cfg){
+  modal(`<div class="grid g2" style="gap:12px"><div class="field"><label>Cliente</label><input class="input" id="sp_c"></div><div class="field"><label>WhatsApp</label><input class="input" id="sp_t" inputmode="tel" placeholder="3XX XXX XXXX"></div><div class="field"><label>Servicio</label><input class="input" id="sp_s" placeholder="${cfg.n}"></div><div class="field"><label>Precio</label><input class="input" id="sp_p" inputmode="numeric" value="500000"></div><div class="field"><label>Anticipo</label><input class="input" id="sp_a" inputmode="numeric" value="250000"></div><div class="field"><label>Entrega estimada</label><input class="input" type="date" id="sp_e" value="${iso(addDays(TODAY,15))}"></div></div><div class="field" style="margin-top:12px"><label>Observaciones</label><textarea class="textarea" id="sp_o" style="min-height:56px"></textarea></div>`,
+  {title:cfg.crearLabel||'Nuevo proyecto',footer:`<button class="btn btn-secondary" onclick="closeLayer()">Cancelar</button><button class="btn btn-primary" onclick="saveSvcProj('${slug}')">Guardar</button>`});
+}
+function saveSvcProj(slug){
+  const c=$('#sp_c').value.trim(),t=phone($('#sp_t').value),s=$('#sp_s').value.trim();
+  if(c.length<3||t.length!==10||!s)return toast('Cliente, WhatsApp (10 dígitos) y servicio son obligatorios.','err');
+  const p=Number($('#sp_p').value)||0,a=Number($('#sp_a').value)||0;
+  const col=slug.replace(/-/g,'');if(!S[col])S[col]=[];
+  const id=col.slice(0,3).toUpperCase()+'-'+String(S[col].length+1).padStart(3,'0');
+  S[col].push({id,cliente:c,telefono:t,servicio:s,precio:p,anticipo:a,saldo:p-a,fechaInicio:iso(TODAY),entrega:$('#sp_e').value,estado:'Nuevo',obs:$('#sp_o').value,asesorId:'A3'});
+  const cats=catsForUnit(slug);S.leads.push({id:'L'+rint(1000,9999),fecha:iso(TODAY),nombre:c,telefono:t,correo:'',ciudad:'Ibagué',interes:s,cat:cats[0]||'ASE',etapa:'Venta efectiva',fuente:'Admin',asesorId:'A3',valor:p,obs:id,followUp:''});
+  audit('Proyecto creado',slug,id);save();closeLayer();render();toast('Proyecto registrado','ok');
+}
+function svcDash(rows){
+  return `<div class="grid g2"><div class="card"><h4>Por estado</h4>${donut(Object.entries(groupBy(rows,'estado')).map(([k,v])=>({n:k,v:v.length})),{center:rows.length+''})}</div><div class="card"><h4>Facturación mensual</h4>${barChart(MONTHS,[{n:'Ingresos',v:MONTHS.map((_,m)=>sum(rows.filter(r=>new Date(r.fechaInicio).getMonth()===m),'precio'))}])}</div></div>`;
+}
+function svcCont(rows){
+  return `<div class="card" style="padding:0;overflow:hidden"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Mes</th><th class="money">Ingresos</th><th class="money">Cobrado</th><th class="money">Saldo</th></tr></thead><tbody>${MONTHS.map((m,i)=>{const del=rows.filter(r=>new Date(r.fechaInicio).getMonth()===i);return `<tr><td>${m}</td><td class="money num">${fmt(sum(del,'precio'))}</td><td class="money num">${fmt(sum(del,'anticipo'))}</td><td class="money num">${fmt(sum(del,'saldo'))}</td></tr>`;}).join('')}</tbody></table></div></div>`;
+}
+
 const UNITS = [
   courseUnit('semilleros', { n: 'Semilleros', d: '$200.000 por persona · 5 horas · por jornada', ic: 'sprout', extra: rows => { const j = GROUPS.filter(g => g.cursoId === 'C1'); const conv = rows.filter(s => S.students.some(o => o.id !== s.id && o.telefono === s.telefono && o.unidad !== 'semilleros')).length; return `<div class="grid g2" style="margin-bottom:20px"><div class="card"><h4>Jornadas</h4>${j.map(g => { const n = groupStudents(g.id).length; return `<div style="padding:8px 0;border-bottom:1px solid var(--border)"><div class="row between small"><b>${g.nombre}</b>${sBadge(g.estado)}</div><div class="caption">${fdate(g.inicio)} · ${g.horario} · ${g.modalidad} · ${n}/${g.cupo}</div>${bar(n / g.cupo * 100)}</div>`; }).join('')}</div><div class="card"><h4>Conversión a cursos largos</h4><p class="small muted">Asistentes de jornadas que luego se matricularon en Crecimiento Digital o Máster 360.</p>${donut([{ n: 'Convirtieron', v: Math.max(conv, Math.round(rows.length * .18)) }, { n: 'Sin conversión', v: rows.length - Math.max(conv, Math.round(rows.length * .18)) }], { center: Math.round(Math.max(conv, rows.length * .18) / (rows.length || 1) * 100) + ' %' })}</div></div>`; } }),
   courseUnit('crecimiento-digital', { n: 'Crecimiento Digital', d: '$200.000 mensuales · 2 meses · 8 módulos' }),
@@ -2059,7 +2122,14 @@ const UNITS = [
   { slug: 'microapps', n: 'Microapps y Soluciones Digitales', d: 'Proyectos web, dominios y renovaciones', ic: 'code', col: 'microapps', cols: [{ k: 'id', l: 'Proyecto' }, { k: 'empresa', l: 'Empresa', clip: true }, { k: 'tipo', l: 'Tipo', clip: true }, { k: 'estado', l: 'Estado', r: m => sBadge(m.estado) }, { k: 'entregaEst', l: 'Entrega', v: m => fdate(m.entregaEst) }, { k: 'dominio', l: 'Dominio' }, { k: 'precio', l: 'Precio', money: true, v: m => fmt(m.precio) }, { k: 'saldo', l: 'Saldo', money: true, v: m => fmt(m.saldo) }], filters: [{ k: 'estado', l: 'Estado' }, { k: 'tipo', l: 'Tipo' }], kpis: rows => [['Proyectos', rows.length], ['En desarrollo', rows.filter(m => !['Entregado', 'Mantenimiento', 'Finalizado', 'Cancelado'].includes(m.estado)).length], ['Ventas', fmt(sum(rows, 'precio'))], ['Utilidad', fmt(sum(rows, m => m.precio - m.costoDev - m.costoDominio - m.costoApis - m.comisiones))]], create: () => newMicroapp(), crearLabel: 'Nuevo aplicativo', open: m => openGeneric('microapps', m.id), kanban: { field: 'estado', stages: APK_ETAPAS, title: m => m.empresa, sub: m => `${m.tipo} · ${fdate(m.entregaEst)}` }, sections: [ { id:'alertas', label:'Alertas', render: rows => apkAlertas(rows) }, { id:'dashboard', label:'Dashboard', render: rows => apkDashboard(rows) }, { id:'clientes', label:'Clientes', render: rows => apkClientes(rows) }, { id:'contabilidad', label:'Contabilidad', render: rows => apkContabilidad(rows) } ] },
   { slug: 'streaming', n: 'Streaming y cuentas digitales', d: 'Suscripciones, cortes, credenciales y renovaciones', ic: 'tv', col: 'streaming', cols: [{ k: 'id', l: 'ID' }, { k: 'servicio', l: 'Servicio', r: s => `<span class="row" style="gap:8px;flex-wrap:nowrap">${platTile(s.servicio)}<b>${esc(s.servicio)}</b></span>` }, { k: 'cliente', l: 'Cliente', clip: true }, { k: 'plan', l: 'Plan' }, { k: 'venta', l: 'Venta', v: s => fdate(s.venta) }, { k: 'corte', l: 'Corte', v: s => fdate(s.corte) }, { k: 'dias', l: 'Días', v: s => dayDiff(s.corte) }, { k: 'estado', l: 'Estado', r: s => sBadge(s.estado) }, { k: 'precio', l: 'Venta', money: true, v: s => fmt(s.precio) }, { k: 'ganancia', l: 'Ganancia', money: true, v: s => fmt(s.precio - s.costo - sum(s.comisiones, 'v')) }], filters: [{ k: 'estado', l: 'Estado' }, { k: 'servicio', l: 'Servicio' }], kpis: rows => [['Activas', rows.filter(s => ['Activa', 'Por vencer'].includes(s.estado)).length], ['Vencen en 7 días', rows.filter(s => dayDiff(s.corte) >= 0 && dayDiff(s.corte) <= 7).length], ['Ventas', fmt(sum(rows, 'precio'))], ['Margen', fmt(sum(rows, s => s.precio - s.costo - sum(s.comisiones, 'v')))]], open: s => openStreaming(s.id), create: () => newStreaming(), crearLabel: 'Nueva cuenta', sections: [ { id: 'alertas', label: 'Alertas de contacto', render: rows => streamAlertas(rows) }, { id: 'dashboard', label: 'Dashboard', render: rows => streamDashboard(rows) }, { id: 'contabilidad', label: 'Contabilidad', render: rows => streamContabilidad(rows) }, { id: 'cuentas', label: 'Cuentas por plataforma', render: rows => streamCuentas(rows) } ] },
   { slug: 'accesorios-mayor', n: 'Accesorios al por mayor', d: 'Pedidos mayoristas con catálogo de Electro Futuro', ic: 'box', col: 'wholesale', cols: [{ k: 'id', l: 'Pedido' }, { k: 'negocio', l: 'Negocio', clip: true }, { k: 'ciudad', l: 'Ciudad' }, { k: 'fecha', l: 'Fecha', v: w => fdate(w.fecha) }, { k: 'unidades', l: 'Unid.' }, { k: 'total', l: 'Total', money: true, v: w => fmt(w.total) }, { k: 'saldo', l: 'Saldo', money: true, v: w => fmt(w.saldo) }, { k: 'estado', l: 'Estado', r: w => sBadge(w.estado) }, { k: 'transportadora', l: 'Envío' }], filters: [{ k: 'estado', l: 'Estado' }, { k: 'ciudad', l: 'Ciudad' }], kpis: rows => [['Pedidos', rows.length], ['Unidades', sum(rows, 'unidades')], ['Ventas', fmt(sum(rows, 'total'))], ['Margen', fmt(sum(rows, w => w.total - w.costo))]], create: () => newPedido(), crearLabel: 'Nuevo pedido', open: w => openGeneric('wholesale', w.id), sections: [ { id:'dashboard', label:'Dashboard', render: () => accDashboard() }, { id:'ventas', label:'Ventas', render: () => accVentas() }, { id:'clientes', label:'Clientes', render: () => accClientes() }, { id:'garantias', label:'Garantías', render: () => accGarantias() }, { id:'contabilidad', label:'Contabilidad', render: () => accContabilidad() } ] },
-  { slug: 'asesorias', n: 'Asesorías personalizadas', d: 'Marketing, ventas, organización y más', ic: 'tag', col: 'leads', filter: l => l.unidad === 'asesorias', cols: [{ k: 'nombre', l: 'Cliente', clip: true }, { k: 'interes', l: 'Tema', clip: true }, { k: 'ciudad', l: 'Ciudad' }, { k: 'valor', l: 'Valor', money: true, v: l => fmt(l.valor) }, { k: 'etapa', l: 'Etapa', r: l => sBadge(l.etapa) }, { k: 'asesorId', l: 'Asesor', v: l => advisorOf(l.asesorId).nombre }], filters: [{ k: 'etapa', l: 'Etapa' }], kpis: rows => [['Asesorías', rows.length], ['En proceso', rows.filter(l => !['Completado', 'Remarketing'].includes(l.etapa)).length], ['Valor potencial', fmt(sum(rows, 'valor'))], ['Cerradas', rows.filter(l => ['Pagado', 'Completado'].includes(l.etapa)).length]], open: l => openLead(l.id) }
+  { slug: 'asesorias', n: 'Asesorías personalizadas', d: 'Marketing, ventas, organización y más', ic: 'tag', col: 'leads', filter: l => l.unidad === 'asesorias', cols: [{ k: 'nombre', l: 'Cliente', clip: true }, { k: 'interes', l: 'Tema', clip: true }, { k: 'ciudad', l: 'Ciudad' }, { k: 'valor', l: 'Valor', money: true, v: l => fmt(l.valor) }, { k: 'etapa', l: 'Etapa', r: l => sBadge(l.etapa) }, { k: 'asesorId', l: 'Asesor', v: l => advisorOf(l.asesorId).nombre }], filters: [{ k: 'etapa', l: 'Etapa' }], kpis: rows => [['Asesorías', rows.length], ['En proceso', rows.filter(l => !['Completado', 'Remarketing'].includes(l.etapa)).length], ['Valor potencial', fmt(sum(rows, 'valor'))], ['Cerradas', rows.filter(l => ['Pagado', 'Completado'].includes(l.etapa)).length]], open: l => openLead(l.id) },
+  serviceUnit('bancos-imagenes',{n:'Bancos de imágenes',d:'Librerías visuales propias de cada marca',ic:'file',crearLabel:'Nuevo banco'}),
+  serviceUnit('videos-organicos',{n:'Videos orgánicos',d:'Contenido cercano y de comunidad',ic:'video',crearLabel:'Nuevo proyecto'}),
+  serviceUnit('grabacion-profesional',{n:'Grabación profesional',d:'Comerciales y video institucional',ic:'video',crearLabel:'Nueva grabación'}),
+  serviceUnit('campanas',{n:'Campañas publicitarias',d:'Pauta en Meta, TikTok y Google',ic:'tag',crearLabel:'Nueva campaña'}),
+  serviceUnit('auditorias',{n:'Auditorías empresariales',d:'Diagnóstico y puntos de fuga',ic:'search',crearLabel:'Nueva auditoría'}),
+  serviceUnit('ia-empresarial',{n:'IA para empresas',d:'Implementación de inteligencia artificial',ic:'globe',crearLabel:'Nuevo proyecto IA'}),
+  serviceUnit('automatizacion',{n:'Automatización de procesos',d:'Menos trabajo manual, más resultados',ic:'settings',crearLabel:'Nuevo proyecto'})
 ];
 const unitBy = slug => UNITS.find(u => u.slug === slug);
 const unitRows = u => (S[u.col] || []).filter(u.filter || (() => true));
@@ -2146,7 +2216,8 @@ const PLAT = {
   'Pantallas':    { c:'#7FA3F5', bg:'#0F1B3D', ini:'PT', ic:'🖥️' },
   'Redes Sociales':{c:'#FF4D6D', bg:'#2A0E17', ini:'RS', ic:'📱' }
 };
-const platOf = n => PLAT[n] || { c:'#94A3B8', bg:'#1B2136', ini:(n||'?').slice(0,2).toUpperCase(), ic:'📺' };
+const PLAT_MAP={'Netflix':{ini:'N',bg:'#E50914',c:'#fff'},'Disney':{ini:'D+',bg:'#113CCF',c:'#fff'},'Prime':{ini:'P',bg:'#00A8E1',c:'#fff'},'HBO':{ini:'HBO',bg:'#5822B4',c:'#fff'},'VIX':{ini:'VIX',bg:'#FF6B00',c:'#fff'},'Crunchyroll':{ini:'CR',bg:'#F47521',c:'#fff'},'Plex':{ini:'PX',bg:'#E5A00D',c:'#1A1A2E'},'Jellyfin':{ini:'JF',bg:'#00A4DC',c:'#fff'},'Spotify':{ini:'S',bg:'#1DB954',c:'#fff'},'Win':{ini:'WP',bg:'#0052CC',c:'#fff'},'Movistar':{ini:'M+',bg:'#019DF4',c:'#fff'},'IPTV':{ini:'IP',bg:'#FF4444',c:'#fff'},'Gemini':{ini:'G',bg:'#8B5CF6',c:'#fff'},'Datacrédito':{ini:'DC',bg:'#2D3748',c:'#fff'},'Canva':{ini:'Ca',bg:'#00C4CC',c:'#fff'},'CapCut':{ini:'CC',bg:'#000',c:'#fff'}};
+const platOf = n => { const k=Object.keys(PLAT_MAP).find(p=>n&&n.startsWith(p)); return k?PLAT_MAP[k]:{c:'#fff',bg:'#4A5568',ini:(n||'?').slice(0,2).toUpperCase()}; };
 const platTile = n => { const p = platOf(n); return `<span class="plat-tile" style="background:${p.bg};color:${p.c}"><b>${p.ini}</b></span>`; };
 
 /* ---- Sub-secciones de Streaming (réplica funcional del Excel) ---- */
