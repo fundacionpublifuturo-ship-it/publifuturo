@@ -1031,6 +1031,9 @@ html[data-theme="dark"] .efc-foot .num{color:var(--c1)}
   .sub-row{gap:8px;padding:8px 0}
   .quick-bar{padding:8px 12px;gap:6px}.quick-bar .btn{font-size:11px;min-height:32px;padding:0 10px;white-space:nowrap}
   .quick-bar .muted{display:none}
+  .sync-badge{font-size:0;padding:7px 9px;gap:0}
+  .appbar select.select{width:auto;max-width:118px;min-width:0;flex:0 1 118px;font-size:12px;padding:7px 24px 7px 9px;min-height:36px}
+  .appbar{gap:6px}
   .pill{font-size:11px;padding:4px 8px}
 }
 
@@ -1475,21 +1478,42 @@ let cloudStatus = CLOUD_ON ? 'connecting' : 'local'; // connecting | synced | er
 let lastSyncAt = null; let saveTimer = null; let applyingRemote = false;
 
 function loadLocal() { try { const raw = localStorage.getItem(STORE_KEY); if (raw) { const s = JSON.parse(raw); if (s.v === 6) return s; } } catch (e) { } return null; }
-function cacheLocal() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) { } }
+const forCloud = () => ({ ...S, session: null }); // la sesión NUNCA viaja a la nube ni al caché
+function cacheLocal() { try { localStorage.setItem(STORE_KEY, JSON.stringify(forCloud())); } catch (e) { } }
 
-async function initState() {
-  if (!CLOUD_ON) { S = loadLocal() || buildSeed(); return; }
+/* ---------- Autenticación: usuario + contraseña + código al correo ---------- */
+const AUTH_INBOX = 'publifuturocolombia', AUTH_DOMAIN = 'gmail.com';
+const authEmail = user => `${AUTH_INBOX}+${user}@${AUTH_DOMAIN}`;
+const userFromEmail = email => { const m = String(email || '').toLowerCase().match(/^publifuturocolombia\+([^@]+)@gmail\.com$/); return m ? USERS.find(u => u.user === m[1]) || null : null; };
+const jwtMethods = token => { try { const p = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return (p.amr || []).map(a => typeof a === 'string' ? a : a.method); } catch (e) { return []; } };
+const hasEmailCode = token => jwtMethods(token).some(m => m === 'otp' || m === 'magiclink'); // solo vale la sesión nacida de un código
+const rndToken = () => Array.from(crypto.getRandomValues(new Uint8Array(8)), b => b.toString(16).padStart(2, '0')).join('');
+let loginPending = null; // { email, userId, usuario, sentAt }
+
+
+async function restoreSession() {
+  if (!CLOUD_ON) return null;
+  try {
+    const { data } = await sb.auth.getSession(); const ses = data && data.session; if (!ses) return null;
+    const u = userFromEmail(ses.user && ses.user.email);
+    if (!u || !hasEmailCode(ses.access_token)) { await sb.auth.signOut({ scope: 'local' }); return null; } // una sesión de solo contraseña no sirve
+    return { userId: u.id, role: u.role };
+  } catch (e) { return null; }
+}
+async function loadCloud() {
+  if (!CLOUD_ON) return;
+  const keep = S.session;
   try {
     const { data, error } = await sb.from('app_state').select('data,updated_at').eq('id', CLOUD_ROW_ID).maybeSingle();
     if (error) throw error;
     if (data && data.data && data.data.v === 6) { S = data.data; lastSyncAt = data.updated_at; }
-    else { S = loadLocal() || buildSeed(); await sb.from('app_state').upsert({ id: CLOUD_ROW_ID, data: S, updated_by: CLIENT_ID, updated_at: new Date().toISOString() }); }
-    cloudStatus = 'synced'; cacheLocal();
-    subscribeRealtime();
-  } catch (e) { console.warn('Supabase no disponible, usando copia local:', e.message || e); S = loadLocal() || buildSeed(); cloudStatus = 'error'; }
+    else { const up = await sb.from('app_state').upsert({ id: CLOUD_ROW_ID, data: forCloud(), updated_by: CLIENT_ID, updated_at: new Date().toISOString() }); if (up.error) throw up.error; }
+    S.session = keep; cloudStatus = 'synced'; cacheLocal(); subscribeRealtime();
+  } catch (e) { console.warn('Supabase no disponible, usando copia local:', e.message || e); S.session = keep; cloudStatus = 'error'; }
 }
 function subscribeRealtime() {
   try {
+    sb.removeAllChannels();
     sb.channel('app_state_changes').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'app_state', filter: `id=eq.${CLOUD_ROW_ID}` }, payload => {
       const row = payload.new; if (!row || row.updated_by === CLIENT_ID) return; // ignora los propios cambios
       applyingRemote = true; const keepSession = S.session; S = row.data; S.session = keepSession; lastSyncAt = row.updated_at; cacheLocal(); applyingRemote = false;
@@ -1499,19 +1523,32 @@ function subscribeRealtime() {
 }
 function save() {
   cacheLocal(); if (applyingRemote) return;
-  if (!CLOUD_ON) return;
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(async () => {
-    try { const now = new Date().toISOString(); const { error } = await sb.from('app_state').update({ data: S, updated_by: CLIENT_ID, updated_at: now }).eq('id', CLOUD_ROW_ID); if (error) throw error; cloudStatus = 'synced'; lastSyncAt = now; }
-    catch (e) { cloudStatus = 'error'; console.warn('No se pudo guardar en la nube (se guardó localmente):', e.message || e); }
-  }, 600);
+  if (!CLOUD_ON || !S.session) return; // sin sesión verificada no se escribe en la nube
+  clearTimeout(saveTimer); saveTimer = setTimeout(pushCloud, 600);
+}
+async function pushCloud() {
+  try {
+    const now = new Date().toISOString();
+    const { data, error } = await sb.from('app_state').update({ data: forCloud(), updated_by: CLIENT_ID, updated_at: now }).eq('id', CLOUD_ROW_ID).select('id');
+    if (error) throw error;
+    if (!data || !data.length) throw new Error('La base de datos no autorizó el guardado');
+    cloudStatus = 'synced'; lastSyncAt = now; return true;
+  } catch (e) { cloudStatus = 'error'; console.warn('No se pudo guardar en la nube (se guardó localmente):', e.message || e); return false; }
 }
 function resetData() { const ses = S.session; S = buildSeed(); S.session = ses; save(); render(); toast('Plataforma vaciada. Lista para empezar.', 'ok'); }
 function cargarDemo() { const ses = S.session; S = buildDemo(); S.session = ses; save(); render(); toast('Datos de demostración cargados', 'ok'); }
 const session = () => S.session;
 const me = () => session() ? S.users.find(u => u.id === session().userId) : null;
 function login(userId) { const u = USERS.find(x => x.id === userId); S.session = { userId, role: u.role }; audit('Inicio de sesión', 'Sesión', userId); save(); const home = { student: '#/estudiante', teacher: '#/docente', admin: '#/admin', finance: '#/cartera', superadmin: '#/superadmin' }[u.role]; location.hash = home; toast(`Bienvenido, ${u.nombre.split(' ')[0]}`, 'ok'); }
-function logout() { S.session = null; save(); location.hash = '#/'; }
+async function logout() {
+  clearTimeout(saveTimer);
+  let ok = true; if (CLOUD_ON && S.session) ok = await pushCloud();
+  try { if (CLOUD_ON) { sb.removeAllChannels(); await sb.auth.signOut({ scope: 'local' }); } } catch (e) { }
+  S.session = null;
+  if (ok) { try { localStorage.removeItem(STORE_KEY); } catch (e) { } S = buildSeed(); S.session = null; cloudStatus = 'connecting'; }
+  else toast('Hay cambios sin sincronizar: se conservaron en este equipo.', 'info');
+  location.hash = '#/'; render();
+}
 function audit(accion, entidad, id, antes = '', despues = '') { const u = me(); S.audit.unshift({ fecha: new Date().toLocaleString('es-CO', { hour12: false }).slice(0, 16), usuario: u ? u.nombre : 'Sistema', accion, entidad, id, antes: String(antes), despues: String(despues) }); if (S.audit.length > 300) S.audit.length = 300; }
 // Accesos a datos derivados
 const courseOf = id => COURSES.find(c => c.id === id);
@@ -1758,19 +1795,25 @@ function markSent(i) {
   if (!arr.includes(i + '')) arr.push(i + ''); localStorage.setItem(key, JSON.stringify(arr)); render();
 }
 
+const PUBPROJ = {}, PUBCERT = {};
 function ClientPortal(r) {
   const pid = r.seg[1]; if (!pid) return NotFound();
-  const m = (S.microapps || []).find(x => x.id === pid);
+  let m = S.session ? (S.microapps || []).find(x => x.token === pid || x.id === pid) : null;
+  if (!m && CLOUD_ON) {
+    if (PUBPROJ[pid] === undefined) { PUBPROJ[pid] = 'loading'; sb.rpc('get_public_project', { tok: pid }).then(({ data }) => { PUBPROJ[pid] = data || null; render(); }, () => { PUBPROJ[pid] = null; render(); }); }
+    if (PUBPROJ[pid] === 'loading') return `<section class="page-hd" style="text-align:center"><div class="wrap"><h1 style="color:#fff">Estado de tu proyecto</h1><p style="color:rgba(255,255,255,.8)">Cargando…</p></div></section>`;
+    m = PUBPROJ[pid];
+  }
   if (!m) return `<div class="sec" style="padding-top:160px;text-align:center"><h2>Proyecto no encontrado</h2><p class="muted">El código <b>${esc(pid)}</b> no existe. Verifica con tu asesor.</p><a href="#/" class="btn btn-primary" style="margin-top:16px">Ir al inicio</a></div>`;
   const etapas = ['Nuevo','En diseño','En desarrollo','En revisión','Ajustes','Entregado','En mantenimiento'];
   const idx = etapas.indexOf(m.estado); const pct = Math.round(((idx < 0 ? 0 : idx) / (etapas.length - 1)) * 100);
-  const pagos = (S.subs || []).filter(s => s.unidad === 'microapps' && s.cliente === m.cliente);
-  return `<section class="page-hd" style="text-align:center"><div class="wrap">${Logo('light',28)}<h1 style="color:#fff;margin-top:18px">Estado de tu proyecto</h1><p style="color:rgba(255,255,255,.8)">${esc(m.empresa || m.cliente)}</p></div></section>
+  const pagos = m.subs || (S.subs || []).filter(s => s.unidad === 'microapps' && s.cliente === m.cliente);
+  return `<section class="page-hd" style="text-align:center"><div class="wrap"><h1 style="color:#fff">Estado de tu proyecto</h1><p style="color:rgba(255,255,255,.8)">${esc(m.empresa || m.cliente)}</p></div></section>
   <section class="sec"><div class="wrap" style="max-width:800px">
   <div class="card" style="text-align:center;padding:32px"><span style="font-size:44px">${m.categoria === '🏦 Software financiero' ? '🏦' : m.categoria === '⚡ Micro aplicativos' ? '⚡' : '💻'}</span><h2 style="margin:12px 0 4px">${esc(m.tipo)}</h2><p class="muted">${esc(m.categoria || 'Proyecto')}</p>
   <div style="margin:22px 0"><div style="position:relative;height:10px;background:var(--canvas);border-radius:99px;overflow:hidden"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--brand-700),var(--brand-600));border-radius:99px;transition:width .6s var(--ease)"></div></div><div class="row between small" style="margin-top:6px"><span>Inicio</span><span class="num" style="color:var(--brand-600);font-weight:700">${pct}%</span><span>Entregado</span></div></div>
   <div class="row" style="justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0">${etapas.map((e, i) => `<span class="pill" style="${i === idx ? 'background:var(--brand-600);color:#fff' : i < idx ? 'background:var(--success-50);color:var(--success)' : ''}">${i < idx ? '✅' : i === idx ? '🔵' : '⬜'} ${e}</span>`).join('')}</div>
-  <div class="badge ${m.estado === 'Entregado' ? 'b-ok' : m.estado === 'Nuevo' ? 'b-info' : 'b-warn'}" style="font-size:15px;padding:8px 18px">${m.estado === 'Entregado' ? '✅ Proyecto entregado' : '🔄 Estado actual: ' + m.estado}</div></div>
+  <div class="badge ${m.estado === 'Entregado' ? 'b-ok' : m.estado === 'Nuevo' ? 'b-info' : 'b-warn'}" style="font-size:15px;padding:8px 18px;white-space:normal;text-align:center;max-width:100%">${m.estado === 'Entregado' ? '✅ Proyecto entregado' : '🔄 Estado actual: ' + m.estado}</div></div>
 
   <div class="grid g2" style="margin-top:20px">
   <div class="card"><h4>📋 Datos del proyecto</h4><table class="mini-t"><tr><td class="muted">Código</td><td><b>${m.id}</b></td></tr><tr><td class="muted">Inicio</td><td>${fdate(m.fechaInicio)}</td></tr>${m.entregaEst ? `<tr><td class="muted">Entrega estimada</td><td><b>${fdate(m.entregaEst)}</b></td></tr>` : ''}<tr><td class="muted">Mantenimiento</td><td>${esc(m.mantenimiento || '—')}</td></tr>${m.url ? `<tr><td class="muted">URL</td><td><a href="${esc(m.url)}" target="_blank">${esc(m.url)}</a></td></tr>` : ''}</table></div>
@@ -1798,10 +1841,10 @@ function onScrollTop() { const tb = $('.topbar'); if (!tb) return; const f = () 
 window.addEventListener('hashchange', render);
 
 function PublicShell(r) {
-  const first = r.seg[0] || ''; const hero = ['', 'academia', 'planes', 'nosotros', 'impacto', 'aliados', 'faq', 'contacto', 'verificar', 'servicios', 'inscripcion'].includes(first) && !(first === 'academia' && r.seg[1]);
+  const first = r.seg[0] || ''; const hero = ['', 'academia', 'planes', 'nosotros', 'impacto', 'aliados', 'faq', 'contacto', 'verificar', 'servicios', 'inscripcion', 'mi-proyecto'].includes(first) && !(first === 'academia' && r.seg[1]);
   const links = [['/academia', 'Academia'], ['/servicios', 'Servicios'], ['/planes', 'Planes'], ['/nosotros', 'Nosotros'], ['/impacto', 'Impacto'], ['/contacto', 'Contacto']];
   const isOn = h => r.path.startsWith(h);
-  const page = { '': Home, academia: r.seg[1] ? CourseDetail : Academy, servicios: Services, planes: Plans, nosotros: About, impacto: Impact, aliados: Partners, faq: FAQ, contacto: Contact, verificar: Verify, inscripcion: Enroll, orden: OrderTrack }[first] || NotFound;
+  const page = { '': Home, academia: r.seg[1] ? CourseDetail : Academy, servicios: Services, planes: Plans, nosotros: About, impacto: Impact, aliados: Partners, faq: FAQ, contacto: Contact, verificar: Verify, inscripcion: Enroll, orden: OrderTrack, 'mi-proyecto': ClientPortal }[first] || NotFound;
   return `<header class="topbar ${hero ? '' : 'solid'}" ${hero ? 'data-hero="1"' : ''}><div class="in">${Logo('', 26)}<nav aria-label="Principal">${links.map(([h, l]) => `<a href="#${h}" class="${isOn(h) ? 'on' : ''}">${l}</a>`).join('')}</nav><div class="acts"><a href="#/ingreso" class="btn btn-secondary btn-sm">Ingresar</a><a href="#/academia" class="btn btn-primary btn-sm">Inscríbete</a><button class="burger" aria-label="Menú" onclick="openMobileNav()">${I.menu}</button></div></div></header>
   <main class="view">${page(r)}</main>${Footer()}<a class="wa-fab" href="${waPF(WA.general)}" target="_blank" rel="noopener" aria-label="WhatsApp">${I.wa}</a>${localStorage.getItem('pf_cookies') ? '' : `<div class="cookie" id="cookie"><span style="flex:1">Usamos cookies para medir el uso del sitio y mejorar tu experiencia. Puedes aceptar solo las esenciales.</span><button class="btn btn-secondary btn-sm" onclick="cookies('esenciales')">Solo esenciales</button><button class="btn btn-primary btn-sm" onclick="cookies('todas')">Aceptar todas</button></div>`}`;
 }
@@ -2042,18 +2085,67 @@ function Partners() { return pageHd('Aliado oficial', '<b>Electro Futuro</b> es 
 function FAQ() { return pageHd('Preguntas frecuentes', 'Respuestas rápidas sobre la <b>academia</b>, <b>pagos</b>, <b>certificados</b>, <b>servicios</b> y la <b>fundación</b>.') + `<section class="sec"><div class="wrap">${FAQBlock()}</div></section>`; }
 function Contact() { return pageHd('Contacto', 'Escríbenos por <b>WhatsApp</b> o ven a la sede en <b>Ibagué</b>. Atendemos de <b>lunes a sábado</b>.') + `<section class="sec"><div class="wrap">${ContactBlock()}</div></section>`; }
 function CertPreview(d) { return `<div class="cert-gen"><img src="${CERT_IMG}" alt="Certificado PubliFuturo"><span class="cg-nombre">${esc(d.nombre)}</span><span class="cg-curso">${esc(d.curso)}</span><span class="cg-meta">${d.horas} horas · Ibagué, Tolima · ${fdate(d.fecha)}</span><span class="cg-codigo">Código de verificación: ${esc(d.codigo)}</span><span class="cg-url">Verifica este certificado en publifuturo.com/verificar</span></div>`; }
-function Verify(r) { const code = (r.q.c || '').trim().toUpperCase(); let res = ''; if (code) { const st = S.students.find(s => s.estado === 'Certificado' && ('PF-2026-' + s.id) === code); res = st ? `<div style="margin-top:20px">${badge('Certificado válido', 'b-ok')}${CertPreview({ nombre: st.nombre, curso: courseOf(st.cursoId).nombre, horas: courseOf(st.cursoId).horas, codigo: code, fecha: groupOf(st.grupoId).fin })}</div>` : `<div class="card" style="margin-top:20px;border-color:var(--danger)">${badge('No encontrado', 'b-bad')}<p class="small muted" style="margin:8px 0 0">No existe un certificado con el código <b>${esc(code)}</b>. Verifica el código o escríbenos.</p></div>`; } const sample = S.students.find(s => s.estado === 'Certificado'); return pageHd('Verificar certificado', 'Cualquier persona puede <b>validar un certificado</b> emitido por la fundación con su <b>código único</b>.') + `<section class="sec"><div class="wrap verify-box"><div class="card"><form onsubmit="location.hash='#/verificar?c='+encodeURIComponent(this.c.value);return false"><div class="field"><label>Código de verificación</label><div class="row"><input class="input" name="c" placeholder="PF-2026-E001" value="${esc(code)}" style="flex:1"><button class="btn btn-primary">Verificar</button></div></div></form>${sample ? `<p class="caption" style="margin-top:8px">Ejemplo para probar: <a href="#/verificar?c=PF-2026-${sample.id}">PF-2026-${sample.id}</a></p>` : ''}</div>${res}</div></section>`; }
+function certLookup(code) {
+  const local = () => S.students.find(s => s.estado === 'Certificado' && ('PF-2026-' + s.id) === code) || null;
+  if (S.session || !CLOUD_ON) return local();
+  if (PUBCERT[code] === undefined) { PUBCERT[code] = 'loading'; sb.rpc('verify_certificate', { code }).then(({ data }) => { PUBCERT[code] = data || null; render(); }, () => { PUBCERT[code] = null; render(); }); }
+  return PUBCERT[code];
+}
+function Verify(r) { const code = (r.q.c || '').trim().toUpperCase(); let res = ''; if (code) { const st = certLookup(code); res = st === 'loading' ? `<div class="card" style="margin-top:20px"><p class="small muted" style="margin:0">Verificando…</p></div>` : st ? `<div style="margin-top:20px">${badge('Certificado válido', 'b-ok')}${CertPreview({ nombre: st.nombre, curso: courseOf(st.cursoId).nombre, horas: courseOf(st.cursoId).horas, codigo: code, fecha: groupOf(st.grupoId).fin })}</div>` : `<div class="card" style="margin-top:20px;border-color:var(--danger)">${badge('No encontrado', 'b-bad')}<p class="small muted" style="margin:8px 0 0">No existe un certificado con el código <b>${esc(code)}</b>. Verifica el código o escríbenos.</p></div>`; } const sample = S.students.find(s => s.estado === 'Certificado'); return pageHd('Verificar certificado', 'Cualquier persona puede <b>validar un certificado</b> emitido por la fundación con su <b>código único</b>.') + `<section class="sec"><div class="wrap verify-box"><div class="card"><form onsubmit="location.hash='#/verificar?c='+encodeURIComponent(this.c.value);return false"><div class="field"><label>Código de verificación</label><div class="row"><input class="input" name="c" placeholder="PF-2026-E001" value="${esc(code)}" style="flex:1"><button class="btn btn-primary">Verificar</button></div></div></form>${sample ? `<p class="caption" style="margin-top:8px">Ejemplo para probar: <a href="#/verificar?c=PF-2026-${sample.id}">PF-2026-${sample.id}</a></p>` : ''}</div>${res}</div></section>`; }
 
 function OrderTrack(r) { return pageHd('Servicio técnico', 'La <b>reparación de equipos</b> la realiza nuestro aliado <b>Electro Futuro</b>.') + `<section class="sec"><div class="wrap verify-box"><div class="card" style="text-align:center"><div style="margin-bottom:14px">${LogoEF(30)}</div><p class="muted">PubliFuturo <b>forma técnicos</b>; no repara equipos. Para <b>reparación</b> escribe a Electro Futuro. Si lo que buscas es <b>aprender</b>, mira nuestros cursos técnicos.</p><div class="row" style="justify-content:center"><a class="btn btn-primary" href="#/servicios/formacion-tecnica">Ver cursos técnicos</a><a class="btn btn-wa" href="${waPF(WA.general)}" target="_blank" rel="noopener">${I.wa} Escribirnos</a></div></div></div></section>`; }
 
-function Login(msg = '') { return `<div class="login view"><div class="art">${Logo('light', 30)}<div><h2 style="color:#fff">Un solo acceso para toda la fundación</h2><p style="color:rgba(255,255,255,.75);max-width:44ch">Estudiantes, docentes, comercial, cartera y gerencia entran por aquí y ven <b>solo lo que les corresponde</b>.</p></div><div class="caption" style="color:rgba(255,255,255,.5)">${COPY.legal.nombre}</div></div><div class="frm"><a href="#/" class="small" style="margin-bottom:24px">← Volver al sitio</a><h2>Ingresar</h2><p class="small muted">Escribe tu <b>usuario</b> y tu <b>contraseña</b> para entrar a tu portal.</p>${msg ? `<div class="card" style="border-color:var(--warning);background:var(--warning-50);padding:12px 14px;font-size:13px;margin:0 0 14px">${msg}</div>` : ''}<div id="login-err"></div><form class="stack" onsubmit="return loginForm(this)" autocomplete="off"><div class="field"><label>Usuario</label><input class="input" name="usuario" id="lg_u" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="tu usuario"></div><div class="field"><label>Contraseña</label><div class="row" style="gap:8px;flex-wrap:nowrap"><input class="input" name="clave" id="lg_p" type="password" placeholder="••••••••" style="flex:1"><button type="button" class="icon-btn" onclick="const i=$('#lg_p');i.type=i.type==='password'?'text':'password';this.classList.toggle('on')" aria-label="Mostrar contraseña">${I.eye}</button></div></div><button class="btn btn-primary">Entrar</button></form><div class="caption" style="margin-top:16px">¿Olvidaste tus datos de acceso? Escríbenos por <a href="${waPF(WA.soporte)}" target="_blank" rel="noopener"><b>WhatsApp</b></a>.</div></div></div>`; }
-
-function loginForm(f) { const usr = (f.usuario.value || '').trim().toLowerCase(); const pwd = (f.clave.value || '').trim().toLowerCase(); const box = $('#login-err'); const fail = m => { if (box) box.innerHTML = `<div class="card" style="border-color:var(--danger);background:var(--danger-50);padding:11px 14px;font-size:13px;margin-bottom:14px">${m}</div>`; return false; };
-  if (!usr || !pwd) return fail('Escribe tu <b>usuario</b> y tu <b>contraseña</b>.');
-  const u = USERS.find(x => x.user === usr);
-  if (!u) return fail('Ese <b>usuario</b> no existe. Revisa que esté bien escrito.');
-  if (pwd !== u.user) return fail('La <b>contraseña</b> no coincide.');
-  login(u.id); return false; }
+function Login(msg = '') {
+  const maskedInbox = AUTH_INBOX[0] + '•'.repeat(AUTH_INBOX.length - 1) + '@' + AUTH_DOMAIN;
+  const alertBox = (txt, color) => `<div class="card" style="border-color:var(--${color});background:var(--${color}-50);padding:12px 14px;font-size:13px;margin:0 0 14px">${txt}</div>`;
+  const step1 = `<h2>Ingresar</h2><p class="small muted">Escribe tu <b>usuario</b> y tu <b>contraseña</b>. Después te pediremos un <b>código</b> que enviamos al correo.</p>${msg ? alertBox(msg, 'warning') : ''}<div id="login-err"></div><form class="stack" onsubmit="loginForm(this);return false" autocomplete="off"><div class="field"><label>Usuario</label><input class="input" name="usuario" id="lg_u" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="tu usuario"></div><div class="field"><label>Contraseña</label><div class="row" style="gap:8px;flex-wrap:nowrap"><input class="input" name="clave" id="lg_p" type="password" placeholder="••••••••" style="flex:1"><button type="button" class="icon-btn" onclick="const i=$('#lg_p');i.type=i.type==='password'?'text':'password';this.classList.toggle('on')" aria-label="Mostrar contraseña">${I.eye}</button></div></div><button class="btn btn-primary" id="lg_btn">Continuar</button></form>`;
+  const step2 = `<h2>Código de verificación</h2><p class="small muted">Enviamos un código al correo <b>${maskedInbox}</b>. Revisa también la carpeta de <b>spam</b>. El asunto dice "Tu código de acceso" y dentro aparece para qué usuario es.</p><div id="login-err"></div><form class="stack" onsubmit="codeForm(this);return false" autocomplete="off"><div class="field"><label>Código</label><input class="input" name="codigo" id="lg_c" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456" style="letter-spacing:6px;font-size:20px;text-align:center"></div><button class="btn btn-primary" id="lg_btn">Entrar</button></form><div class="row between" style="margin-top:14px"><button class="btn btn-secondary btn-sm" id="lg_resend" onclick="resendCode()">Reenviar código</button><button class="btn btn-secondary btn-sm" onclick="loginPending=null;render()">Cambiar usuario</button></div>`;
+  return `<div class="login view"><div class="art">${Logo('light', 30)}<div><h2 style="color:#fff">Un solo acceso para toda la fundación</h2><p style="color:rgba(255,255,255,.75);max-width:44ch">Estudiantes, docentes, comercial, cartera y gerencia entran por aquí y ven <b>solo lo que les corresponde</b>.</p></div><div class="caption" style="color:rgba(255,255,255,.5)">${COPY.legal.nombre}</div></div><div class="frm"><a href="#/" class="small" style="margin-bottom:24px">← Volver al sitio</a>${loginPending ? step2 : step1}<div class="caption" style="margin-top:16px">¿Problemas para entrar? Escríbenos por <a href="${waPF(WA.soporte)}" target="_blank" rel="noopener"><b>WhatsApp</b></a>.</div></div></div>`;
+}
+const loginFail = m => { const box = $('#login-err'); if (box) box.innerHTML = `<div class="card" style="border-color:var(--danger);background:var(--danger-50);padding:11px 14px;font-size:13px;margin-bottom:14px">${m}</div>`; const b = $('#lg_btn'); if (b) { b.disabled = false; b.textContent = loginPending ? 'Entrar' : 'Continuar'; } return false; };
+const loginBusy = txt => { const b = $('#lg_btn'); if (b) { b.disabled = true; b.textContent = txt; } const box = $('#login-err'); if (box) box.innerHTML = ''; };
+async function loginForm(f) {
+  if (!CLOUD_ON) return loginFail('No hay conexión con el servidor de acceso. Recarga la página e inténtalo de nuevo.');
+  const usr = (f.usuario.value || '').trim().toLowerCase(); const pwd = (f.clave.value || '').trim();
+  if (!usr || !pwd) return loginFail('Escribe tu <b>usuario</b> y tu <b>contraseña</b>.');
+  const u = USERS.find(x => x.user === usr); const email = u ? authEmail(u.user) : null;
+  loginBusy('Verificando…');
+  try {
+    if (!u) return loginFail('Usuario o contraseña incorrectos.');
+    let r = await sb.auth.signInWithPassword({ email, password: pwd });
+    if (r.error && pwd !== pwd.toLowerCase()) r = await sb.auth.signInWithPassword({ email, password: pwd.toLowerCase() }); // teclados que ponen mayúscula inicial
+    if (r.error) return loginFail('Usuario o contraseña incorrectos.');
+    await sb.auth.signOut({ scope: 'local' }); // la sesión de solo contraseña se descarta: no da acceso a nada
+    loginBusy('Enviando código…');
+    const o = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+    if (o.error) return loginFail(o.error.status === 429 || /rate|seconds/i.test(o.error.message || '') ? 'Pediste un código hace muy poco. Espera un minuto e inténtalo de nuevo.' : 'No se pudo enviar el código. Avísanos por WhatsApp.');
+    loginPending = { email, userId: u.id, usuario: u.user, sentAt: Date.now() }; render();
+  } catch (e) { return loginFail('No se pudo conectar. Revisa tu internet e inténtalo de nuevo.'); }
+  return false;
+}
+async function codeForm(f) {
+  if (!loginPending) return render();
+  const token = (f.codigo.value || '').replace(/\D/g, '');
+  if (token.length < 6) return loginFail('Escribe el código completo.');
+  loginBusy('Verificando…');
+  try {
+    const { data, error } = await sb.auth.verifyOtp({ email: loginPending.email, token, type: 'email' });
+    if (error || !data || !data.session) return loginFail('Código incorrecto o vencido. Pide uno nuevo con "Reenviar código".');
+    if (!hasEmailCode(data.session.access_token)) { await sb.auth.signOut({ scope: 'local' }); return loginFail('No se pudo validar el código. Avísanos por WhatsApp.'); }
+    const userId = loginPending.userId; loginPending = null;
+    await loadCloud(); login(userId);
+  } catch (e) { return loginFail('No se pudo conectar. Revisa tu internet e inténtalo de nuevo.'); }
+  return false;
+}
+let resendAt = 0;
+async function resendCode() {
+  if (!loginPending) return; const wait = Math.ceil((resendAt + 60000 - Date.now()) / 1000);
+  if (wait > 0) return loginFail(`Espera ${wait} s para pedir otro código.`);
+  const o = await sb.auth.signInWithOtp({ email: loginPending.email, options: { shouldCreateUser: false } });
+  if (o.error) return loginFail('No se pudo reenviar el código. Espera un minuto e inténtalo de nuevo.');
+  resendAt = Date.now(); toast('Código reenviado', 'ok');
+}
+window.addEventListener('hashchange', () => { if (!location.hash.startsWith('#/ingreso')) loginPending = null; });
 </script>
 <script>
 /* ============================================================================
@@ -2460,7 +2552,7 @@ function newVideo(){ modal(`<div class="stack"><div class="grid g2" style="gap:1
 function newMicroapp(){
   const CA=[{cat:'💻 Páginas web',items:['Página web empresarial','Landing page','Catálogo interactivo','Menú digital','Tienda virtual'],color:'#0078D4'},{cat:'⚡ Micro aplicativos',items:['Aplicativo de pedidos','Reservas','Cotizaciones','CRM','Sistema de inventario','Dashboard','Personalizado'],color:'#7C3AED'},{cat:'🏦 Software financiero',items:['Sistema contable','Cartera','Facturación POS','Control de gastos','ERP empresarial'],color:'#059669'}];
   const co=CA.map(c=>`<option value="${c.cat}">${c.cat}</option>`).join('');const at=CA.flatMap(c=>c.items);
-  modal(`<div class="stack"><div class="grid g2" style="gap:12px"><div class="field"><label>Cliente</label><input class="input" id="nm_c"></div><div class="field"><label>Empresa</label><input class="input" id="nm_e"></div><div class="field"><label>WhatsApp</label><input class="input" id="nm_t" inputmode="tel"></div><div class="field"><label>Correo</label><input class="input" id="nm_mail" inputmode="email"></div><div class="field"><label>Ciudad</label><input class="input" id="nm_ci" value="Ibagué"></div><div class="field"><label>Categoría</label><select class="select" id="nm_cat" onchange="(function(){const v=$('#nm_cat').value;const ca=${JSON.stringify(CA.map(c=>({c:c.cat,i:c.items})))};const f=ca.find(x=>x.c===v);$('#nm_ti').innerHTML=f?f.i.map(t=>'<option>'+t+'</option>').join(''):'<option>—</option>'})()"><option value="">— Selecciona —</option>${co}</select></div><div class="field"><label>Tipo</label><select class="select" id="nm_ti">${at.map(t=>`<option>${t}</option>`).join('')}</select></div><div class="field"><label>Forma de pago</label><select class="select" id="nm_fp"><option value="unico">💳 Pago único</option><option value="mensual">🔁 Desarrollo + mensualidad</option></select></div><div class="field"><label>Valor mensual</label><input class="input" id="nm_mv" inputmode="numeric" value="80000"></div><div class="field"><label>Precio</label><input class="input" id="nm_p" inputmode="numeric" value="1200000"></div><div class="field"><label>Anticipo</label><input class="input" id="nm_a" inputmode="numeric" value="600000"></div><div class="field"><label>Entrega</label><input class="input" type="date" id="nm_f" value="${iso(addDays(TODAY,21))}"></div></div><details style="margin-top:10px"><summary class="small" style="cursor:pointer;color:var(--brand-600);font-weight:600">📋 Credenciales y ficha técnica</summary><div class="grid g2" style="gap:12px;margin-top:12px"><div class="field"><label>URL</label><input class="input" id="nm_url"></div><div class="field"><label>Dominio en</label><input class="input" id="nm_dom"></div><div class="field"><label>GitHub</label><input class="input" id="nm_gh"></div><div class="field"><label>Vercel</label><input class="input" id="nm_vc"></div><div class="field"><label>Correo acceso</label><input class="input" id="nm_am"></div><div class="field"><label>Contraseña</label><input class="input" id="nm_pw" type="password"></div><div class="field"><label>Supabase</label><input class="input" id="nm_sb"></div><div class="field"><label>Notas</label><textarea class="textarea" id="nm_obs" style="min-height:56px"></textarea></div></div></details></div>`,{title:'💻 Nuevo proyecto',footer:`<button class="btn btn-secondary" onclick="closeLayer()">Cancelar</button><button class="btn btn-primary" onclick="(function(){const c=$('#nm_c').value.trim(),t=phone($('#nm_t').value);if(!c||t.length!==10)return toast('Cliente y WhatsApp obligatorios.','err');const p=Number($('#nm_p').value)||0,a=Number($('#nm_a').value)||0;const id='AW-'+String(200+S.microapps.length).toString().padStart(3,'0');S.microapps.push({id,cliente:c,empresa:$('#nm_e').value.trim(),correoCliente:$('#nm_mail').value||'',telefono:t,ciudad:$('#nm_ci').value,categoria:$('#nm_cat').value||'',tipo:$('#nm_ti').value,estado:'Nuevo',fechaInicio:iso(TODAY),entregaEst:$('#nm_f').value,precio:p,anticipo:a,pagado:a,saldo:p-a,costoDev:Math.round(p*.35),costoDominio:60000,costoHosting:0,costoApis:0,comisiones:Math.round(p*.1),renovDominio:iso(addDays(TODAY,365)),mantenimiento:'Sin mantenimiento',cambios:'',obs:'',changelog:[{fecha:new Date().toLocaleString('es-CO',{hour12:false}).slice(0,16),accion:'Proyecto creado',campos:''}],url:$('#nm_url').value||'',dominio:$('#nm_dom').value||'',github:$('#nm_gh').value||'',vercel:$('#nm_vc').value||'',accMail:$('#nm_am').value||'',accPw:$('#nm_pw').value||'',supabase:$('#nm_sb').value||'',obsTec:$('#nm_obs').value||''});audit('Aplicativo creado','Microapps',id);save();const fp=$('#nm_fp').value;const pre={cliente:c,telefono:t,unidad:'microapps',servicio:'Mensualidad '+$('#nm_ti').value,valorMensual:Number($('#nm_mv').value)||0};closeLayer();render();toast('Proyecto creado','ok');if(fp==='mensual')setTimeout(()=>newSub('microapps',pre),260)})()">Crear</button>`}); }
+  modal(`<div class="stack"><div class="grid g2" style="gap:12px"><div class="field"><label>Cliente</label><input class="input" id="nm_c"></div><div class="field"><label>Empresa</label><input class="input" id="nm_e"></div><div class="field"><label>WhatsApp</label><input class="input" id="nm_t" inputmode="tel"></div><div class="field"><label>Correo</label><input class="input" id="nm_mail" inputmode="email"></div><div class="field"><label>Ciudad</label><input class="input" id="nm_ci" value="Ibagué"></div><div class="field"><label>Categoría</label><select class="select" id="nm_cat" onchange="(function(){const v=$('#nm_cat').value;const ca=${JSON.stringify(CA.map(c=>({c:c.cat,i:c.items})))};const f=ca.find(x=>x.c===v);$('#nm_ti').innerHTML=f?f.i.map(t=>'<option>'+t+'</option>').join(''):'<option>—</option>'})()"><option value="">— Selecciona —</option>${co}</select></div><div class="field"><label>Tipo</label><select class="select" id="nm_ti">${at.map(t=>`<option>${t}</option>`).join('')}</select></div><div class="field"><label>Forma de pago</label><select class="select" id="nm_fp"><option value="unico">💳 Pago único</option><option value="mensual">🔁 Desarrollo + mensualidad</option></select></div><div class="field"><label>Valor mensual</label><input class="input" id="nm_mv" inputmode="numeric" value="80000"></div><div class="field"><label>Precio</label><input class="input" id="nm_p" inputmode="numeric" value="1200000"></div><div class="field"><label>Anticipo</label><input class="input" id="nm_a" inputmode="numeric" value="600000"></div><div class="field"><label>Entrega</label><input class="input" type="date" id="nm_f" value="${iso(addDays(TODAY,21))}"></div></div><details style="margin-top:10px"><summary class="small" style="cursor:pointer;color:var(--brand-600);font-weight:600">📋 Credenciales y ficha técnica</summary><div class="grid g2" style="gap:12px;margin-top:12px"><div class="field"><label>URL</label><input class="input" id="nm_url"></div><div class="field"><label>Dominio en</label><input class="input" id="nm_dom"></div><div class="field"><label>GitHub</label><input class="input" id="nm_gh"></div><div class="field"><label>Vercel</label><input class="input" id="nm_vc"></div><div class="field"><label>Correo acceso</label><input class="input" id="nm_am"></div><div class="field"><label>Contraseña</label><input class="input" id="nm_pw" type="password"></div><div class="field"><label>Supabase</label><input class="input" id="nm_sb"></div><div class="field"><label>Notas</label><textarea class="textarea" id="nm_obs" style="min-height:56px"></textarea></div></div></details></div>`,{title:'💻 Nuevo proyecto',footer:`<button class="btn btn-secondary" onclick="closeLayer()">Cancelar</button><button class="btn btn-primary" onclick="(function(){const c=$('#nm_c').value.trim(),t=phone($('#nm_t').value);if(!c||t.length!==10)return toast('Cliente y WhatsApp obligatorios.','err');const p=Number($('#nm_p').value)||0,a=Number($('#nm_a').value)||0;const id='AW-'+String(200+S.microapps.length).toString().padStart(3,'0');S.microapps.push({id,token:rndToken(),cliente:c,empresa:$('#nm_e').value.trim(),correoCliente:$('#nm_mail').value||'',telefono:t,ciudad:$('#nm_ci').value,categoria:$('#nm_cat').value||'',tipo:$('#nm_ti').value,estado:'Nuevo',fechaInicio:iso(TODAY),entregaEst:$('#nm_f').value,precio:p,anticipo:a,pagado:a,saldo:p-a,costoDev:Math.round(p*.35),costoDominio:60000,costoHosting:0,costoApis:0,comisiones:Math.round(p*.1),renovDominio:iso(addDays(TODAY,365)),mantenimiento:'Sin mantenimiento',cambios:'',obs:'',changelog:[{fecha:new Date().toLocaleString('es-CO',{hour12:false}).slice(0,16),accion:'Proyecto creado',campos:''}],url:$('#nm_url').value||'',dominio:$('#nm_dom').value||'',github:$('#nm_gh').value||'',vercel:$('#nm_vc').value||'',accMail:$('#nm_am').value||'',accPw:$('#nm_pw').value||'',supabase:$('#nm_sb').value||'',obsTec:$('#nm_obs').value||''});audit('Aplicativo creado','Microapps',id);save();const fp=$('#nm_fp').value;const pre={cliente:c,telefono:t,unidad:'microapps',servicio:'Mensualidad '+$('#nm_ti').value,valorMensual:Number($('#nm_mv').value)||0};closeLayer();render();toast('Proyecto creado','ok');if(fp==='mensual')setTimeout(()=>newSub('microapps',pre),260)})()">Crear</button>`}); }
 
 function newPedido(){ modal(`<div class="stack"><div class="grid g2" style="gap:12px"><div class="field"><label>Cliente</label><input class="input" id="npd_c"></div><div class="field"><label>Negocio</label><input class="input" id="npd_n"></div><div class="field"><label>WhatsApp</label><input class="input" id="npd_t" inputmode="tel"></div><div class="field"><label>Ciudad</label><input class="input" id="npd_ci" value="Ibagué"></div><div class="field"><label>Unidades</label><input class="input" id="npd_u" inputmode="numeric" value="20"></div><div class="field"><label>Total del pedido</label><input class="input" id="npd_v" inputmode="numeric" value="900000"></div><div class="field"><label>Estado</label><select class="select" id="npd_e"><option>Cotizado</option><option>Confirmado</option><option>Alistando</option></select></div><div class="field"><label>Transportadora</label><select class="select" id="npd_tr"><option>Servientrega</option><option>Interrapidísimo</option><option>Entrega local</option></select></div></div></div>`,{title:'Nuevo pedido mayorista',footer:`<button class="btn btn-secondary" onclick="closeLayer()">Cancelar</button><button class="btn btn-primary" onclick="(function(){const c=$('#npd_c').value.trim(),t=phone($('#npd_t').value);if(!c||t.length!==10)return toast('Cliente y WhatsApp de 10 dígitos son obligatorios.','err');const total=Number($('#npd_v').value)||0;const id='PM-'+String(700+S.wholesale.length+1);S.wholesale.unshift({id,cliente:c,negocio:$('#npd_n').value||c,telefono:t,ciudad:$('#npd_ci').value,fecha:iso(TODAY),items:[],unidades:Number($('#npd_u').value)||0,total,costo:Math.round(total*.65),pagado:0,saldo:total,estado:$('#npd_e').value,transportadora:$('#npd_tr').value,guia:''});audit('Pedido creado','Accesorios',id);save();closeLayer();render();toast('Pedido creado','ok')})()">Crear pedido</button>`}); }
 
@@ -2642,13 +2734,20 @@ function SupReports() { const reps = [['Comercial', 'Leads, embudo, ventas por u
    [S17] ARRANQUE
    ============================================================================ */
 (async function boot() {
-  if (CLOUD_ON) $('#app').innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--grad-hero)"><div style="text-align:center;color:#fff">${Logo('light', 30)}<div class="caption" style="color:rgba(255,255,255,.7);margin-top:14px">Conectando con la nube…</div></div></div>`;
-  await initState();
-  if ('serviceWorker' in navigator) { /* PWA: registrar sw.js si se despliega junto al index (opcional) */ }
+  if (CLOUD_ON) $('#app').innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--grad-hero)"><div style="text-align:center;color:#fff">${Logo('light', 30)}<div class="caption" style="color:rgba(255,255,255,.7);margin-top:14px">Cargando…</div></div></div>`;
+  S = loadLocal() || buildSeed(); S.session = null; // el visitante nunca hereda una sesión
+  if (CLOUD_ON) {
+    const ses = await restoreSession();
+    if (ses) { S.session = ses; await loadCloud(); }
+    sb.auth.onAuthStateChange(evt => { if (evt === 'SIGNED_OUT' && S && S.session) { S.session = null; render(); } });
+  }
   render();
 })();
 
 
+function shareProject(id) { const m = S.microapps.find(x => x.id === id); if (!m) return; if (!m.token) { m.token = rndToken(); save(); } const url = location.origin + '/#/mi-proyecto/' + m.token;
+  const ok = () => toast('🔗 Enlace copiado. Funciona en unos segundos, cuando se sincronice.', 'ok');
+  try { navigator.clipboard.writeText(url).then(ok, () => prompt('Copia este enlace:', url)); } catch (e) { prompt('Copia este enlace:', url); } }
 function exportFicha(id) { const m = S.microapps.find(x => x.id === id); if (!m) return;
   const w = window.open('', '_blank');
   w.document.write(`<html><head><title>Ficha ${m.id}</title><style>body{font-family:Arial,sans-serif;padding:40px;max-width:700px;margin:0 auto;color:#1A1A2E}h1{color:#003EC8;font-size:22px;border-bottom:2px solid #003EC8;padding-bottom:8px}h2{font-size:16px;margin-top:24px;color:#374151}.r{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #E5E7EB;font-size:14px}.r span:first-child{color:#6B7280}.r b{color:#1A1A2E}.warn{background:#FEF3C7;padding:12px;border-radius:8px;font-size:13px;margin-top:20px;border-left:4px solid #F59E0B}.footer{margin-top:40px;font-size:11px;color:#9CA3AF;border-top:1px solid #E5E7EB;padding-top:12px}</style></head><body>
@@ -2689,7 +2788,7 @@ function openMicroapp(id){const m=S.microapps.find(x=>x.id===id);if(!m)return;co
   ${m.url||m.github||m.vercel||m.accMail?`<h4 style="margin-top:18px">🔐 Credenciales</h4><div class="detail-grid">${m.url?`<div><span>URL</span><a href="${esc(m.url)}" target="_blank">${esc(m.url)}</a></div>`:''}${m.dominio?`<div><span>Dominio</span>${esc(m.dominio)}</div>`:''}${m.github?`<div><span>GitHub</span>${esc(m.github)}</div>`:''}${m.vercel?`<div><span>Vercel</span>${esc(m.vercel)}</div>`:''}${m.supabase?`<div><span>Supabase</span>${esc(m.supabase)}</div>`:''}${m.accMail?`<div><span>Correo</span>${esc(m.accMail)}</div>`:''}${m.accPw?`<div><span>Pass</span><span class="mask">••••</span> <button class="btn btn-secondary btn-xs" onclick="audit('Credencial','Microapp','${m.id}');save();this.previousElementSibling.textContent='${m.accPw.replace(/'/g,"\\'")}';this.remove()">Ver</button></div>`:''}</div>`:'<div class="note-box" style="margin-top:18px">📋 Sin credenciales. Edita para agregar URL, GitHub y Vercel.</div>'}
   ${m.obsTec?`<div class="card" style="margin-top:14px"><h4>📝 Notas</h4><p class="small muted">${esc(m.obsTec)}</p></div>`:''}
   ${(m.changelog&&m.changelog.length)?`<h4 style="margin-top:18px">📋 Historial de cambios</h4><div style="max-height:200px;overflow-y:auto">${m.changelog.slice().reverse().map(c=>`<div class="sub-row" style="padding:6px 0"><span class="caption">${c.fecha}</span><span class="small" style="flex:1">${esc(c.accion)} ${c.campos?'('+esc(c.campos)+')':''}</span></div>`).join('')}</div>`:''}
-  <div class="row" style="margin-top:16px;gap:8px;flex-wrap:wrap"><button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText(location.origin+'/#/mi-proyecto/${m.id}');toast('🔗 Enlace copiado','ok')">🔗 Compartir con cliente</button><button class="btn btn-secondary btn-sm" onclick="exportFicha('${m.id}')">📄 Exportar PDF</button><button class="btn btn-primary btn-sm" onclick="closeLayer();editMicroapp('${m.id}')">✏️ Editar ficha</button><a class="btn btn-wa btn-sm" href="${waLink(m.telefono,'Hola *'+m.cliente.split(' ')[0]+'*! 👋 Te escribo sobre tu proyecto *'+m.tipo+'*. 🚀')}" target="_blank" rel="noopener">${I.wa}</a><select class="select" style="min-height:36px;width:auto;font-size:13px" onchange="const m=S.microapps.find(x=>x.id==='${m.id}');audit('Estado','Microapp','${m.id}',m.estado,this.value);m.estado=this.value;save();closeLayer();render()">${['Nuevo','En diseño','En desarrollo','En revisión','Ajustes','Entregado','En mantenimiento'].map(s=>`<option ${s===m.estado?'selected':''}>${s}</option>`).join('')}</select></div>`,'Proyecto '+m.id);}
+  <div class="row" style="margin-top:16px;gap:8px;flex-wrap:wrap"><button class="btn btn-secondary btn-sm" onclick="shareProject('${m.id}')">🔗 Compartir con cliente</button><button class="btn btn-secondary btn-sm" onclick="exportFicha('${m.id}')">📄 Exportar PDF</button><button class="btn btn-primary btn-sm" onclick="closeLayer();editMicroapp('${m.id}')">✏️ Editar ficha</button><a class="btn btn-wa btn-sm" href="${waLink(m.telefono,'Hola *'+m.cliente.split(' ')[0]+'*! 👋 Te escribo sobre tu proyecto *'+m.tipo+'*. 🚀')}" target="_blank" rel="noopener">${I.wa}</a><select class="select" style="min-height:36px;width:auto;font-size:13px" onchange="const m=S.microapps.find(x=>x.id==='${m.id}');audit('Estado','Microapp','${m.id}',m.estado,this.value);m.estado=this.value;save();closeLayer();render()">${['Nuevo','En diseño','En desarrollo','En revisión','Ajustes','Entregado','En mantenimiento'].map(s=>`<option ${s===m.estado?'selected':''}>${s}</option>`).join('')}</select></div>`,'Proyecto '+m.id);}
 function editMicroapp(id){const m=S.microapps.find(x=>x.id===id);modal(`<div class="grid g2" style="gap:12px"><div class="field"><label>URL</label><input class="input" id="em_url" value="${esc(m.url||'')}"></div><div class="field"><label>Dominio</label><input class="input" id="em_dom" value="${esc(m.dominio||'')}"></div><div class="field"><label>GitHub</label><input class="input" id="em_gh" value="${esc(m.github||'')}"></div><div class="field"><label>Vercel</label><input class="input" id="em_vc" value="${esc(m.vercel||'')}"></div><div class="field"><label>Correo</label><input class="input" id="em_am" value="${esc(m.accMail||'')}"></div><div class="field"><label>Contraseña</label><input class="input" id="em_pw" value="${esc(m.accPw||'')}"></div><div class="field"><label>Supabase</label><input class="input" id="em_sb" value="${esc(m.supabase||'')}"></div><div class="field"><label>Mantenimiento</label><select class="select" id="em_mt">${['Sin mantenimiento','Mensual','Trimestral','Anual'].map(o=>`<option ${o===m.mantenimiento?'selected':''}>${o}</option>`).join('')}</select></div></div><div class="field"><label>Notas</label><textarea class="textarea" id="em_obs" style="min-height:70px">${esc(m.obsTec||'')}</textarea></div>`,{title:'✏️ Editar · '+m.id,footer:`<button class="btn btn-secondary" onclick="closeLayer()">Cancelar</button><button class="btn btn-primary" onclick="(function(){const m=S.microapps.find(x=>x.id==='${id}');m.url=$('#em_url').value;m.dominio=$('#em_dom').value;m.github=$('#em_gh').value;m.vercel=$('#em_vc').value;m.accMail=$('#em_am').value;m.accPw=$('#em_pw').value;m.supabase=$('#em_sb').value;m.mantenimiento=$('#em_mt').value;m.obsTec=$('#em_obs').value;if(!m.changelog)m.changelog=[];m.changelog.push({fecha:new Date().toLocaleString('es-CO',{hour12:false}).slice(0,16),accion:'Ficha actualizada',campos:['url','dominio','github','vercel','accMail','supabase','mantenimiento'].filter(k=>m[k]!==$('#em_'+{url:'url',dominio:'dom',github:'gh',vercel:'vc',accMail:'am',supabase:'sb',mantenimiento:'mt'}[k]).value).join(', ')||'sin cambios'});audit('Ficha editada','Microapp','${id}');save();closeLayer();render();toast('Ficha actualizada','ok')})()">Guardar</button>`});}
 
 
