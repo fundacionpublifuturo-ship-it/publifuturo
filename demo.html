@@ -5557,7 +5557,10 @@ document.addEventListener('keydown', function(e) {
   };
   PV.cList = (k, el) => {
     const l = cart[k]; if (!l) return; const p = S.products.find(x => x.id === l.productId); if (!p) return;
-    l.priceKey = el.value; l.price = precioVigente(p, el.value); const pi = g('pvp' + k); if (pi) pi.value = nfmt(l.price); PV.paint();
+    l.priceKey = el.value; l.price = precioVigente(p, el.value); const pi = g('pvp' + k); if (pi) pi.value = nfmt(l.price);
+    /* la lista elegida queda activa: los productos que se agreguen después entran con ese mismo precio */
+    if (posHdr.priceKey !== el.value) { posHdr.priceKey = el.value; const ls = g('pvLista'); if (ls) ls.value = el.value; toast('Los siguientes productos entran con «' + pLabel({ price: 'p1', price2: 'p2', price3: 'p3' }[el.value]) + '»', '🏷️'); }
+    PV.paint();
   };
   PV.cTax = (k, el) => { const l = cart[k]; if (!l) return; const tf = tarifaDe(el.value); l.tarifa = el.value; l.iva = tf.tipo === 'INC' ? 0 : tf.pct; l.inc = tf.tipo === 'INC'; PV.paint(); };
 
