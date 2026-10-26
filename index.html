@@ -543,9 +543,18 @@ function demoWelcome() {
 }
 function demoVolver(e) {
   if (e) e.preventDefault();
-  const dest = location.origin + '/#/';
-  try { (window.top && window.top !== window ? window.top : window).location.assign(dest); } catch (x) { window.open(dest, '_top'); }
+  /* la demo vive en /demo/: el inicio del sitio es la carpeta de arriba (también sirve desde un computador o una subcarpeta) */
+  const base = new URL(location.protocol === 'file:' ? '../index.html' : '../', location.href);
+  const dest = base.href.split('#')[0] + '#/';
+  const ir = () => { try { (window.top && window.top !== window ? window.top : window).location.assign(dest); } catch (x) { window.open(dest, '_top'); } };
+  if (location.protocol === 'file:') { ir(); return false; }
+  /* si la dirección principal resulta ser esta misma demo, lo avisamos en vez de quedarnos dando vueltas */
+  fetch(base.href, { cache: 'no-store' }).then(r => r.text()).then(t => { if (t.indexOf('id="demo-seed"') > -1) demoAvisoRaiz(base.href); else ir(); }).catch(ir);
   return false;
+}
+function demoAvisoRaiz(url) {
+  try { closeModal(); } catch (e) { }
+  modal({ title: 'La página principal no está publicada', em: '⚠️', ok: 'Entendido', body: `<p style="margin-top:0">Esta demo está en <b>${esc(location.pathname)}</b>, pero la dirección principal (<b>${esc(url)}</b>) también está mostrando la demo, por eso «Volver al inicio» da vueltas.</p><div class="alertbox y"><span class="em">🛠️</span><div>En GitHub, el <b>index.html de la raíz</b> debe ser el del <b>sitio</b> (pesa unos 570 KB) y la demo debe estar en <b>demo/index.html</b> (pesa cerca de 1 MB).</div></div>`, onSubmit: () => closeModal() });
 }
 function demoMarcarPerfil() {
   const id = typeof SESSION !== 'undefined' && SESSION ? SESSION.userId : null;
