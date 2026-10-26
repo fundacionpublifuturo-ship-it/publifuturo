@@ -1,3 +1,9 @@
+-- ⚠️ IMPORTANTE: el ingreso actual usa un código por correo con FormSubmit (no Supabase Auth).
+--    NO EJECUTES la PARTE B ni nada de lo que cierra la tabla: la página guardaría en la nube
+--    con la llave pública y el cierre la dejaría sin poder guardar.
+--    Si YA ejecutaste la PARTE B, corre el bloque ROLLBACK del final de este archivo.
+--    La PARTE A (funciones públicas del portal del cliente y del verificador) SÍ se usa.
+
 -- ═════════════════════════════════════════════════════════════════════
 --  PUBLIFUTURO · Seguridad de Supabase
 --  Ejecutar por PARTES y EN ORDEN en SQL Editor.
