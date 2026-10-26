@@ -1087,6 +1087,98 @@ html[data-theme="dark"] .efc-foot .num{color:var(--c1)}
 @media(max-width:900px){.sis-case{grid-template-columns:1fr}.sis-screen{height:560px}}
 @media(max-width:700px){.sis-frame{display:none}.sis-mobile-demo{display:block}.sis-band{padding:26px 20px}.sis-band .row{width:100%}.sis-band .btn{flex:1;justify-content:center}}
 @media (prefers-reduced-motion:reduce){.sis-step{transition:none}}
+
+/* ===== Ajustes: aviso legible, inicio más corto y celular compacto ===== */
+.sis-band .eyebrow{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.28)}
+.appbar .search{min-width:0;flex:1 1 140px}
+.appbar .period,.appbar .sync-badge,.appbar .icon-btn,.appbar .mob-av{flex:0 0 auto}
+.appbar .icon-btn{min-width:36px}
+.appbar select.select{max-width:190px;min-width:0;flex:0 1 190px}
+@media (min-width:768px) and (max-width:1279px){.appbar{flex-wrap:wrap;row-gap:8px}.appbar .search{flex:1 1 200px}}
+.aging{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))!important}
+.aging div{min-width:0;padding:12px 8px}
+.aging b{font-size:clamp(12px,1.5vw,19px);overflow-wrap:anywhere}
+.hero{padding:calc(110px + var(--sat)) 0 64px}
+.hero h1{font-size:50px}
+.hero-logo{height:380px}
+@media (max-width:767px){
+  .wrap,.hero .in{padding-left:16px;padding-right:16px}
+  h1{font-size:27px;line-height:1.12} h2{font-size:21px;line-height:1.2} h3{font-size:17px} h4{font-size:15px}
+  .sec{padding:30px 0}
+  .sec-hd{margin-bottom:16px} .sec-hd p{font-size:14px;line-height:1.5}
+  .btn{min-height:40px;padding:0 15px;font-size:13px}
+  .btn-lg{min-height:42px;font-size:14px}
+  .card{padding:14px;border-radius:16px}
+  .grid{gap:10px}
+  .hero{padding:calc(72px + var(--sat)) 0 24px}
+  .hero .in{grid-template-columns:1fr;gap:0}
+  .hero h1{font-size:27px;max-width:none;margin-bottom:10px}
+  .hero .lead{font-size:14px;line-height:1.5;margin:0 0 16px}
+  .hero .row{gap:8px;flex-wrap:nowrap}
+  .hero .row .btn{flex:1;padding:0 10px}
+  .hero-logo{display:none}
+  .marquee{padding:9px 0;font-size:12px}
+  .page-hd{padding:calc(76px + var(--sat)) 0 24px}
+  .page-hd h1{font-size:25px} .page-hd p{font-size:14px;line-height:1.5}
+  .caps-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .cap{padding:12px 12px 32px;border-radius:14px}
+  .cap b{font-size:13px;line-height:1.25}
+  .cap em{font-size:11.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .svc{display:grid!important;grid-template-columns:38px 1fr;column-gap:12px;align-items:start;padding:14px}
+  .svc ul{display:none}
+  .svc .ico{width:38px;height:38px;grid-row:1/3}
+  .svc h4{grid-column:2;margin:0!important;font-size:15px}
+  .svc p{grid-column:2;margin:3px 0 0;font-size:12.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .svc .row{grid-column:1/-1;margin-top:8px;font-size:12px}
+  .sis-band .eyebrow{font-size:9.5px;letter-spacing:.07em;padding:5px 11px}
+  .plans-row{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin:0 -16px;padding:4px 16px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .plans-row::-webkit-scrollbar{display:none}
+  .plans-row .plan{flex:0 0 82%;scroll-snap-align:center}
+  .plan{padding:14px}
+  .plan-emoji{font-size:24px;line-height:1}
+  .plan p.small{min-height:0!important;margin:2px 0 4px}
+  .plan .pr{font-size:26px;margin:2px 0 0}
+  .plan ul{gap:5px;font-size:12.5px;margin:10px 0}
+  .tabs button{padding:0 12px;font-size:12.5px}
+  .plans-row .plan{opacity:1!important;transform:none!important}
+  .aging{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .aging>div{min-width:0;overflow:hidden}
+  .aging b,.aging .num{font-size:clamp(14px,4.4vw,18px)}
+  .mini-cards .card{display:grid;grid-template-columns:38px 1fr;column-gap:12px;align-items:start;padding:12px}
+  .mini-cards .ico{width:38px;height:38px;grid-row:1/3}
+  .mini-cards h4{grid-column:2;margin:0!important}.mini-cards p{grid-column:2;margin:2px 0 0!important;font-size:12.5px;line-height:1.4}
+  .metodo{grid-template-columns:1fr 1fr;gap:8px}
+  .met{padding:12px 12px 14px}.met:last-child{grid-column:1/-1}
+  .met-ico{width:38px;height:38px;font-size:19px;border-radius:12px;margin-bottom:8px}
+  .met h4,.met h3{font-size:14px}.met p{font-size:12.5px;line-height:1.4}
+  .ef-block{padding:16px;gap:14px;border-radius:20px}
+  .ef-block .card{display:none}
+  .ef-block img{height:30px;width:auto}
+  .ef-block p.muted{font-size:13.5px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+  .ef-block h2{font-size:19px}
+  .ef-acad-hd{margin-bottom:8px}
+  .faq-wrap{gap:12px}
+  .faq-side{align-items:flex-start;gap:6px}
+  .faq-side .card{display:none}
+  .faq-side button{padding:8px 12px;font-size:12.5px;gap:6px}
+  .foot .grid.g4{grid-template-columns:1fr 1fr;gap:16px 12px}
+  .foot .grid.g4>div:first-child{grid-column:1/-1}
+  .foot h4{font-size:12.5px;margin-bottom:6px}.foot a{font-size:12.5px;padding:3px 0}
+  .foot .legal{font-size:11.5px;flex-direction:column;gap:6px}
+  .wa-fab,.wa-float,#waFab,.fab-wa{width:44px!important;height:44px!important;right:12px!important;bottom:calc(14px + var(--sab))!important}
+  .sis-band{padding:20px 16px;border-radius:18px;gap:14px}
+  .sis-band h2{font-size:1.15rem}.sis-band p{font-size:13.5px}
+  .sis-steps{grid-template-columns:repeat(2,1fr);gap:8px}
+  .sis-step{padding:14px 12px}.sis-step b{font-size:14px}.sis-step p{font-size:12.5px}
+  .sis-trio{grid-template-columns:1fr;gap:8px}.sis-trio>div{padding:12px 14px}
+  .sis-q summary{font-size:14px;padding:13px 0}.sis-q p{font-size:13.5px}
+  .sis-list li{font-size:13.5px}
+  .about-grid{gap:8px}
+  .about-card{display:grid;grid-template-columns:34px 1fr;column-gap:12px;align-items:start;padding:12px 14px}
+  .about-card .ae{grid-row:1/3;font-size:24px;line-height:1.1}
+  .about-card h4{grid-column:2;margin:0!important;font-size:14.5px}
+  .about-card p{grid-column:2;margin:2px 0 0!important;font-size:12.5px;line-height:1.4}
+}
 </style>
 </head>
 <body>
@@ -1996,28 +2088,30 @@ const UNITS_PUBLIC = [
 function Home() {
   const words = COPY.hero.split(' ').map((w, i) => `<span class="w" style="animation-delay:${i * 40}ms">${w}</span>`).join(' ');
   const cities = new Set(S.students.map(s => s.ciudad)).size;
-  return `<section class="hero"><div class="in"><div><h1>${words}</h1><p class="lead">${COPY.lead}</p><div class="row"><a href="#/academia" class="btn btn-primary">Explorar la academia</a><a href="#/nosotros" class="btn btn-ghost">Conoce la fundación</a></div><div class="metrics"><div><b data-count="${S.students.length}" data-suf="${S.students.length ? '+' : ''}">0</b><span>Estudiantes formados</span></div><div><b data-count="${COURSES.length}">0</b><span>Programas activos</span></div><div><b data-count="${cities}">0</b><span>Ciudades atendidas</span></div><div><b data-count="6">0</b><span>Años de experiencia</span></div></div></div>
+  return `<section class="hero"><div class="in"><div><h1>${words}</h1><p class="lead">Marketing digital, inteligencia artificial y tecnología, con proyectos reales desde el primer día.</p><div class="row"><a href="#/servicios" class="btn btn-primary" onclick="var e=document.getElementById('home-servicios');if(e){e.scrollIntoView({behavior:'smooth'});return false}">Ver servicios</a><a href="#/academia" class="btn btn-ghost">Explorar la academia</a></div></div>
   <div class="hero-logo" aria-hidden="true"><div class="hl-glow"></div><div class="hl-ring r1"></div><div class="hl-ring r2"></div><img src="${HERO_LOGO}" alt="PubliFuturo"><div class="hl-chips"><span class="hl-chip c1">🎓 <b>Academia</b></span><span class="hl-chip c2">🤖 <b>IA aplicada</b></span><span class="hl-chip c3">📈 <b>Campañas</b></span></div></div></div></section>
   <div class="marquee" aria-label="Temas que enseñamos"><div class="trk">${TEMAS.concat(TEMAS).map(t => `<span>${esc(t)}</span>`).join('')}</div></div>
-  <section class="sec"><div class="wrap grid g2 rv" style="align-items:center"><div><h2>Una fundación que enseña haciendo</h2><p class="muted" style="font-size:16px">Somos una entidad sin ánimo de lucro de Ibagué. Formamos en marketing digital, inteligencia artificial y tecnología con clases en vivo, proyectos reales de empresas del Tolima y una unidad técnica aliada donde los estudiantes practican sobre equipos de verdad.</p><p class="muted" style="font-size:16px">Cada programa termina con un entregable que el estudiante puede mostrar, y cada certificado tiene un código público que cualquier empleador puede verificar.</p><a href="#/nosotros" class="btn btn-soft">Conocer la fundación ${I.arrow}</a></div><div class="card" style="background:var(--grad-card)"><h4>Ficha de la entidad</h4><table class="mini-t"><tr><td class="muted">Nombre legal</td><td><b>${COPY.legal.nombre}</b></td></tr><tr><td class="muted">Naturaleza</td><td>${COPY.legal.tipo}</td></tr><tr><td class="muted">Domicilio</td><td>${COPY.legal.domicilio}</td></tr><tr><td class="muted">Objeto social</td><td>${COPY.legal.objeto}</td></tr><tr><td class="muted">Representante legal</td><td>${COPY.legal.directivos[0][0]}</td></tr></table></div></div></section>
-  <section class="sec alt mvv"><div class="wrap"><div class="sec-hd"><h2>Misión, visión y valores</h2></div><div class="grid g3 rv-stagger"><div class="card lift"><div class="ico">${I.rocket}</div><h3 style="margin-top:14px">Misión</h3><p class="muted">${COPY.mision}</p></div><div class="card lift"><div class="ico v">${I.globe}</div><h3 style="margin-top:14px">Visión</h3><p class="muted">${COPY.vision}</p></div><div class="card lift"><div class="ico g">${I.heart}</div><h3 style="margin-top:14px">Valores</h3><ul style="padding-left:18px;color:var(--muted)">${COPY.valores.map(v => `<li>${v}</li>`).join('')}</ul></div></div></div></section>
-  <section class="sec"><div class="wrap"><div class="grid g2" style="align-items:center"><div class="rv"><h2>Enfoque social</h2><p class="muted" style="font-size:16px">Democratizamos el acceso a la formación digital en el Tolima y en regiones con baja oferta educativa. Cuatro pilares guían cada decisión de la fundación.</p><div style="margin:18px 0 6px"><div class="row between small"><span>Meta 2026 · 400 beneficiarios</span><b class="num">${S.students.length + 240}</b></div>${bar((S.students.length + 240) / 4, 'ok')}</div><a href="#/impacto" class="btn btn-soft" style="margin-top:14px">Ver impacto y becas ${I.arrow}</a></div><div class="grid g2 rv-stagger">${COPY.pilares.map(([t, d], i) => `<div class="card"><div class="ico ${['', 'v', 'c', 'g'][i]}">${[I.heart, I.pin, I.users, I.trend][i]}</div><h4 style="margin-top:12px">${t}</h4><p class="small muted" style="margin:0">${d}</p></div>`).join('')}</div></div></div></section>
-  <section class="sec alt"><div class="wrap"><div class="sec-hd"><h2>Servicios</h2><p>Unidades de negocio que sostienen la fundación y dan trabajo real a los estudiantes.</p></div><div class="grid g3 rv-stagger">${UNITS_PUBLIC.map(u => `<a href="#/${u.slug === 'academia' ? 'academia' : 'servicios/' + u.slug}" class="card svc lift" style="display:block;color:inherit"><div class="ico ${u.c}">${I[u.ic]}</div><h4 style="margin-top:12px">${u.n}</h4><p class="small muted">${u.d}</p><ul>${u.b.map(b => `<li>${b}</li>`).join('')}</ul><div class="row between"><span class="small muted">Desde <b class="num" style="color:var(--text)">${fmt(u.desde)}</b></span><span style="color:var(--brand-600)">${I.arrow}</span></div></a>`).join('')}</div>
+  <section class="sec alt" id="home-servicios"><div class="wrap"><div class="sec-hd"><h2>Servicios</h2><p>Unidades de negocio que sostienen la fundación y dan trabajo real a los estudiantes.</p></div><div class="grid g3 rv-stagger">${UNITS_PUBLIC.map(u => `<a href="#/${u.slug === 'academia' ? 'academia' : 'servicios/' + u.slug}" class="card svc lift" style="display:block;color:inherit"><div class="ico ${u.c}">${I[u.ic]}</div><h4 style="margin-top:12px">${u.n}</h4><p class="small muted">${u.d}</p><ul>${u.b.map(b => `<li>${b}</li>`).join('')}</ul><div class="row between"><span class="small muted">Desde <b class="num" style="color:var(--text)">${fmt(u.desde)}</b></span><span style="color:var(--brand-600)">${I.arrow}</span></div></a>`).join('')}</div>
   <div class="caps-wrap rv"><div class="caps-hd"><span class="eyebrow">TAMBIÉN HACEMOS</span><h3>Todo lo que necesita tu marca, en un solo lugar</h3></div><div class="caps-grid rv-stagger">${CAPS.map(c => `<a class="cap" style="--cc:${c.c}" href="#/servicios/${c.slug}"><span class="cap-e">${c.e}</span><b>${c.n}</b><em>${c.d}</em><span class="cap-go">${I.arrow}</span></a>`).join('')}</div><div class="caps-cta"><span>¿No sabes por dónde empezar? Te lo decimos <b>sin costo</b>.</span><a class="btn btn-wa btn-sm" href="${waPF(WA.general)}" target="_blank" rel="noopener">${I.wa} Hablar con un asesor</a></div></div>
   </div></section>
-  <section class="sec" style="padding-top:0;padding-bottom:0"><div class="wrap"><div class="sis-band rv"><div><span class="eyebrow" style="color:rgba(255,255,255,.75)">🧾 SISTEMA ADMINISTRATIVO Y CONTABLE</span><h2 style="margin-top:8px">Ventas, inventario, caja y cartera en un solo sistema</h2><p>Con tu logo y tus colores. Pruébalo ahora con una demo real, sin registrarte.</p></div><div class="row"><a class="btn btn-lg" href="/demo.html" target="_blank" rel="noopener" style="background:#fff;color:var(--brand-700);box-shadow:none">▶ Ver demo</a><a class="btn btn-secondary btn-lg" href="#/sistema" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.5)">Conocer el sistema</a></div></div></div></section> <section class="sec"><div class="wrap"><div class="row between" style="margin-bottom:24px"><div class="sec-hd" style="margin:0"><h2>Cursos de la Academia</h2><p>Programas con pénsum público, docente asignado y cupos en tiempo real.</p></div><a href="#/academia" class="btn btn-secondary">Ver todos</a></div><div class="hscroll rv">${COURSES.map(CourseCard).join('')}</div></div></section>
+  <section class="sec" style="padding-top:0;padding-bottom:0"><div class="wrap"><div class="sis-band rv"><div><span class="eyebrow">🧾 SISTEMA ADMINISTRATIVO Y CONTABLE</span><h2 style="margin-top:8px">Ventas, inventario, caja y cartera en un solo sistema</h2><p>Con tu logo y tus colores. Pruébalo ahora con una demo real, sin registrarte.</p></div><div class="row"><a class="btn btn-lg" href="/demo.html" target="_blank" rel="noopener" style="background:#fff;color:var(--brand-700);box-shadow:none">▶ Ver demo</a><a class="btn btn-secondary btn-lg" href="#/sistema" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.5)">Conocer el sistema</a></div></div></div></section> <section class="sec"><div class="wrap"><div class="row between" style="margin-bottom:24px"><div class="sec-hd" style="margin:0"><h2>Cursos de la Academia</h2><p>Programas con pénsum público, docente asignado y cupos en tiempo real.</p></div><a href="#/academia" class="btn btn-secondary">Ver todos</a></div><div class="hscroll rv">${COURSES.map(CourseCard).join('')}</div></div></section>
   <section class="sec alt" id="planes"><div class="wrap"><div class="sec-hd center"><h2>Planes de acompañamiento digital</h2><p>Para negocios que quieren un equipo de marketing sin contratar uno. Cambia entre pago mensual y trimestral.</p></div>${PlansGrid()}</div></section>
   <section class="sec"><div class="wrap"><div class="sec-hd"><h2>🧭 Cómo trabajamos</h2><p>Cinco pasos, siempre los mismos, desde que llegas hasta que sales <b>certificado y produciendo</b>.</p></div><div class="metodo rv-stagger">${[['🔎', 'Diagnóstico', 'Entendemos tu <b>punto de partida</b> y a dónde quieres llegar.', '#38BDF8'], ['🎥', 'Formación en vivo', 'Clases con <b>docente real</b>, presencial en Ibagué o remoto.', '#1A57E0'], ['🛠️', 'Práctica guiada', 'Cada módulo cierra con un <b>entregable</b> que puedes usar.', '#5B4BE1'], ['🚀', 'Proyecto real', 'Aplicas lo aprendido a <b>tu negocio</b> o al de un aliado.', '#10B981'], ['🏅', 'Certificación', 'Certificado con <b>código verificable</b> en línea.', '#F59E0B']].map(([e, t, d, c], i) => `<div class="met" style="--cc:${c}"><span class="met-line"></span><span class="met-ico">${e}<i>${i + 1}</i></span><h4>${t}</h4><p>${d}</p></div>`).join('')}</div></div></section>
-  <section class="sec alt"><div class="wrap"><div class="sec-hd"><h2>💬 Lo que dicen los egresados</h2><p>Personas reales que ya pasaron por la Academia.</p></div><div class="hscroll rv">${TESTIMONIALS.map((t, i) => `<div class="testi" style="--cc:${['#1A57E0', '#5B4BE1', '#10B981', '#F59E0B', '#EC4899'][i % 5]}"><span class="tq">"</span><p class="tt">${esc(t.q)}</p><div class="row" style="margin-top:auto;padding-top:14px;border-top:1px solid var(--border)">${avatar(t.n, '', ['', 'v', 'c', 'g', 'w'][i % 5])}<div><b class="small">${esc(t.n)}</b><div class="caption">🎓 ${esc(t.c)}${t.k ? ' · ' + esc(t.k) : ''}</div></div></div></div>`).join('')}</div></div></section>
-  <section class="sec"><div class="wrap">${EFBlock()}</div></section>
-  <section class="sec alt"><div class="wrap"><div class="sec-hd center"><h2>Preguntas frecuentes</h2></div>${FAQBlock()}</div></section>
-  <section class="sec" id="contacto"><div class="wrap">${ContactBlock()}</div></section>`;
+  <section class="sec alt"><div class="wrap">
+    <div class="sec-hd"><h2>Una fundación que enseña haciendo</h2><p>Entidad sin ánimo de lucro de Ibagué: clases en vivo, proyectos reales con empresas del Tolima y certificados que cualquiera puede verificar.</p></div>
+    <div class="grid g3 rv-stagger mini-cards"><div class="card lift"><div class="ico">${I.rocket}</div><h4 style="margin-top:10px">Misión</h4><p class="small muted" style="margin:0">Democratizar el acceso a la formación digital de calidad en Colombia.</p></div><div class="card lift"><div class="ico v">${I.globe}</div><h4 style="margin-top:10px">Visión</h4><p class="small muted" style="margin:0">Ser para 2030 la fundación de formación digital de mayor impacto en el centro de Colombia.</p></div><div class="card lift"><div class="ico g">${I.heart}</div><h4 style="margin-top:10px">Enfoque social</h4><p class="small muted" style="margin:0">Becas, formación remota y proyectos reales con empresas del Tolima.</p></div></div>
+    <div class="row" style="margin-top:18px"><a href="#/nosotros" class="btn btn-soft">Conocer la fundación ${I.arrow}</a><a href="#/impacto" class="btn btn-soft">Ver impacto y becas ${I.arrow}</a></div>
+  </div></section>
+  <section class="sec"><div class="wrap"><div class="sec-hd"><h2>💬 Lo que dicen los egresados</h2><p>Personas reales que ya pasaron por la Academia.</p></div><div class="hscroll rv">${TESTIMONIALS.map((t, i) => `<div class="testi" style="--cc:${['#1A57E0', '#5B4BE1', '#10B981', '#F59E0B', '#EC4899'][i % 5]}"><span class="tq">"</span><p class="tt">${esc(t.q)}</p><div class="row" style="margin-top:auto;padding-top:14px;border-top:1px solid var(--border)">${avatar(t.n, '', ['', 'v', 'c', 'g', 'w'][i % 5])}<div><b class="small">${esc(t.n)}</b><div class="caption">🎓 ${esc(t.c)}${t.k ? ' · ' + esc(t.k) : ''}</div></div></div></div>`).join('')}</div></div></section>
+  <section class="sec alt"><div class="wrap">${EFBlock()}</div></section>
+  <section class="sec"><div class="wrap"><div class="sec-hd center"><h2>Preguntas frecuentes</h2></div>${FAQBlock()}</div></section>
+  <section class="sec alt" id="contacto"><div class="wrap">${ContactBlock()}</div></section>`;
 }
 function CourseCard(c) { const g = GROUPS.filter(x => x.cursoId === c.id && !x.estado.startsWith('Fin')).sort((a, b) => a.inicio.localeCompare(b.inicio))[0]; const cupos = g ? g.cupo - groupStudents(g.id).length : null; const pocos = cupos !== null && cupos > 0 && cupos <= 5;
   return `<a href="#/academia/${c.slug}" class="course-card" style="--c1:${c.color};--c2:${c.color2}"><div class="cc-cover"><span class="cc-blob b1"></span><span class="cc-blob b2"></span><span class="cc-emoji">${c.emoji}</span><span class="badge cc-nivel">${c.nivel}</span>${pocos ? `<span class="cc-hot">🔥 Últimos ${cupos}</span>` : ''}<h4>${esc(c.nombre)}</h4></div><div class="body"><p class="small muted" style="margin:0">${c.tagline}</p><div class="meta"><span class="cc-chip">⏱️ ${esc(c.duracion)}</span><span class="cc-chip">📚 ${c.clases} ${c.clases === 1 ? 'clase' : 'clases'}</span><span class="cc-chip">🕐 ${c.horas} h</span></div><div class="row between" style="margin-top:auto"><div><div class="price num">${fmt(c.precio)}${c.mensual ? '<span class="caption"> /mes</span>' : ''}</div>${g ? `<div class="caption">${cupos > 0 ? '📅 Inicia ' + fdate(g.inicio) : 'Cupos agotados'}</div>` : '<div class="caption">Próxima fecha por anunciar</div>'}</div><span class="cc-go">${I.arrow}</span></div></div></a>`; }
 
 let planPeriod = 'mensual';
-function PlansGrid() { const tri = planPeriod === 'trimestral'; return `<div class="row" style="justify-content:center;margin-bottom:28px"><div class="tabs"><button class="${!tri ? 'on' : ''}" onclick="planPeriod='mensual';render()">Mensual</button><button class="${tri ? 'on' : ''}" onclick="planPeriod='trimestral';render()">Trimestral · −15 %</button></div></div><div class="grid g4 rv-stagger" style="align-items:stretch">${PLANS.map(p => { const v = tri ? Math.round(p.precio * .85 * 3 / 1000) * 1000 : p.precio; return `<div class="card plan ${p.hot ? 'hot' : ''}" style="--pc:${p.color}">${p.hot ? '<span class="tag">Más elegido</span>' : ''}<div class="plan-emoji">${p.emoji}</div><h4>${p.nombre}</h4><p class="small muted" style="min-height:40px">${p.para}</p><div class="pr num">${fmt(v)}<small> /${tri ? 'trimestre' : 'mes'}</small></div>${tri ? `<div class="caption" style="color:var(--success)">Ahorras ${fmt(p.precio * 3 - v)}</div>` : ''}<ul>${p.inc.map(i => `<li>${i}</li>`).join('')}</ul><a href="${waPF(WA.plan(p))}" target="_blank" rel="noopener" class="btn ${p.hot ? 'btn-primary' : 'btn-secondary'}" style="margin-top:auto" onclick="track('Lead',{plan:'${p.id}'})">Quiero este plan</a></div>`; }).join('')}</div>`; }
+function PlansGrid() { const tri = planPeriod === 'trimestral'; return `<div class="row" style="justify-content:center;margin-bottom:28px"><div class="tabs"><button class="${!tri ? 'on' : ''}" onclick="planPeriod='mensual';render()">Mensual</button><button class="${tri ? 'on' : ''}" onclick="planPeriod='trimestral';render()">Trimestral · −15 %</button></div></div><div class="grid g4 rv-stagger plans-row" style="align-items:stretch">${PLANS.map(p => { const v = tri ? Math.round(p.precio * .85 * 3 / 1000) * 1000 : p.precio; return `<div class="card plan ${p.hot ? 'hot' : ''}" style="--pc:${p.color}">${p.hot ? '<span class="tag">Más elegido</span>' : ''}<div class="plan-emoji">${p.emoji}</div><h4>${p.nombre}</h4><p class="small muted" style="min-height:40px">${p.para}</p><div class="pr num">${fmt(v)}<small> /${tri ? 'trimestre' : 'mes'}</small></div>${tri ? `<div class="caption" style="color:var(--success)">Ahorras ${fmt(p.precio * 3 - v)}</div>` : ''}<ul>${p.inc.map(i => `<li>${i}</li>`).join('')}</ul><a href="${waPF(WA.plan(p))}" target="_blank" rel="noopener" class="btn ${p.hot ? 'btn-primary' : 'btn-secondary'}" style="margin-top:auto" onclick="track('Lead',{plan:'${p.id}'})">Quiero este plan</a></div>`; }).join('')}</div>`; }
 function PlanMatrix() { return `<div class="card" style="margin-top:32px"><div class="card-hd"><h4>📋 Comparativo completo</h4><span class="caption">Todo lo que incluye cada plan</span></div><div class="tbl-wrap"><table class="tbl matrix" style="min-width:760px"><thead><tr><th>Incluye</th>${PLANS.map(p => `<th style="text-align:center;color:${p.color}">${p.emoji} ${p.nombre.replace('Plan ', '')}</th>`).join('')}</tr></thead><tbody>${PLAN_MATRIX.map(row => `<tr><td><b>${row[0]}</b></td>${row.slice(1).map(c => `<td style="text-align:center">${c === '—' ? '<span class="mx-no">—</span>' : c === 'Sí' ? '<span class="mx-yes">✓</span>' : `<b class="mx-val">${c}</b>`}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`; }
 
 function EFBlock() { const tec = COURSES.filter(c => c.cat === 'Tecnología'); return `<div class="ef-block rv"><div style="position:relative"><div style="margin-bottom:22px">${LogoEF(40)}</div><span class="badge b-cyan">🤝 Aliado oficial</span><h2 style="margin-top:14px">Electro Futuro es nuestro <b>brazo técnico</b></h2><p class="muted">Unidad aliada de tecnología y accesorios: comercializa <b>accesorios para celular</b>, cargadores y cables, audio, power banks, relojes inteligentes, herramientas y repuestos, pantallas, baterías y línea de computación; y opera el <b>servicio técnico</b> especializado en equipos móviles.</p><div class="row"><a href="#/servicios/formacion-tecnica" class="btn btn-primary" style="background:#0E8FA0;box-shadow:0 6px 16px rgba(25,193,214,.3)">🔧 Cursos técnicos</a><a href="#/servicios/accesorios-mayor" class="btn btn-secondary">📦 Catálogo mayorista</a></div></div>
