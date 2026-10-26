@@ -2083,13 +2083,14 @@ function sisLoadDemo(el) {
 function Sistema() {
   const mods = [
     ['🛒', 'Punto de venta', 'Venta rápida con 3 listas de precios, pagos mixtos, atajos de teclado y tiquete de 80 mm o carta.'],
-    ['🧮', 'Caja y cierres', 'Apertura y cierre con <b>conteo de billetes y monedas</b>, informes X y Z y semáforo de diferencias.'],
-    ['📦', 'Inventario y kardex', 'Existencias, mínimos, ubicaciones, historial de cada movimiento y conteo físico con capturador.'],
+    ['🧮', 'Caja y cierres', 'Apertura y cierre con <b>conteo de billetes y monedas</b>, informes X y Z, semáforo de diferencias y <b>dinero esperado por banco</b>.'],
+    ['📦', 'Inventario y kardex', 'Existencias, mínimos, historial de cada movimiento, <b>lotes con costo promedio ponderado</b> y conteo físico con capturador.'],
     ['👥', 'Terceros y cartera', 'Clientes y proveedores con NIT y dígito de verificación, cupos, créditos, separados y abonos.'],
+    ['🚦', 'Cobros pendientes', 'Fiados, créditos, separados y órdenes con saldo en un solo semáforo (vencido, urgente, próximo), con <b>campanita de avisos</b> y cobro por WhatsApp.'],
     ['🛍️', 'Compras y proveedores', 'Compras de contado o a crédito, cuentas por pagar y costos que se actualizan solos.'],
     ['🧾', 'Documentos', 'Facturas POS, anulaciones con reglas, notas crédito y débito y control de resoluciones de numeración.'],
     ['📑', 'Reportes y finanzas', 'Ventas, utilidad, gastos, comisiones y estados financieros. Exporta a <b>PDF, Excel y Word</b>.'],
-    ['🔧', 'Servicio técnico y garantías', 'Órdenes de servicio con estados, anticipos, entrega con cobro y garantías.'],
+    ['🔧', 'Servicio técnico y garantías', 'Órdenes en un <b>tablero que se arrastra por estados</b>, anticipos, entrega con cobro, orden impresa como factura y garantías.'],
     ['💬', 'Campañas por WhatsApp', 'Mensajes listos para cobrar, avisar y promocionar a tus clientes con un clic.']
   ];
   const faq = [
@@ -2143,7 +2144,7 @@ function Sistema() {
     <div class="sec-hd center"><span class="eyebrow">PRUÉBALO TÚ MISMO</span><h2 style="margin-top:8px">Una demo real, con datos de ejemplo</h2><p>Vende, cobra, cierra caja y mira los reportes. Lo que hagas se guarda solo en tu navegador y puedes reiniciarla cuando quieras.</p></div>
     <div class="sis-frame rv">
       <div class="sis-bar"><i></i><i></i><i></i><span class="sis-url">🔒 publifuturo.com/demo</span><a href="/demo/" target="_blank" rel="noopener" class="sis-full">Pantalla completa ↗</a></div>
-      <div class="sis-screen"><div class="sis-poster"><span style="font-size:46px">🧾</span><h3 style="color:#fff;margin:0">PubliFuturo Gestión</h3><p style="margin:0;opacity:.85;max-width:44ch">19 módulos con 14 días de operación de ejemplo: ventas, créditos, compras, caja y más.</p><button class="btn btn-primary btn-lg" style="background:#fff;color:var(--brand-700);box-shadow:none" onclick="sisLoadDemo(this)">▶ Probar la demo aquí</button><span class="small" style="opacity:.75">Entras como Gerencia · PIN de la demo: <b>1111</b></span></div></div>
+      <div class="sis-screen"><div class="sis-poster"><span style="font-size:46px">🧾</span><h3 style="color:#fff;margin:0">PubliFuturo Gestión</h3><p style="margin:0;opacity:.85;max-width:44ch">20 módulos con 14 días de operación de ejemplo: ventas, fiados, cobros pendientes, compras, caja y más.</p><button class="btn btn-primary btn-lg" style="background:#fff;color:var(--brand-700);box-shadow:none" onclick="sisLoadDemo(this)">▶ Probar la demo aquí</button><span class="small" style="opacity:.75">Entras como Gerencia · PIN de la demo: <b>1111</b></span></div></div>
     </div>
     <div class="sis-mobile-demo card"><span style="font-size:38px">🧾</span><h3>Demo en vivo</h3><p class="muted">Ábrela en pantalla completa para verla mejor en tu celular.</p><a class="btn btn-primary" href="/demo/" target="_blank" rel="noopener">▶ Abrir la demo</a></div>
     <div class="row" style="justify-content:center;margin-top:22px"><a class="btn btn-wa" href="${wa}" target="_blank" rel="noopener">${I.wa} Solicitar demo personalizada</a><a class="btn btn-secondary" href="/demo/" target="_blank" rel="noopener">Abrir en pantalla completa ↗</a></div>
