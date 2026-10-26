@@ -1049,6 +1049,44 @@ html[data-theme="dark"] .efc-foot .num{color:var(--c1)}
 .quick-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;padding:12px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);overflow-x:auto}
 .quick-bar .btn{font-size:12.5px;min-height:36px;padding:0 14px}
 
+
+/* ===== Sistema administrativo ===== */
+.sis-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.sis-chip{display:inline-flex;gap:6px;align-items:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:99px;padding:6px 13px;font-size:12.5px;font-weight:600}
+.sis-case{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+.sis-case>.card{padding:26px}
+.sis-list{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-direction:column;gap:12px}
+.sis-list li{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;color:var(--muted);line-height:1.5}
+.sis-list li b{color:var(--text)}.sis-list .e{font-size:20px;line-height:1.25}
+.sis-trio{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:22px}
+.sis-trio>div{display:flex;flex-direction:column;gap:3px;background:var(--surface);border:1.5px dashed var(--border);border-radius:var(--r-lg);padding:16px 18px}
+.sis-trio span{font-size:24px}.sis-trio b{font-size:14.5px}.sis-trio em{font-style:normal;font-size:13px;color:var(--muted);line-height:1.45}
+.sis-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+.sis-step{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:22px 18px;transition:transform .18s var(--ease),box-shadow .18s,border-color .18s}
+.sis-step:hover{transform:translateY(-4px);box-shadow:var(--e3);border-color:var(--brand-600)}
+.sis-step .n{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--brand-50);color:var(--brand-600);font-weight:800;font-size:14px;margin-bottom:12px}
+.sis-step b{display:block;font-size:15.5px;margin-bottom:5px}.sis-step p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.5}
+.sis-frame{max-width:1100px;margin:0 auto;border-radius:18px;border:1.5px solid var(--border);background:var(--surface);box-shadow:var(--e3);overflow:hidden}
+.sis-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--canvas);border-bottom:1px solid var(--border)}
+.sis-bar i{width:10px;height:10px;border-radius:50%;background:#d3d9e6}
+.sis-url{margin-left:10px;flex:1;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:4px 12px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sis-full{font-size:12.5px;font-weight:600;color:var(--brand-600);white-space:nowrap}
+.sis-screen{position:relative;height:640px;background:var(--grad-hero)}
+.sis-poster{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;text-align:center;padding:24px}
+.sis-screen iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+.sis-mobile-demo{display:none;text-align:center;padding:26px 20px}
+.sis-faq{display:flex;flex-direction:column;gap:10px}
+.sis-q{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:0 18px}
+.sis-q summary{cursor:pointer;font-weight:700;font-size:15px;padding:16px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.sis-q summary::after{content:'+';color:var(--brand-600);font-size:20px;line-height:1}
+.sis-q[open] summary::after{content:'–'}
+.sis-q summary::-webkit-details-marker{display:none}
+.sis-q p{margin:0 0 16px;font-size:14.5px;color:var(--muted);line-height:1.6}
+.sis-band{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--grad-hero);color:#fff;border-radius:var(--r-xl);padding:34px 36px;position:relative;overflow:hidden}
+.sis-band h2{color:#fff;margin:0 0 6px;font-size:clamp(1.3rem,2.6vw,1.8rem)}.sis-band p{margin:0;color:rgba(255,255,255,.85);max-width:56ch}
+@media(max-width:900px){.sis-case{grid-template-columns:1fr}.sis-screen{height:560px}}
+@media(max-width:700px){.sis-frame{display:none}.sis-mobile-demo{display:block}.sis-band{padding:26px 20px}.sis-band .row{width:100%}.sis-band .btn{flex:1;justify-content:center}}
+@media (prefers-reduced-motion:reduce){.sis-step{transition:none}}
 </style>
 </head>
 <body>
@@ -1841,20 +1879,21 @@ function onScrollTop() { const tb = $('.topbar'); if (!tb) return; const f = () 
 window.addEventListener('hashchange', render);
 
 function PublicShell(r) {
-  const first = r.seg[0] || ''; const hero = ['', 'academia', 'planes', 'nosotros', 'impacto', 'aliados', 'faq', 'contacto', 'verificar', 'servicios', 'inscripcion', 'mi-proyecto'].includes(first) && !(first === 'academia' && r.seg[1]);
-  const links = [['/academia', 'Academia'], ['/servicios', 'Servicios'], ['/planes', 'Planes'], ['/nosotros', 'Nosotros'], ['/impacto', 'Impacto'], ['/contacto', 'Contacto']];
+  const first = r.seg[0] || ''; const hero = ['', 'academia', 'planes', 'nosotros', 'impacto', 'aliados', 'faq', 'contacto', 'verificar', 'servicios', 'inscripcion', 'mi-proyecto', 'sistema'].includes(first) && !(first === 'academia' && r.seg[1]);
+  const links = [['/academia', 'Academia'], ['/servicios', 'Servicios'], ['/sistema', 'Sistema'], ['/planes', 'Planes'], ['/nosotros', 'Nosotros'], ['/impacto', 'Impacto'], ['/contacto', 'Contacto']];
   const isOn = h => r.path.startsWith(h);
-  const page = { '': Home, academia: r.seg[1] ? CourseDetail : Academy, servicios: Services, planes: Plans, nosotros: About, impacto: Impact, aliados: Partners, faq: FAQ, contacto: Contact, verificar: Verify, inscripcion: Enroll, orden: OrderTrack, 'mi-proyecto': ClientPortal }[first] || NotFound;
+  const page = { '': Home, academia: r.seg[1] ? CourseDetail : Academy, servicios: Services, planes: Plans, nosotros: About, impacto: Impact, aliados: Partners, faq: FAQ, contacto: Contact, verificar: Verify, sistema: Sistema, inscripcion: Enroll, orden: OrderTrack, 'mi-proyecto': ClientPortal }[first] || NotFound;
   return `<header class="topbar ${hero ? '' : 'solid'}" ${hero ? 'data-hero="1"' : ''}><div class="in">${Logo('', 26)}<nav aria-label="Principal">${links.map(([h, l]) => `<a href="#${h}" class="${isOn(h) ? 'on' : ''}">${l}</a>`).join('')}</nav><div class="acts"><a href="#/ingreso" class="btn btn-secondary btn-sm">Ingresar</a><a href="#/academia" class="btn btn-primary btn-sm">Inscríbete</a><button class="burger" aria-label="Menú" onclick="openMobileNav()">${I.menu}</button></div></div></header>
   <main class="view">${page(r)}</main>${Footer()}<a class="wa-fab" href="${waPF(WA.general)}" target="_blank" rel="noopener" aria-label="WhatsApp">${I.wa}</a>${localStorage.getItem('pf_cookies') ? '' : `<div class="cookie" id="cookie"><span style="flex:1">Usamos cookies para medir el uso del sitio y mejorar tu experiencia. Puedes aceptar solo las esenciales.</span><button class="btn btn-secondary btn-sm" onclick="cookies('esenciales')">Solo esenciales</button><button class="btn btn-primary btn-sm" onclick="cookies('todas')">Aceptar todas</button></div>`}`;
 }
 function cookies(v) { localStorage.setItem('pf_cookies', v); $('#cookie')?.remove(); track('CookieConsent', { v }); }
-function openMobileNav() { $('#layer').innerHTML = `<div class="mnav" onclick="if(event.target===this)closeLayer()"><div class="pane"><div class="row between" style="margin-bottom:10px">${Logo('', 24)}<button class="icon-btn" onclick="closeLayer()">${I.x}</button></div>${[['/', 'Inicio'], ['/academia', 'Academia'], ['/servicios', 'Servicios'], ['/planes', 'Planes'], ['/nosotros', 'Nosotros'], ['/impacto', 'Impacto social'], ['/aliados', 'Aliados'], ['/faq', 'Preguntas frecuentes'], ['/contacto', 'Contacto'], ['/verificar', 'Verificar certificado']].map(([h, l]) => `<a href="#${h}" onclick="closeLayer()">${l}</a>`).join('')}<div class="foot"><a href="#/ingreso" class="btn btn-secondary" onclick="closeLayer()">Ingresar</a><a href="#/academia" class="btn btn-primary" onclick="closeLayer()">Inscríbete</a></div></div></div>`; }
-function Footer() { return `<footer class="foot"><div class="wrap"><div class="grid g4"><div>${Logo('light', 28)}<p class="small" style="margin-top:14px;max-width:32ch">${COPY.legal.nombre}. ${COPY.legal.tipo} dedicada a la ${COPY.legal.objeto.toLowerCase()}. ${COPY.legal.domicilio}.</p></div><div><h4>Academia</h4>${COURSES.map(c => `<a href="#/academia/${c.slug}">${c.nombre}</a>`).join('')}</div><div><h4>Servicios</h4><a href="#/servicios/videos-ia">Videos con IA</a><a href="#/servicios/microapps">Microapps y soluciones web</a><a href="#/servicios/streaming">Suscripciones digitales</a><a href="#/servicios/servicio-tecnico">Servicio técnico</a><a href="#/servicios/accesorios-mayor">Accesorios al por mayor</a><a href="#/planes">Planes</a></div><div><h4>Fundación</h4><a href="#/nosotros">Quiénes somos</a><a href="#/impacto">Impacto social</a><a href="#/aliados">Aliados</a><a href="#/verificar">Verificar certificado</a><a href="#/contacto">Contacto</a><a href="#/ingreso">Portales</a></div></div><div class="legal"><span>© ${TODAY.getFullYear()} ${COPY.legal.nombre}. Todos los derechos reservados.</span><span><a href="#/nosotros" style="display:inline">Tratamiento de datos (Ley 1581 de 2012)</a> · <a href="#/nosotros" style="display:inline">Términos</a> · <a href="#/nosotros" style="display:inline">Cookies</a></span></div></div></footer>`; }
+function openMobileNav() { $('#layer').innerHTML = `<div class="mnav" onclick="if(event.target===this)closeLayer()"><div class="pane"><div class="row between" style="margin-bottom:10px">${Logo('', 24)}<button class="icon-btn" onclick="closeLayer()">${I.x}</button></div>${[['/', 'Inicio'], ['/academia', 'Academia'], ['/servicios', 'Servicios'], ['/sistema', 'Sistema administrativo'], ['/planes', 'Planes'], ['/nosotros', 'Nosotros'], ['/impacto', 'Impacto social'], ['/aliados', 'Aliados'], ['/faq', 'Preguntas frecuentes'], ['/contacto', 'Contacto'], ['/verificar', 'Verificar certificado']].map(([h, l]) => `<a href="#${h}" onclick="closeLayer()">${l}</a>`).join('')}<div class="foot"><a href="#/ingreso" class="btn btn-secondary" onclick="closeLayer()">Ingresar</a><a href="#/academia" class="btn btn-primary" onclick="closeLayer()">Inscríbete</a></div></div></div>`; }
+function Footer() { return `<footer class="foot"><div class="wrap"><div class="grid g4"><div>${Logo('light', 28)}<p class="small" style="margin-top:14px;max-width:32ch">${COPY.legal.nombre}. ${COPY.legal.tipo} dedicada a la ${COPY.legal.objeto.toLowerCase()}. ${COPY.legal.domicilio}.</p></div><div><h4>Academia</h4>${COURSES.map(c => `<a href="#/academia/${c.slug}">${c.nombre}</a>`).join('')}</div><div><h4>Servicios</h4><a href="#/servicios/videos-ia">Videos con IA</a><a href="#/servicios/microapps">Microapps y soluciones web</a><a href="#/sistema">Sistema administrativo</a><a href="#/servicios/streaming">Suscripciones digitales</a><a href="#/servicios/servicio-tecnico">Servicio técnico</a><a href="#/servicios/accesorios-mayor">Accesorios al por mayor</a><a href="#/planes">Planes</a></div><div><h4>Fundación</h4><a href="#/nosotros">Quiénes somos</a><a href="#/impacto">Impacto social</a><a href="#/aliados">Aliados</a><a href="#/verificar">Verificar certificado</a><a href="#/contacto">Contacto</a><a href="#/ingreso">Portales</a></div></div><div class="legal"><span>© ${TODAY.getFullYear()} ${COPY.legal.nombre}. Todos los derechos reservados.</span><span><a href="#/nosotros" style="display:inline">Tratamiento de datos (Ley 1581 de 2012)</a> · <a href="#/nosotros" style="display:inline">Términos</a> · <a href="#/nosotros" style="display:inline">Cookies</a></span></div></div></footer>`; }
 function track(ev, p = {}) { (window.dataLayer = window.dataLayer || []).push({ event: ev, ...p, ts: Date.now() }); /* Conectar aquí Meta Pixel (fbq) y GA4 (gtag) */ }
 
 /* ---- Mensajes de WhatsApp contextuales (negrilla con *asteriscos* + emojis) ---- */
 const WA = {
+  sistema: '¡Hola *PubliFuturo*! 👋\n\nVi la sección del *sistema administrativo y contable* y quiero una *demo personalizada* para mi empresa. 🙌\n\n🏢 Mi negocio es: ',
   general: '¡Hola *PubliFuturo*! 👋\n\nEstoy navegando en su página web y quiero *más información*. 🙌',
   academia: '¡Hola *PubliFuturo*! 🎓\n\nQuiero información sobre los *cursos de la Academia*.\n\n¿Me cuentan *fechas de inicio*, *precios* y *formas de pago*? 📅💳',
   curso: c => `¡Hola *PubliFuturo*! 🎓\n\nMe interesa el curso *${c.nombre}*.\n\n📌 Duración: *${c.duracion}*\n💰 Valor: *${fmt(c.precio)}*\n\n¿Me cuentan la *próxima fecha de inicio* y cómo *reservar mi cupo*? 🙌`,
@@ -1945,7 +1984,7 @@ function Home() {
   <section class="sec alt"><div class="wrap"><div class="sec-hd"><h2>Servicios</h2><p>Unidades de negocio que sostienen la fundación y dan trabajo real a los estudiantes.</p></div><div class="grid g3 rv-stagger">${UNITS_PUBLIC.map(u => `<a href="#/${u.slug === 'academia' ? 'academia' : 'servicios/' + u.slug}" class="card svc lift" style="display:block;color:inherit"><div class="ico ${u.c}">${I[u.ic]}</div><h4 style="margin-top:12px">${u.n}</h4><p class="small muted">${u.d}</p><ul>${u.b.map(b => `<li>${b}</li>`).join('')}</ul><div class="row between"><span class="small muted">Desde <b class="num" style="color:var(--text)">${fmt(u.desde)}</b></span><span style="color:var(--brand-600)">${I.arrow}</span></div></a>`).join('')}</div>
   <div class="caps-wrap rv"><div class="caps-hd"><span class="eyebrow">TAMBIÉN HACEMOS</span><h3>Todo lo que necesita tu marca, en un solo lugar</h3></div><div class="caps-grid rv-stagger">${CAPS.map(c => `<a class="cap" style="--cc:${c.c}" href="#/servicios/${c.slug}"><span class="cap-e">${c.e}</span><b>${c.n}</b><em>${c.d}</em><span class="cap-go">${I.arrow}</span></a>`).join('')}</div><div class="caps-cta"><span>¿No sabes por dónde empezar? Te lo decimos <b>sin costo</b>.</span><a class="btn btn-wa btn-sm" href="${waPF(WA.general)}" target="_blank" rel="noopener">${I.wa} Hablar con un asesor</a></div></div>
   </div></section>
-  <section class="sec"><div class="wrap"><div class="row between" style="margin-bottom:24px"><div class="sec-hd" style="margin:0"><h2>Cursos de la Academia</h2><p>Programas con pénsum público, docente asignado y cupos en tiempo real.</p></div><a href="#/academia" class="btn btn-secondary">Ver todos</a></div><div class="hscroll rv">${COURSES.map(CourseCard).join('')}</div></div></section>
+  <section class="sec" style="padding-top:0;padding-bottom:0"><div class="wrap"><div class="sis-band rv"><div><span class="eyebrow" style="color:rgba(255,255,255,.75)">🧾 SISTEMA ADMINISTRATIVO Y CONTABLE</span><h2 style="margin-top:8px">Ventas, inventario, caja y cartera en un solo sistema</h2><p>Con tu logo y tus colores. Pruébalo ahora con una demo real, sin registrarte.</p></div><div class="row"><a class="btn btn-lg" href="/demo/" target="_blank" rel="noopener" style="background:#fff;color:var(--brand-700);box-shadow:none">▶ Ver demo</a><a class="btn btn-secondary btn-lg" href="#/sistema" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.5)">Conocer el sistema</a></div></div></div></section> <section class="sec"><div class="wrap"><div class="row between" style="margin-bottom:24px"><div class="sec-hd" style="margin:0"><h2>Cursos de la Academia</h2><p>Programas con pénsum público, docente asignado y cupos en tiempo real.</p></div><a href="#/academia" class="btn btn-secondary">Ver todos</a></div><div class="hscroll rv">${COURSES.map(CourseCard).join('')}</div></div></section>
   <section class="sec alt" id="planes"><div class="wrap"><div class="sec-hd center"><h2>Planes de acompañamiento digital</h2><p>Para negocios que quieren un equipo de marketing sin contratar uno. Cambia entre pago mensual y trimestral.</p></div>${PlansGrid()}</div></section>
   <section class="sec"><div class="wrap"><div class="sec-hd"><h2>🧭 Cómo trabajamos</h2><p>Cinco pasos, siempre los mismos, desde que llegas hasta que sales <b>certificado y produciendo</b>.</p></div><div class="metodo rv-stagger">${[['🔎', 'Diagnóstico', 'Entendemos tu <b>punto de partida</b> y a dónde quieres llegar.', '#38BDF8'], ['🎥', 'Formación en vivo', 'Clases con <b>docente real</b>, presencial en Ibagué o remoto.', '#1A57E0'], ['🛠️', 'Práctica guiada', 'Cada módulo cierra con un <b>entregable</b> que puedes usar.', '#5B4BE1'], ['🚀', 'Proyecto real', 'Aplicas lo aprendido a <b>tu negocio</b> o al de un aliado.', '#10B981'], ['🏅', 'Certificación', 'Certificado con <b>código verificable</b> en línea.', '#F59E0B']].map(([e, t, d, c], i) => `<div class="met" style="--cc:${c}"><span class="met-line"></span><span class="met-ico">${e}<i>${i + 1}</i></span><h4>${t}</h4><p>${d}</p></div>`).join('')}</div></div></section>
   <section class="sec alt"><div class="wrap"><div class="sec-hd"><h2>💬 Lo que dicen los egresados</h2><p>Personas reales que ya pasaron por la Academia.</p></div><div class="hscroll rv">${TESTIMONIALS.map((t, i) => `<div class="testi" style="--cc:${['#1A57E0', '#5B4BE1', '#10B981', '#F59E0B', '#EC4899'][i % 5]}"><span class="tq">"</span><p class="tt">${esc(t.q)}</p><div class="row" style="margin-top:auto;padding-top:14px;border-top:1px solid var(--border)">${avatar(t.n, '', ['', 'v', 'c', 'g', 'w'][i % 5])}<div><b class="small">${esc(t.n)}</b><div class="caption">🎓 ${esc(t.c)}${t.k ? ' · ' + esc(t.k) : ''}</div></div></div></div>`).join('')}</div></div></section>
@@ -2036,6 +2075,88 @@ function enrollFinish(cid) { const d = enrollSt.d; if (!d.metodo) return toast('
   modal(`<div style="text-align:center;padding:10px 0"><div style="font-size:52px;line-height:1;margin-bottom:10px">🎉</div><h3>¡Matrícula confirmada!</h3><p class="muted">Bienvenido, <b>${esc(d.nombre.split(' ')[0])}</b>. Registramos tu cupo en <b>${esc(g.nombre)}</b> y tu pago de <b>${fmt(first)}</b> por ${esc(d.metodo)}.</p><div class="sum" style="text-align:left"><div class="r"><span>Código de estudiante</span><b>${id}</b></div><div class="r"><span>Inicio</span><b>${fdate(g.inicio)}</b></div><div class="r"><span>Saldo pendiente</span><b>${fmt(finalV - first)}</b></div></div><p class="caption" style="margin-top:12px">Te enviamos el comprobante y el acceso al portal del estudiante por WhatsApp y correo.</p></div>`, { title: '', footer: `<button class="btn btn-secondary" onclick="printEl('.sum')">Descargar resumen</button><a href="#/" class="btn btn-primary" onclick="closeLayer()">Volver al inicio</a>` });
 }
 function printEl(sel) { const el = $(sel); if (!el) return; const isCert = el.classList && el.classList.contains('cert-gen'); const w = window.open('', '_blank'); const styles = isCert ? `body{margin:0;padding:0}.wrap{position:relative;width:100%;font-family:Arial,Helvetica,sans-serif;line-height:1.1}.wrap img{width:100%;display:block}.wrap span{position:absolute;left:8%;right:8%;text-align:center;color:#1049C8}.cg-nombre{top:48.4%;font-size:30px;font-weight:800}.cg-curso{top:60.6%;font-size:19px;font-weight:700}.cg-meta{top:65.4%;font-size:12px;color:#26324D}.cg-codigo{top:84.6%;font-size:11px;font-weight:700}.cg-url{top:87.7%;font-size:10px;color:#5A6180}@page{size:landscape;margin:0}` : `body{font-family:Arial;padding:30px}.r{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #ddd}`; w.document.write(`<html><head><title>PubliFuturo</title><style>${styles}</style></head><body>${isCert ? `<div class="wrap">${el.innerHTML}</div>` : `<h2>Fundación PubliFuturo Colombia</h2>${el.outerHTML}<p style="font-size:12px;color:#666;margin-top:20px">Documento generado el ${new Date().toLocaleString('es-CO')}</p>`}</body></html>`); w.document.close(); setTimeout(() => w.print(), 500); }
+
+function sisLoadDemo(el) {
+  const box = el.closest('.sis-screen'); if (!box) return;
+  box.innerHTML = '<iframe src="/demo/" title="Demo del sistema administrativo y contable de PubliFuturo" loading="lazy"></iframe>';
+}
+function Sistema() {
+  const mods = [
+    ['🛒', 'Punto de venta', 'Venta rápida con 3 listas de precios, pagos mixtos, atajos de teclado y tiquete de 80 mm o carta.'],
+    ['🧮', 'Caja y cierres', 'Apertura y cierre con <b>conteo de billetes y monedas</b>, informes X y Z y semáforo de diferencias.'],
+    ['📦', 'Inventario y kardex', 'Existencias, mínimos, ubicaciones, historial de cada movimiento y conteo físico con capturador.'],
+    ['👥', 'Terceros y cartera', 'Clientes y proveedores con NIT y dígito de verificación, cupos, créditos, separados y abonos.'],
+    ['🛍️', 'Compras y proveedores', 'Compras de contado o a crédito, cuentas por pagar y costos que se actualizan solos.'],
+    ['🧾', 'Documentos', 'Facturas POS, anulaciones con reglas, notas crédito y débito y control de resoluciones de numeración.'],
+    ['📑', 'Reportes y finanzas', 'Ventas, utilidad, gastos, comisiones y estados financieros. Exporta a <b>PDF, Excel y Word</b>.'],
+    ['🔧', 'Servicio técnico y garantías', 'Órdenes de servicio con estados, anticipos, entrega con cobro y garantías.'],
+    ['💬', 'Campañas por WhatsApp', 'Mensajes listos para cobrar, avisar y promocionar a tus clientes con un clic.']
+  ];
+  const faq = [
+    ['¿Emite factura electrónica ante la DIAN?', 'No directamente. El sistema genera documentos de control (tiquete POS, notas crédito y débito) y, en la demo, documentos <b>simulados y sin validez ante la DIAN</b>. Si necesitas facturación electrónica oficial, hoy se hace con tu proveedor tecnológico autorizado; escríbenos y revisamos cómo encaja con tu operación.'],
+    ['¿Tengo que instalar algo?', 'No. Funciona desde el navegador, en computador, tableta o celular.'],
+    ['¿Dónde quedan mis datos?', 'Cada empresa tiene su propia base de datos en la nube, con acceso por usuario y PIN, perfiles con permisos distintos y registro de auditoría de lo que se hace.'],
+    ['¿Se puede adaptar a mi negocio?', 'Sí. Activamos o quitamos módulos (servicios, productos, mayoristas, garantías…) y personalizamos logo, colores y reportes. Si además necesitas tienda web, la construimos conectada al sistema.'],
+    ['¿Cuánto cuesta?', 'Depende de los módulos y de si necesitas tienda web. Escríbenos y te cotizamos.']
+  ];
+  const wa = waPF(WA.sistema);
+  return pageHd('Sistema administrativo y contable para tu empresa',
+    'Punto de venta, inventario, caja, cartera y reportes en un solo lugar, con <b>tu logo y tus colores</b>. Pruébalo ahora, sin registrarte.',
+    `<div class="row" style="margin-top:22px"><a class="btn btn-primary btn-lg" href="/demo/" target="_blank" rel="noopener" style="background:#fff;color:var(--brand-700);box-shadow:none">▶ Ver demo en vivo</a><a class="btn btn-wa" href="${wa}" target="_blank" rel="noopener">${I.wa} Solicitar demo personalizada</a></div>
+     <div class="sis-chips"><span class="sis-chip">🇨🇴 Pensado para Colombia</span><span class="sis-chip">🎨 Con tu marca</span><span class="sis-chip">☁️ Datos en la nube</span><span class="sis-chip">📱 Computador y celular</span></div>`) + `
+  <section class="sec"><div class="wrap sis-case rv">
+    <div>
+      <span class="eyebrow">DESARROLLO A LA MEDIDA</span>
+      <h2 style="margin-top:8px">No vendemos un software enlatado: lo construimos para tu negocio</h2>
+      <p class="muted" style="font-size:16px">En PubliFuturo desarrollamos <b>tiendas web y sistemas administrativos</b> para comercios que hoy llevan su operación en Excel, cuadernos o programas que ya les quedaron pequeños. Partimos de un sistema probado y lo ajustamos a cómo vende, cobra y controla su inventario cada empresa.</p>
+      <p class="muted" style="font-size:16px">Lo usamos en <b>tiendas de tecnología</b> y lo adaptamos a otros comercios, como <b>ferreterías</b> y <b>negocios de consumo</b>, siempre con la marca del cliente.</p>
+    </div>
+    <div class="card">
+      <span class="badge b-cyan">🤝 Caso real</span>
+      <h3 style="margin:12px 0 4px">Electronics BGA · Bucaramanga</h3>
+      <p class="small muted" style="margin:0">Tienda de accesorios y tecnología, venta al detal y por mayor.</p>
+      <ul class="sis-list">
+        <li><span class="e">🛍️</span><span><b>Tienda web</b> con catálogo de más de 140 productos con foto real y pedido por WhatsApp.</span></li>
+        <li><span class="e">🧾</span><span><b>Sistema administrativo con su marca</b>: facturas, informes y PDF con el nombre del negocio.</span></li>
+        <li><span class="e">📦</span><span><b>Inventario, ventas al detal y por mayor</b>, y usuarios por perfil: gerencia, caja y asesor.</span></li>
+      </ul>
+    </div>
+  </div></section>
+
+  <section class="sec alt"><div class="wrap">
+    <div class="sec-hd center"><h2>Todo lo que tu empresa necesita en un solo sistema</h2><p>Módulos que se activan según tu negocio: si no manejas servicio técnico o mayoristas, simplemente no aparecen.</p></div>
+    <div class="about-grid rv-stagger">${mods.map(([e, t, d]) => `<div class="about-card"><span class="ae">${e}</span><h4>${t}</h4><p>${d}</p></div>`).join('')}</div>
+    <div class="sis-trio rv"><div><span>🎨</span><b>Marca blanca</b><em>Tu logo y tus colores en todo el sistema, incluidos los PDF.</em></div><div><span>🔐</span><b>Perfiles y auditoría</b><em>Gerencia, caja y bodega con PIN y permisos distintos.</em></div><div><span>☁️</span><b>Datos en la nube</b><em>Tu información disponible desde cualquier dispositivo.</em></div></div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-hd"><h2>🧭 Cómo lo montamos</h2><p>Un proceso simple, sin que tengas que parar tu negocio.</p></div>
+    <div class="sis-steps rv-stagger">
+      <div class="sis-step"><span class="n">1</span><b>Conversamos</b><p>Entendemos cómo vendes, cobras y controlas hoy tu inventario.</p></div>
+      <div class="sis-step"><span class="n">2</span><b>Configuramos con tu marca</b><p>Logo, colores, usuarios, perfiles y los módulos que necesitas.</p></div>
+      <div class="sis-step"><span class="n">3</span><b>Cargamos tu información</b><p>Productos, clientes y proveedores para arrancar con datos reales.</p></div>
+      <div class="sis-step"><span class="n">4</span><b>Entregamos y acompañamos</b><p>Tu equipo aprende a usarlo y te apoyamos con los ajustes.</p></div>
+    </div>
+  </div></section>
+
+  <section class="sec alt" id="demo"><div class="wrap">
+    <div class="sec-hd center"><span class="eyebrow">PRUÉBALO TÚ MISMO</span><h2 style="margin-top:8px">Una demo real, con datos de ejemplo</h2><p>Vende, cobra, cierra caja y mira los reportes. Lo que hagas se guarda solo en tu navegador y puedes reiniciarla cuando quieras.</p></div>
+    <div class="sis-frame rv">
+      <div class="sis-bar"><i></i><i></i><i></i><span class="sis-url">🔒 publifuturo.com/demo</span><a href="/demo/" target="_blank" rel="noopener" class="sis-full">Pantalla completa ↗</a></div>
+      <div class="sis-screen"><div class="sis-poster"><span style="font-size:46px">🧾</span><h3 style="color:#fff;margin:0">PubliFuturo Gestión</h3><p style="margin:0;opacity:.85;max-width:44ch">19 módulos con 14 días de operación de ejemplo: ventas, créditos, compras, caja y más.</p><button class="btn btn-primary btn-lg" style="background:#fff;color:var(--brand-700);box-shadow:none" onclick="sisLoadDemo(this)">▶ Probar la demo aquí</button><span class="small" style="opacity:.75">Entras como Gerencia · PIN de la demo: <b>1111</b></span></div></div>
+    </div>
+    <div class="sis-mobile-demo card"><span style="font-size:38px">🧾</span><h3>Demo en vivo</h3><p class="muted">Ábrela en pantalla completa para verla mejor en tu celular.</p><a class="btn btn-primary" href="/demo/" target="_blank" rel="noopener">▶ Abrir la demo</a></div>
+    <div class="row" style="justify-content:center;margin-top:22px"><a class="btn btn-wa" href="${wa}" target="_blank" rel="noopener">${I.wa} Solicitar demo personalizada</a><a class="btn btn-secondary" href="/demo/" target="_blank" rel="noopener">Abrir en pantalla completa ↗</a></div>
+  </div></section>
+
+  <section class="sec"><div class="wrap" style="max-width:820px">
+    <div class="sec-hd center"><h2>Preguntas frecuentes</h2></div>
+    <div class="sis-faq">${faq.map(([q, a]) => `<details class="sis-q"><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
+  </div></section>
+
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="sis-band rv"><div><h2>¿Quieres verlo con el logo y los colores de tu empresa?</h2><p>Cuéntanos tu negocio y te mostramos una demo personalizada. Sin compromiso.</p></div><div class="row"><a class="btn btn-wa btn-lg" href="${wa}" target="_blank" rel="noopener">${I.wa} Escribir por WhatsApp</a></div></div></div></section>`;
+}
+
 function Services(r) {
   const slug = r.seg[1];
   if (slug) { const cap = CAPS.find(x => x.slug === slug); if (cap) return CapPage(cap); const u = UNITS_PUBLIC.find(x => x.slug === slug); if (u) return UnitPage(u); return NotFound(); }
