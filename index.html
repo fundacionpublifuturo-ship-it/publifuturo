@@ -1612,7 +1612,7 @@ const forCloud = () => ({ ...S, session: null }); // la sesión NUNCA viaja a la
 function cacheLocal() { try { localStorage.setItem(STORE_KEY, JSON.stringify(forCloud())); } catch (e) { } }
 
 /* ---------- Autenticación: usuario + contraseña + código al correo ---------- */
-const AUTH_INBOX = 'publifuturocolombia', AUTH_DOMAIN = 'gmail.com';
+const AUTH_INBOX = 'fundacionpublifuturo', AUTH_DOMAIN = 'gmail.com';
 const authEmail = user => `${AUTH_INBOX}+${user}@${AUTH_DOMAIN}`;
 const userFromEmail = email => { const m = String(email || '').toLowerCase().match(/^publifuturocolombia\+([^@]+)@gmail\.com$/); return m ? USERS.find(u => u.user === m[1]) || null : null; };
 const jwtMethods = token => { try { const p = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return (p.amr || []).map(a => typeof a === 'string' ? a : a.method); } catch (e) { return []; } };
@@ -1620,7 +1620,7 @@ const hasEmailCode = token => jwtMethods(token).some(m => m === 'otp' || m === '
 const rndToken = () => Array.from(crypto.getRandomValues(new Uint8Array(8)), b => b.toString(16).padStart(2, '0')).join('');
 let loginPending = null; // { userId, usuario, sinCorreo }
 /* Código por correo con FormSubmit (como en Electronics BGA). Tras activar FormSubmit, cambia FS_TARGET por el alias aleatorio que te envía. */
-const FS_TARGET = 'publifuturocolombia@gmail.com';
+const FS_TARGET = 'fundacionpublifuturo@gmail.com';
 const FS_ENDPOINT = 'https://formsubmit.co/ajax/' + encodeURIComponent(FS_TARGET);
 const SES_KEY = 'pf_ses_v1';
 const PFCODE = (() => {
@@ -1634,9 +1634,9 @@ const PFCODE = (() => {
       try {
         const r = await fetch(FS_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({ _subject: '🔐 Código de acceso · PubliFuturo', _template: 'table', _captcha: 'false', Usuario: u.nombre, Perfil: u.role, Codigo: code, Vence: 'en 10 minutos', Fecha: new Date().toLocaleString('es-CO') }) });
-        const j = await r.json().catch(() => ({}));
-        return { ok: r.ok && String(j.success) !== 'false' };
-      } catch (e) { return { ok: false }; }
+        const j = await r.json().catch(() => ({})), ok = r.ok && String(j.success) !== 'false';
+        return { ok, msg: ok ? '' : String(j.message || ('HTTP ' + r.status)).slice(0, 240) };
+      } catch (e) { return { ok: false, msg: 'No hubo conexión con FormSubmit (' + (e && e.message ? e.message : 'red') + ')' }; }
     },
     check(v) { if (!code || Date.now() > exp) return 'vencido'; if (++tries > 5) { code = null; return 'intentos'; } if (String(v).trim() === code) { code = null; return 'ok'; } return 'mal'; }
   };
@@ -2336,7 +2336,7 @@ function Login(msg = '') {
   const maskedInbox = AUTH_INBOX[0] + '•'.repeat(AUTH_INBOX.length - 1) + '@' + AUTH_DOMAIN;
   const alertBox = (txt, color) => `<div class="card" style="border-color:var(--${color});background:var(--${color}-50);padding:12px 14px;font-size:13px;margin:0 0 14px">${txt}</div>`;
   const step1 = `<h2>Ingresar</h2><p class="small muted">Escribe tu <b>usuario</b> y tu <b>contraseña</b>. Después te pediremos un <b>código</b> que enviamos al correo.</p>${msg ? alertBox(msg, 'warning') : ''}<div id="login-err"></div><form class="stack" onsubmit="loginForm(this);return false" autocomplete="off"><div class="field"><label>Usuario</label><input class="input" name="usuario" id="lg_u" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="tu usuario"></div><div class="field"><label>Contraseña</label><div class="row" style="gap:8px;flex-wrap:nowrap"><input class="input" name="clave" id="lg_p" type="password" placeholder="••••••••" style="flex:1"><button type="button" class="icon-btn" onclick="const i=$('#lg_p');i.type=i.type==='password'?'text':'password';this.classList.toggle('on')" aria-label="Mostrar contraseña">${I.eye}</button></div></div><button class="btn btn-primary" id="lg_btn">Continuar</button></form>`;
-  const step2 = `<h2>Código de verificación</h2><p class="small muted">Enviamos un código de <b>6 dígitos</b> al correo <b>${maskedInbox}</b>. Vence en 10 minutos. Revisa también la carpeta de <b>spam</b>. El asunto dice "Código de acceso · PubliFuturo".</p>${loginPending && loginPending.sinCorreo ? alertBox('⚠️ <b>El correo no respondió.</b> Si es la primera vez, abre el correo de <b>activación de FormSubmit</b> en esa bandeja (o en spam), pulsa <b>Activate</b> y luego usa «Reenviar código».', 'warning') : ''}<div id="login-err"></div><form class="stack" onsubmit="codeForm(this);return false" autocomplete="off"><div class="field"><label>Código</label><input class="input" name="codigo" id="lg_c" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456" style="letter-spacing:6px;font-size:20px;text-align:center"></div><button class="btn btn-primary" id="lg_btn">Entrar</button></form><div class="row between" style="margin-top:14px"><button class="btn btn-secondary btn-sm" id="lg_resend" onclick="resendCode()">Reenviar código</button><button class="btn btn-secondary btn-sm" onclick="loginPending=null;render()">Cambiar usuario</button></div>`;
+  const step2 = `<h2>Código de verificación</h2><p class="small muted">Enviamos un código de <b>6 dígitos</b> al correo <b>${maskedInbox}</b>. Vence en 10 minutos. Revisa también la carpeta de <b>spam</b>. El asunto dice "Código de acceso · PubliFuturo".</p>${loginPending && loginPending.sinCorreo ? alertBox('⚠️ <b>El correo no respondió.</b> Si es la primera vez, abre el correo de <b>activación de FormSubmit</b> en esa bandeja (o en spam), pulsa <b>Activate</b> y luego usa «Reenviar código».' + (loginPending.msg ? '<br><small>FormSubmit respondió: <i>' + esc(loginPending.msg) + '</i></small>' : ''), 'warning') : ''}<div id="login-err"></div><form class="stack" onsubmit="codeForm(this);return false" autocomplete="off"><div class="field"><label>Código</label><input class="input" name="codigo" id="lg_c" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456" style="letter-spacing:6px;font-size:20px;text-align:center"></div><button class="btn btn-primary" id="lg_btn">Entrar</button></form><div class="row between" style="margin-top:14px"><button class="btn btn-secondary btn-sm" id="lg_resend" onclick="resendCode()">Reenviar código</button><button class="btn btn-secondary btn-sm" onclick="loginPending=null;render()">Cambiar usuario</button></div>`;
   return `<div class="login view"><div class="art">${Logo('light', 30)}<div><h2 style="color:#fff">Un solo acceso para toda la fundación</h2><p style="color:rgba(255,255,255,.75);max-width:44ch">Estudiantes, docentes, comercial, cartera y gerencia entran por aquí y ven <b>solo lo que les corresponde</b>.</p></div><div class="caption" style="color:rgba(255,255,255,.5)">${COPY.legal.nombre}</div></div><div class="frm"><a href="#/" class="small" style="margin-bottom:24px">← Volver al sitio</a>${loginPending ? step2 : step1}<div class="caption" style="margin-top:16px">¿Problemas para entrar? Escríbenos por <a href="${waPF(WA.soporte)}" target="_blank" rel="noopener"><b>WhatsApp</b></a>.</div></div></div>`;
 }
 const loginFail = m => { const box = $('#login-err'); if (box) box.innerHTML = `<div class="card" style="border-color:var(--danger);background:var(--danger-50);padding:11px 14px;font-size:13px;margin-bottom:14px">${m}</div>`; const b = $('#lg_btn'); if (b) { b.disabled = false; b.textContent = loginPending ? 'Entrar' : 'Continuar'; } return false; };
@@ -2349,7 +2349,7 @@ async function loginForm(f) {
   loginBusy('Enviando código…');
   const r = await PFCODE.send(u);
   if (r.wait) return loginFail(`Espera ${r.wait} s para pedir otro código.`);
-  loginPending = { userId: u.id, usuario: u.user, sinCorreo: !r.ok }; render();
+  loginPending = { userId: u.id, usuario: u.user, sinCorreo: !r.ok, msg: r.msg || '' }; render();
   return false;
 }
 async function codeForm(f) {
@@ -2370,8 +2370,8 @@ async function resendCode() {
   if (!loginPending) return;
   const r = await PFCODE.send(USERS.find(x => x.id === loginPending.userId));
   if (r.wait) return loginFail(`Espera ${r.wait} s para pedir otro código.`);
-  if (!r.ok) { loginPending.sinCorreo = true; render(); return false; }
-  loginPending.sinCorreo = false; render(); toast('Código reenviado', 'ok');
+  if (!r.ok) { loginPending.sinCorreo = true; loginPending.msg = r.msg || ''; render(); return false; }
+  loginPending.sinCorreo = false; loginPending.msg = ''; render(); toast('Código reenviado', 'ok');
 }
 window.addEventListener('hashchange', () => { if (!location.hash.startsWith('#/ingreso')) loginPending = null; });
 </script>
