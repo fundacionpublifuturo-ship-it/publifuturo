@@ -1235,11 +1235,293 @@ select.doc-in{padding-right:8px}
 }
 
 </style>
+<style id="nav-css">
+/* ===== Navegación unificada (solo perfiles que NO son estudiante: todo va bajo .nvx) ===== */
+.nvx [hidden],.nv-sheet [hidden],.nv-cat[hidden],.nv-u[hidden],.nv-empty[hidden]{display:none!important}
+@media(min-width:1024px){.app.nvx{grid-template-columns:272px 1fr}.app.nvx.collapsed{grid-template-columns:76px 1fr}}
+@media(min-width:1280px){.app.nvx{grid-template-columns:288px 1fr}.app.nvx.collapsed{grid-template-columns:76px 1fr}}
+.nvx .side{gap:1px;padding:16px 12px calc(16px + var(--sab));background:linear-gradient(180deg,#00012E 0%,#020B4F 100%);scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent}
+.nvx .side::-webkit-scrollbar{width:6px}.nvx .side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:9px}
+.nvx .side .brand{padding:4px 8px 12px}
+.nvx .side .role{padding:0 10px 10px;color:#9DB6F8}
+/* búsqueda del menú */
+.nv-search{position:relative;margin:0 2px 10px;display:flex;align-items:center}
+.nv-search svg{position:absolute;left:11px;color:rgba(255,255,255,.55);pointer-events:none}
+.nv-search input{width:100%;min-height:38px;padding:0 36px 0 33px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:13px;transition:border-color .18s,background .18s,box-shadow .18s;-webkit-appearance:none}
+.nv-search input::placeholder{color:rgba(255,255,255,.58)}
+.nv-search input::-webkit-search-cancel-button{filter:invert(1);opacity:.6}
+.nv-search input:focus{outline:0;border-color:#7FA3F5;background:rgba(255,255,255,.11);box-shadow:0 0 0 3px rgba(127,163,245,.28)}
+.nv-search kbd{position:absolute;right:9px;font:600 10.5px/1 var(--font-body);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:3px 6px;pointer-events:none}
+.nv-search input:focus+kbd,.nv-search input:not(:placeholder-shown)+kbd{opacity:0}
+/* grupos */
+.nv-grp{margin-top:4px}
+.nv-g{list-style:none;display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:12px;color:rgba(255,255,255,.66);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;user-select:none;transition:background .15s,color .15s}
+.nv-g::-webkit-details-marker{display:none}.nv-g::marker{content:''}
+.nv-g:hover{background:rgba(255,255,255,.06);color:#fff}
+.nv-g:focus-visible{outline:2px solid #7FA3F5;outline-offset:-2px}
+.nv-e{font-size:15px;line-height:1;transition:transform .22s var(--ease)}
+.nv-g:hover .nv-e{transform:scale(1.2) rotate(-6deg)}
+.nv-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nv-n{font-size:10.5px;font-weight:700;letter-spacing:0;background:rgba(255,255,255,.12);color:rgba(255,255,255,.88);border-radius:99px;padding:2px 7px}
+.nv-ch{font-size:16px;line-height:1;opacity:.6;transition:transform .22s var(--ease)}
+.nv-grp[open]>.nv-g .nv-ch{transform:rotate(90deg)}
+.nv-grp.has-on>.nv-g{color:#fff}.nv-grp.has-on>.nv-g .nv-t{text-shadow:0 0 18px rgba(127,163,245,.6)}
+.nv-items{margin:1px 0 4px 17px;padding-left:7px;border-left:1px solid rgba(255,255,255,.1)}
+.nv-grp[open]>.nv-items{animation:nvIn .22s var(--ease)}
+.nv-sub{margin-top:1px}.nv-sub>.nv-g{font-size:12.5px;font-weight:600;padding:7px 8px;letter-spacing:0;text-transform:none}.nv-sub>.nv-g .nv-e{font-size:14px}
+.nv-sub>.nv-items{margin-left:12px}
+@keyframes nvIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+/* ítems */
+.nv-row{position:relative}
+.nvx .nav{padding:8px 11px;margin:1px 0;gap:11px;font-size:13.5px;border-radius:11px;transition:background .15s,color .15s,transform .18s var(--ease),box-shadow .18s}
+.nvx .nav:hover{background:rgba(255,255,255,.08);color:#fff;transform:translateX(2px)}
+.nvx .nav .nv-ic{display:grid;place-items:center;width:22px;height:22px;flex:none;transition:transform .2s var(--ease)}
+.nvx .nav .nv-ic svg{width:18px;height:18px}
+.nvx .nav:hover .nv-ic{transform:scale(1.12)}
+.nvx .nav.on{background:linear-gradient(135deg,#1A57E0 0%,#003EC8 100%);color:#fff;font-weight:600;box-shadow:0 8px 20px -10px rgba(26,87,224,.95),inset 0 1px 0 rgba(255,255,255,.18)}
+.nvx .nav span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.nv-it .cnt{margin-right:22px}
+.nv-star{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:24px;height:24px;border:0;border-radius:7px;background:none;color:rgba(255,255,255,.35);font-size:13px;line-height:1;cursor:pointer;opacity:0;transition:opacity .15s,color .15s,transform .15s}
+.nv-row:hover .nv-star,.nv-star:focus-visible,.nv-star.on{opacity:1}
+.nv-star:hover{color:#FFD166;transform:translateY(-50%) scale(1.2)}.nv-star.on{color:#FFC233}
+.nv-empty{padding:18px 10px;text-align:center;font-size:13px;color:rgba(255,255,255,.6)}
+/* barra lateral contraída: solo íconos */
+.app.nvx.collapsed .nv-search,.app.nvx.collapsed .nv-g,.app.nvx.collapsed .nv-star,.app.nvx.collapsed .nv-sub,.app.nvx.collapsed .nv-empty{display:none}
+.app.nvx.collapsed .nv-items{margin:0;padding:0;border:0}
+.app.nvx.collapsed .nv-grp{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.1)}
+.app.nvx.collapsed .nv-grp:first-of-type{border-top:0;padding-top:0}
+.app.nvx.collapsed .nv-it .cnt{position:absolute;top:4px;right:6px;margin:0}
+@media(min-width:768px) and (max-width:1023px){
+  .app.nvx .nv-search,.app.nvx .nv-g,.app.nvx .nv-star,.app.nvx .nv-sub,.app.nvx .nv-empty{display:none}
+  .app.nvx .nv-items{margin:0;padding:0;border:0}
+  .app.nvx .nv-grp{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.1)}
+  .app.nvx .nv-it .cnt{position:absolute;top:4px;right:6px;margin:0}
+}
+/* tarjetas de categorías */
+.nv-hub-wrap{margin-bottom:22px}
+.nv-hub-t{font:700 12px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 2px 10px}
+.nv-hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;align-items:start}
+.nv-card{background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;box-shadow:var(--e1);transition:transform .2s var(--ease),box-shadow .2s;animation:nvCard .45s var(--ease) both;animation-delay:calc(var(--i,0)*60ms)}
+.nv-card:hover{transform:translateY(-3px);box-shadow:var(--e2)}
+.nv-card-h{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.nv-card-h b{display:block;font:700 15px/1.2 var(--font-display);color:var(--text)}
+.nv-card-h small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.nv-tile{display:grid;place-items:center;width:42px;height:42px;flex:none;border-radius:13px;font-size:20px;color:#fff;box-shadow:0 8px 18px -10px rgba(0,40,133,.7),inset 0 1px 0 rgba(255,255,255,.28);transition:transform .25s var(--ease)}
+.nv-card:hover .nv-tile,.nv-cat-h:hover .nv-tile{transform:scale(1.08) rotate(-4deg)}
+.nv-pills,.nv-chips{display:flex;flex-wrap:wrap;gap:7px}
+.nv-pill{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border-radius:99px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:600 12.5px/1 var(--font-body);cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s,color .15s,transform .15s,box-shadow .15s}
+.nv-pill:hover{background:var(--brand-50);border-color:var(--brand-300);color:var(--brand-600);transform:translateY(-1px);box-shadow:var(--e1)}
+.nv-pill small{background:var(--brand-50);color:var(--brand-600);border-radius:99px;padding:2px 7px;font-size:11px}
+@keyframes nvCard{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* vista de unidades por categoría */
+.nv-find{display:flex;flex-direction:column;gap:12px;margin-bottom:8px}
+.nv-sq{width:100%;max-width:420px;min-height:42px;padding:0 14px;border:1.5px solid var(--border);border-radius:var(--r-md);background:var(--surface);color:var(--text);font-size:14px}
+.nv-sq:focus{outline:0;border-color:var(--brand-600);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand-600) 18%,transparent)}
+.nv-cat{margin-top:26px;scroll-margin-top:84px;animation:nvCard .45s var(--ease) both;animation-delay:calc(var(--i,0)*50ms)}
+.nv-cat-h{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.nv-cat-h h3{margin:0;font-size:19px}
+.nv-empty{color:var(--muted)}
+.nv-hub-wrap~.nv-empty,.nv-cat~.nv-empty{padding:30px;text-align:center}
+/* menú Más del celular */
+.nv-sheet .nv-sq{max-width:none;margin-bottom:12px}
+.nv-sg{margin-bottom:14px}
+.nv-sg h5{margin:2px 2px 8px;font:700 11.5px/1 var(--font-body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.nv-sd{border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:8px;background:var(--surface)}
+.nv-sd>summary{list-style:none;cursor:pointer;padding:12px 14px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
+.nv-sd>summary::-webkit-details-marker{display:none}
+.nv-sd>summary small{margin-left:auto;background:var(--brand-50);color:var(--brand-600);border-radius:99px;padding:2px 8px;font-size:11px}
+.nv-sd>summary::after{content:'›';font-size:18px;line-height:1;transition:transform .2s;opacity:.6}
+.nv-sd[open]>summary::after{transform:rotate(90deg)}
+.nv-sd>.grid{padding:0 10px 10px}
+.nv-sl.on{border-color:var(--brand-600);background:var(--brand-50);box-shadow:inset 3px 0 0 var(--brand-600)}
+.nv-sl .cnt{margin-left:auto;background:var(--danger);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px;font-style:normal}
+.nv-sl{min-width:0}.nv-sl b{overflow:hidden;text-overflow:ellipsis}
+@media(max-width:760px){
+  .nv-hub{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0;padding:2px 0 10px;scrollbar-width:none}
+  .nv-hub::-webkit-scrollbar{display:none}
+  .nv-card{flex:0 0 86%;scroll-snap-align:start}
+  .nv-cat-h h3{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){.nv-card,.nv-cat,.nv-grp[open]>.nv-items{animation:none}.nvx .nav,.nv-e,.nv-tile,.nv-pill{transition:none}.nvx .nav:hover{transform:none}}
+
+.nv-u .nv-al{display:block;color:var(--danger);font-weight:700}
+.nv-g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.nv-sheet .uni{padding:10px 11px;gap:9px;border-radius:14px;min-width:0}
+.nv-sheet .uni .ico{width:34px;height:34px;flex:none}
+.nv-sheet .uni b{font-size:13px;line-height:1.25;word-break:break-word}
+.nv-sheet .nv-sd>.nv-g2{padding:0 10px 10px}
+
+@media(min-width:1024px) and (max-width:1279px){.app.nvx .nv-sub>.nv-g{font-size:12px;gap:7px;padding:7px 6px}.app.nvx .nv-items{margin-left:12px;padding-left:5px}.app.nvx .nv-sub>.nv-items{margin-left:8px}}
+
+</style>
 </head>
 <body>
 <div id="app"></div>
 <div class="toasts" id="toasts"></div>
 <div id="layer"></div>
+<script id="nav-module">
+/* ===== NAVEGACIÓN UNIFICADA · todos los perfiles excepto estudiante ======================
+   - Menú lateral agrupado (categorías → subcategorías → secciones), con búsqueda y favoritos
+   - Menú "Más" del celular agrupado
+   - Tarjetas de categorías en el inicio de cada panel
+   - Unidades de negocio agrupadas por categoría
+   Solo REORGANIZA lo que ya existe: cada enlace sale de NAV[rol] (permisos) o de myUnits().   */
+(function () {
+  const NX = window.NAVX = { q: '', ctx: null };
+  const norm = s => String(s == null ? '' : s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const LS = { get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } } };
+  const E = s => (typeof esc === 'function' ? esc(s) : String(s));
+
+  /* ---------- categorías de las unidades de negocio (mismos nombres de la página pública de servicios) ---------- */
+  const CATS = [
+    { id: 'academia', e: '🎓', n: 'Academia', d: 'Programas de formación', slugs: ['semilleros', 'crecimiento-digital', 'master-digital-360', 'curso-express-remoto', 'marketing-ia-meta-ads', 'software-servicio-tecnico'] },
+    { id: 'contenido', e: '🎬', n: 'Contenido y producción', d: 'Imágenes y video', slugs: ['bancos-imagenes', 'videos-ia', 'videos-organicos', 'grabacion-profesional'] },
+    { id: 'publicidad', e: '📣', n: 'Publicidad y crecimiento', d: 'Campañas y asesorías', slugs: ['campanas', 'asesorias'] },
+    { id: 'consultoria', e: '🧭', n: 'Consultoría empresarial', d: 'Auditorías, IA y automatización', slugs: ['auditorias', 'ia-empresarial', 'automatizacion'] },
+    { id: 'digitales', e: '💻', n: 'Soluciones digitales', d: 'Aplicativos y páginas web', slugs: ['microapps'] },
+    { id: 'comercio', e: '🛍️', n: 'Comercio y suscripciones', d: 'Streaming y accesorios', slugs: ['streaming', 'accesorios-mayor'] }
+  ];
+  NX.cats = units => {
+    const used = new Set(); const out = CATS.map(c => ({ id: c.id, e: c.e, n: c.n, d: c.d, units: c.slugs.map(s => units.find(u => u.slug === s)).filter(Boolean) })).filter(c => c.units.length);
+    out.forEach(c => c.units.forEach(u => used.add(u.slug))); const rest = units.filter(u => !used.has(u.slug));
+    if (rest.length) out.push({ id: 'otras', e: '📦', n: 'Otras unidades', d: '', units: rest });
+    return out;
+  };
+
+  /* ---------- árbol por perfil (solo agrupa rutas que YA existen en NAV[rol]) ---------- */
+  const TREE = {
+    admin: [
+      { h: '/admin', l: 'Inicio' },
+      { id: 'ventas', e: '🤝', n: 'Ventas y clientes', d: 'Leads, clientes y contratos', items: [['/admin/pipeline', 'Pipeline'], ['/admin/clientes', 'Clientes'], ['/admin/documentos', 'Documentos']] },
+      { id: 'cobros', e: '💰', n: 'Cobros y seguimiento', d: 'Pagos, vencidos y recordatorios', items: [['/admin/mensualidades', 'Mensualidades'], ['/admin/semaforo', 'Semáforo'], ['/admin/recordatorios', 'Recordatorios'], ['/admin/alertas', 'Alertas']] },
+      { id: 'unidades', e: '🏢', n: 'Unidades de negocio', units: true, extra: [['/admin/academico', 'Gestión académica', 'academia']] }
+    ],
+    finance: [
+      { h: '/cartera', l: 'Inicio' },
+      { id: 'cobrar', e: '💰', n: 'Cobros', d: 'Lo que se debe cobrar', items: [['/cartera/cobrar', 'Por cobrar'], ['/cartera/mensualidades', 'Mensualidades'], ['/cartera/semaforo', 'Semáforo']] },
+      { id: 'conta', e: '📊', n: 'Contabilidad', d: 'Movimientos y resultados', items: [['/cartera/movimientos', 'Movimientos'], ['/cartera/resultados', 'Resultados'], ['/cartera/flujo', 'Flujo de caja']] },
+      { id: 'otros', e: '🧾', n: 'Comisiones y ESAL', d: 'Pagos a asesores y reporte ESAL', items: [['/cartera/comisiones', 'Comisiones'], ['/cartera/esal', 'ESAL']] }
+    ],
+    teacher: [
+      { h: '/docente', l: 'Inicio' },
+      { id: 'clases', e: '📚', n: 'Clases y evaluación', d: 'Tu día a día con los grupos', items: [['/docente/clases', 'Clases'], ['/docente/asistencia', 'Asistencia'], ['/docente/calificar', 'Calificar']] },
+      { h: '/docente/honorarios', l: 'Honorarios' }
+    ],
+    superadmin: [
+      { h: '/superadmin', l: 'Torre de control' },
+      { id: 'acad', e: '🎓', n: 'Gestión académica', d: 'Cursos, estudiantes y asistencia', items: [['/superadmin/cursos', 'Cursos'], ['/superadmin/estudiantes', 'Estudiantes'], ['/superadmin/asistencia', 'Asistencia'], ['/superadmin/mensualidades', 'Mensualidades']] },
+      { id: 'admin', e: '🛡️', n: 'Administración', d: 'Usuarios, configuración y auditoría', items: [['/superadmin/usuarios', 'Usuarios'], ['/superadmin/config', 'Configuración'], ['/superadmin/auditoria', 'Auditoría'], ['/superadmin/reportes', 'Reportes']] },
+      { id: 'paneles', e: '🧭', n: 'Otros paneles', d: 'Entrar a los demás portales', only: 'superadmin', items: [['/admin', 'Comercial', 'kanban'], ['/cartera', 'Cartera', 'wallet'], ['/docente', 'Docente', 'book']] },
+      { id: 'unidades', e: '🏢', n: 'Unidades de negocio', units: true }
+    ]
+  };
+
+  /* ---------- resolución contra permisos (nada que NAV[rol] o myUnits() no permita) ---------- */
+  NX.resolve = (role, mine) => {
+    const nav = NAV[role] || [], u = me(), out = [], count = h => { if (h.endsWith('/alertas')) return (mine || []).length || ''; const x = nav.find(n => n[0] === h); try { return x && x[3] ? (x[3]() || '') : ''; } catch (e) { return ''; } };
+    (TREE[role] || []).forEach(g => {
+      if (g.h) { const x = nav.find(n => n[0] === g.h); if (x) out.push({ type: 'item', h: g.h, l: g.l || x[1], ic: I[x[2]] || '', cnt: count(g.h) }); return; }
+      if (g.units) {
+        let cats = []; try { cats = NX.cats(myUnits()); } catch (e) { cats = []; } if (!cats.length) return;
+        const extra = (g.extra || []).map(([h, l, ic]) => nav.find(n => n[0] === h) ? { h, l, ic: I[nav.find(n => n[0] === h)[2]] || '', cat: ic } : null).filter(Boolean);
+        out.push({ type: 'units', id: g.id, e: g.e, n: g.n, cats, extra, total: cats.reduce((a, c) => a + c.units.length, 0), all: nav.find(n => n[0] === '/admin/unidades') || role === 'superadmin' ? '/admin/unidades' : null }); return;
+      }
+      if (g.only && (!u || u.role !== g.only)) return;
+      const items = g.items.map(([h, l, ic]) => { const x = nav.find(n => n[0] === h); if (x) return { h, l, ic: I[x[2]] || '', cnt: count(h) }; if (g.only) return { h, l, ic: I[ic] || '', cnt: '' }; return null; }).filter(Boolean);
+      if (items.length) out.push({ type: 'group', id: g.id, e: g.e, n: g.n, d: g.d, items });
+    });
+    return out;
+  };
+  const flat = tree => { const a = []; tree.forEach(g => { if (g.type === 'item') a.push(g); else if (g.type === 'group') a.push(...g.items.map(i => Object.assign({ grp: g.n }, i))); else if (g.type === 'units') { if (g.all) a.push({ h: g.all, l: 'Todas las unidades', ic: I.grid || '', grp: g.n }); g.extra.forEach(i => a.push(Object.assign({ grp: g.n }, i))); g.cats.forEach(c => c.units.forEach(un => a.push({ h: '/admin/unidad/' + un.slug, l: un.n, ic: I[un.ic] || '', grp: c.n }))); } }); return a; };
+
+  /* ---------- favoritos y estado de grupos ---------- */
+  const favKey = () => 'pf_fav_' + ((me() || {}).id || 'x');
+  const favs = () => LS.get(favKey(), []);
+  const isOpenStored = (id, def) => { const st = LS.get('pf_navg', {}); return id in st ? !!st[id] : def; };
+  NX.fav = h => { const f = favs(), i = f.indexOf(h); if (i >= 0) f.splice(i, 1); else f.push(h); LS.set(favKey(), f.slice(0, 8)); NX.refresh(); toast(i >= 0 ? 'Quitado de favoritos' : '⭐ Agregado a favoritos', 'ok'); };
+
+  /* ---------- menú lateral ---------- */
+  const row = (it, on, role) => { const fav = favs().includes(it.h); return `<div class="nv-row"><a class="nav nv-it ${on(it.h) ? 'on' : ''}" href="#${it.h}" ${on(it.h) ? 'aria-current="page"' : ''} title="${E(it.l)}" data-l="${E(norm(it.l + ' ' + (it.grp || '')))}"><i class="nv-ic">${it.ic || ''}</i><span>${E(it.l)}</span>${it.cnt ? `<em class="cnt">${it.cnt}</em>` : ''}</a><button type="button" class="nv-star ${fav ? 'on' : ''}" onclick="event.preventDefault();event.stopPropagation();NAVX.fav('${it.h}')" aria-label="${fav ? 'Quitar de favoritos' : 'Marcar como favorito'}" title="${fav ? 'Quitar de favoritos' : 'Favorito'}">★</button></div>`; };
+  const grp = (id, e, n, inner, open, hasOn, sub, count) => `<details class="nv-grp ${sub ? 'nv-sub' : ''} ${hasOn ? 'has-on' : ''}" data-g="${id}" ${open ? 'open' : ''}><summary class="nv-g"><span class="nv-e">${e}</span><span class="nv-t">${E(n)}</span>${count ? `<span class="nv-n">${count}</span>` : ''}<span class="nv-ch">›</span></summary><div class="nv-items">${inner}</div></details>`;
+  NX.treeHTML = (role, r, mine) => {
+    const tree = NX.resolve(role, mine), all = flat(tree), collapsed = (typeof sideCollapsed !== 'undefined' && sideCollapsed) || (window.innerWidth >= 768 && window.innerWidth <= 1023);
+    const on = h => (h === ROLE_HOME[role] ? r.path === h : (h === '/admin/unidades' ? r.path === h : (r.path === h || r.path.startsWith(h + '/'))));
+    const q = norm(NX.q).trim(); const vis = it => !q || norm(it.l + ' ' + (it.grp || '')).includes(q);
+    const favItems = favs().map(h => all.find(i => i.h === h)).filter(Boolean);
+    let html = ''; const rest = tree.slice(); if (rest[0] && rest[0].type === 'item') html += row(rest.shift(), on, role);
+    if (favItems.length) html += grp('fav', '⭐', 'Favoritos', favItems.map(i => row(i, on, role)).join(''), true, favItems.some(i => on(i.h)));
+    rest.forEach(g => {
+      if (g.type === 'item') { html += row(g, on, role); return; }
+      if (g.type === 'group') { const items = g.items; html += grp(g.id, g.e, g.n, items.map(i => row(i, on, role)).join(''), collapsed || (q ? items.some(vis) : isOpenStored(g.id, true)) || items.some(i => on(i.h)), items.some(i => on(i.h))); return; }
+      let inner = (g.all ? row({ h: g.all, l: 'Todas las unidades', ic: I.grid || '' }, on, role) : '') + g.extra.map(x => row(Object.assign({ grp: g.n }, x), on, role)).join('');
+      g.cats.forEach(c => { const its = c.units.map(un => ({ h: '/admin/unidad/' + un.slug, l: un.n, ic: I[un.ic] || '', grp: c.n })); const arr = its; inner += grp('c-' + c.id, c.e, c.n, arr.map(i => row(i, on, role)).join(''), (q ? arr.some(vis) : isOpenStored('c-' + c.id, false)) || arr.some(i => on(i.h)), arr.some(i => on(i.h)), true); });
+      const hasOn = flat([g]).some(i => on(i.h));
+      html += grp(g.id, g.e, g.n, inner, collapsed || (q ? true : isOpenStored(g.id, true)) || hasOn, hasOn, false, g.total);
+    });
+    return html;
+  };
+  NX.side = (role, r, mine) => {
+    NX.ctx = { role, r, mine }; requestAnimationFrame(() => NX.reveal());
+    return `<div class="nv-search"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="nvq" type="search" placeholder="Buscar en el menú" aria-label="Buscar en el menú" autocomplete="off" value="${E(NX.q)}" oninput="NAVX.filtrar(this.value)"><kbd>/</kbd></div><div id="nvTree">${NX.treeHTML(role, r, mine)}</div><div class="nv-empty" id="nvEmpty" hidden>Sin resultados</div>`;
+  };
+  NX.reveal = () => { const a = document.querySelector('.side .nv-it.on'), s = document.querySelector('.side'); if (!a || !s || !a.offsetParent) return; const ar = a.getBoundingClientRect(), sr = s.getBoundingClientRect(); if (ar.top < sr.top + 70 || ar.bottom > sr.bottom - 24) s.scrollTop += ar.top - sr.top - sr.height / 3; };
+  NX.refresh = () => { const c = NX.ctx, t = document.getElementById('nvTree'); if (c && t) { t.innerHTML = NX.treeHTML(c.role, c.r, c.mine); NX.filtrar(NX.q); } };
+  NX.filtrar = v => {
+    NX.q = v || ''; const q = norm(NX.q).trim(), side = document.querySelector('.side'); if (!side) return; NX.sil = Date.now();
+    side.querySelectorAll('.nv-row').forEach(rw => { const a = rw.querySelector('.nv-it'); rw.hidden = !!q && !a.dataset.l.includes(q); });
+    const ds = [...side.querySelectorAll('details.nv-grp')].reverse();
+    ds.forEach(d => { const any = [...d.querySelectorAll('.nv-row')].some(x => !x.hidden); d.hidden = !!q && !any; if (q) d.open = any; else d.open = !!d.querySelector('.nv-it.on') || (typeof sideCollapsed !== 'undefined' && sideCollapsed && !d.classList.contains('nv-sub')) || isOpenStored(d.dataset.g, !String(d.dataset.g || '').startsWith('c-')); });
+    const e = document.getElementById('nvEmpty'); if (e) e.hidden = !q || ds.some(d => !d.hidden) || [...side.querySelectorAll('.nv-row')].some(x => !x.hidden);
+  };
+  if (window.matchMedia) { const mq = window.matchMedia('(max-width:1023px)'); const f = () => NX.refresh(); mq.addEventListener ? mq.addEventListener('change', f) : mq.addListener(f); }
+  document.addEventListener('toggle', e => { const d = e.target; if (!d || !d.matches || !d.matches('details.nv-grp') || NX.q || Date.now() - (NX.sil || 0) < 120) return; const st = LS.get('pf_navg', {}); st[d.dataset.g] = d.open; LS.set('pf_navg', st); }, true);
+  document.addEventListener('keydown', e => { if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return; const t = e.target, tag = t && t.tagName; if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return; const i = document.getElementById('nvq'); if (i && i.offsetParent) { e.preventDefault(); i.focus(); i.select(); } });
+
+  /* ---------- menú "Más" del celular ---------- */
+  NX.sheet = role => {
+    const r = route(), mine = (() => { try { const a = computeAlerts(); return role === 'teacher' ? a.filter(x => x.prioridad === 'academico') : a; } catch (e) { return []; } })(), tree = NX.resolve(role, mine);
+    const on = h => (h === ROLE_HOME[role] ? r.path === h : (r.path === h || r.path.startsWith(h + '/')));
+    const lk = (it, extra) => `<a href="#${it.h}" class="uni nv-sl ${on(it.h) ? 'on' : ''}" data-l="${E(norm(it.l + ' ' + (it.grp || '')))}" onclick="closeLayer()"><span class="ico">${it.ic || ''}</span><b>${E(it.l)}</b>${it.cnt ? `<em class="cnt">${it.cnt}</em>` : ''}</a>`;
+    const favItems = favs().map(h => flat(tree).find(i => i.h === h)).filter(Boolean);
+    let b = favItems.length ? `<section class="nv-sg"><h5>⭐ Favoritos</h5><div class="nv-g2">${favItems.map(lk).join('')}</div></section>` : '';
+    tree.forEach(g => {
+      if (g.type === 'item') b += `<section class="nv-sg"><div class="nv-g2">${lk(g)}</div></section>`;
+      else if (g.type === 'group') b += `<section class="nv-sg"><h5>${g.e} ${E(g.n)}</h5><div class="nv-g2">${g.items.map(lk).join('')}</div></section>`;
+      else b += `<section class="nv-sg"><h5>${g.e} ${E(g.n)}</h5><div class="nv-g2" style="margin-bottom:8px">${(g.all ? lk({ h: g.all, l: 'Todas las unidades', ic: I.grid || '' }) : '') + g.extra.map(x => lk(Object.assign({ grp: g.n }, x))).join('')}</div>${g.cats.map(c => { const its = c.units.map(un => ({ h: '/admin/unidad/' + un.slug, l: un.n, ic: I[un.ic] || '', grp: c.n })); const arr = its; return `<details class="nv-sd" ${arr.some(i => on(i.h)) ? 'open' : ''}><summary>${c.e} ${E(c.n)} <small>${c.units.length}</small></summary><div class="nv-g2">${arr.map(lk).join('')}</div></details>`; }).join('')}</section>`;
+    });
+    $('#layer').innerHTML = `<div class="overlay" style="align-items:flex-end;padding:0" onclick="if(event.target===this)closeLayer()"><div class="sheet nv-sheet" role="dialog" aria-label="Todas las secciones"><div class="card-hd"><h4 style="margin:0">Todas las secciones</h4><button class="icon-btn" onclick="closeLayer()" aria-label="Cerrar">${I.x}</button></div><input class="nv-sq" type="search" placeholder="Buscar sección…" aria-label="Buscar sección" oninput="NAVX.filtrarSheet(this.value)" autocomplete="off">${b}<div class="nv-sg"><div class="nv-g2"><a href="#/" class="uni" onclick="closeLayer()"><span class="ico">${I.globe}</span><b>Sitio público</b></a><a href="#/" class="uni" onclick="closeLayer();logout()"><span class="ico w">${I.logout}</span><b>Cerrar sesión</b></a></div></div><div class="nv-empty" id="nvSEmpty" hidden>Sin resultados</div></div></div>`;
+  };
+  NX.filtrarSheet = v => { const q = norm(v).trim(), sh = document.querySelector('.nv-sheet'); if (!sh) return; sh.querySelectorAll('.nv-sl').forEach(a => { a.hidden = !!q && !a.dataset.l.includes(q); }); sh.querySelectorAll('.nv-sd').forEach(d => { const any = [...d.querySelectorAll('.nv-sl')].some(x => !x.hidden); d.hidden = !!q && !any; if (q) d.open = any; }); let anyVis = false; sh.querySelectorAll('.nv-sg').forEach(s => { const links = s.querySelectorAll('.nv-sl'); if (!links.length) return; const any = [...links].some(x => !x.hidden); s.hidden = !!q && !any; if (any) anyVis = true; }); const e = document.getElementById('nvSEmpty'); if (e) e.hidden = !q || anyVis; };
+
+  /* ---------- tarjetas de categorías (inicio de cada panel) ---------- */
+  const TONES = ['linear-gradient(135deg,#1A57E0,#003EC8)', 'linear-gradient(135deg,#5B4BE1,#3B2FC0)', 'linear-gradient(135deg,#19C1D6,#0E93A5)', 'linear-gradient(135deg,#10B981,#0B8A4B)', 'linear-gradient(135deg,#F59E0B,#D97706)'];
+  NX.irCat = id => { location.hash = '#/admin/unidades'; setTimeout(() => { const el = document.getElementById('cat-' + id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 120); };
+  NX.hub = role => {
+    const tree = NX.resolve(role, []).filter(g => g.type !== 'item'); if (tree.length < 3) return '';
+    const cards = tree.map((g, i) => {
+      const tone = TONES[i % TONES.length];
+      if (g.type === 'units') return `<div class="nv-card" style="--i:${i}"><div class="nv-card-h"><span class="nv-tile" style="background:${tone}">${g.e}</span><div><b>${E(g.n)}</b><small>${g.total} unidades en ${g.cats.length} categorías</small></div></div><div class="nv-pills">${g.cats.map(c => `<button type="button" class="nv-pill" onclick="NAVX.irCat('${c.id}')">${c.e} ${E(c.n)} <small>${c.units.length}</small></button>`).join('')}</div></div>`;
+      return `<div class="nv-card" style="--i:${i}"><div class="nv-card-h"><span class="nv-tile" style="background:${tone}">${g.e}</span><div><b>${E(g.n)}</b><small>${E(g.d || '')}</small></div></div><div class="nv-pills">${g.items.map(it => `<a class="nv-pill" href="#${it.h}">${E(it.l)}${it.cnt ? ` <small>${it.cnt}</small>` : ''}</a>`).join('')}</div></div>`;
+    }).join('');
+    return `<section class="nv-hub-wrap" aria-label="Accesos por categoría"><div class="nv-hub-t">Accesos por categoría</div><div class="nv-hub">${cards}</div></section>`;
+  };
+
+  /* ---------- unidades de negocio agrupadas ---------- */
+  NX.unitsView = () => {
+    const units = myUnits(), cats = NX.cats(units), al = computeAlerts();
+    const card = u => { const rows = unitRows(u), a = al.filter(x => x.unidad === u.slug && x.prioridad !== 'ok').length; return `<a class="uni nv-u" href="#/admin/unidad/${u.slug}" data-n="${E(norm(u.n))}"><span class="ico ${['c', 'v', '', 'g', 'w'][UNITS.indexOf(u) % 5]}">${I[u.ic]}</span><div style="min-width:0"><b>${E(u.n)}</b><span style="display:block">${rows.length} registros · ${fmt(unitSales(u.slug))}</span>${a ? `<span class="nv-al">${a} alertas</span>` : ''}</div></a>`; };
+    return ph('Unidades de negocio', `${units.length} unidades en ${cats.length} categorías. Cada una tiene indicadores, operación, pipeline y mensualidades.`)
+      + `<div class="nv-find"><input class="nv-sq" type="search" placeholder="Buscar unidad…" aria-label="Buscar unidad" oninput="NAVX.filtrarUnidades(this.value)" autocomplete="off"><div class="nv-chips">${cats.map(c => `<button type="button" class="nv-pill" onclick="document.getElementById('cat-${c.id}').scrollIntoView({behavior:'smooth',block:'start'})">${c.e} ${E(c.n)}</button>`).join('')}</div></div>`
+      + cats.map((c, i) => { const tot = c.units.reduce((a, u) => a + unitSales(u.slug), 0); return `<section class="nv-cat" id="cat-${c.id}" style="--i:${i}"><div class="nv-cat-h"><span class="nv-tile" style="background:${TONES[i % TONES.length]}">${c.e}</span><div><h3>${E(c.n)}</h3><span class="small muted">${c.units.length} ${c.units.length === 1 ? 'unidad' : 'unidades'} · ${fmt(tot)}${c.d ? ' · ' + E(c.d) : ''}</span></div></div><div class="uni-grid">${c.units.map(card).join('')}</div></section>`; }).join('')
+      + `<div class="nv-empty" id="nvUEmpty" hidden>Ninguna unidad coincide con la búsqueda.</div>`;
+  };
+  NX.filtrarUnidades = v => { const q = norm(v).trim(); let any = false; document.querySelectorAll('.nv-cat').forEach(s => { let vis = 0; s.querySelectorAll('.nv-u').forEach(a => { const ok = !q || a.dataset.n.includes(q) || norm(s.querySelector('h3').textContent).includes(q); a.hidden = !ok; if (ok) vis++; }); s.hidden = !vis; if (vis) any = true; }); const e = document.getElementById('nvUEmpty'); if (e) e.hidden = any; };
+
+  /* ---------- buscador general (Ctrl K): accesos a las secciones del perfil ---------- */
+  NX.cmdItems = () => { const c = NX.ctx, u = me(); if (!c || !u || u.role === 'student') return []; try { return flat(NX.resolve(c.role, c.mine)).map(i => ({ g: 'Secciones', t: i.l, s: i.grp || 'Menú', h: '#' + i.h })); } catch (e) { return []; } };
+})();
+
+</script>
 <script id="docs-module">
 /* ===== DOCUMENTOS DEL PROYECTO · núcleo (esquemas + PDF) ================================
    Sin dependencias del DOM: funciona en el navegador y en Node (para pruebas).
@@ -2352,7 +2634,7 @@ function closeLayer() { $('#layer').innerHTML = ''; document.body.style.overflow
 function confirmDialog(title, text, onOk, danger = false) { modal(`<p>${text}</p>`, { title, footer: `<button class="btn btn-secondary" onclick="closeLayer()">Cancelar</button><button class="btn ${danger ? 'btn-danger' : 'btn-primary'}" onclick="closeLayer();(${onOk})()">Confirmar</button>` }); }
 function toast(msg, type = 'info') { const t = document.createElement('div'); t.className = 'toast ' + type; t.innerHTML = `${type === 'ok' ? I.check : type === 'err' ? I.x : I.bell}<span>${esc(msg)}</span>`; $('#toasts').appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 3200); }
 // Paleta de comandos
-function openCmdK() { const items = [].concat(S.students.map(s => ({ g: 'Estudiantes', t: s.nombre, s: courseOf(s.cursoId).nombre, h: session() ? (session().role === 'student' ? '#/estudiante' : '#/superadmin/estudiantes?q=' + encodeURIComponent(s.nombre)) : '#/ingreso' })), COURSES.map(c => ({ g: 'Cursos', t: c.nombre, s: c.duracion + ' · ' + fmt(c.precio), h: '#/academia/' + c.slug })), S.leads.map(l => ({ g: 'Leads', t: l.nombre, s: l.interes + ' · ' + l.etapa, h: '#/admin/pipeline' })), S.microapps.map(m => ({ g: 'Proyectos', t: m.empresa, s: m.tipo + ' · ' + m.estado, h: '#/admin/unidad/microapps' })), [{ g: 'Ir a', t: 'Sitio público', s: 'Inicio', h: '#/' }, { g: 'Ir a', t: 'Academia', s: 'Catálogo de cursos', h: '#/academia' }, { g: 'Ir a', t: 'Cartera financiera', s: 'Portal', h: '#/cartera' }, { g: 'Ir a', t: 'Pipeline comercial', s: 'CRM', h: '#/admin/pipeline' }]);
+function openCmdK() { const items = [].concat(S.students.map(s => ({ g: 'Estudiantes', t: s.nombre, s: courseOf(s.cursoId).nombre, h: session() ? (session().role === 'student' ? '#/estudiante' : '#/superadmin/estudiantes?q=' + encodeURIComponent(s.nombre)) : '#/ingreso' })), COURSES.map(c => ({ g: 'Cursos', t: c.nombre, s: c.duracion + ' · ' + fmt(c.precio), h: '#/academia/' + c.slug })), S.leads.map(l => ({ g: 'Leads', t: l.nombre, s: l.interes + ' · ' + l.etapa, h: '#/admin/pipeline' })), S.microapps.map(m => ({ g: 'Proyectos', t: m.empresa, s: m.tipo + ' · ' + m.estado, h: '#/admin/unidad/microapps' })), [{ g: 'Ir a', t: 'Sitio público', s: 'Inicio', h: '#/' }, { g: 'Ir a', t: 'Academia', s: 'Catálogo de cursos', h: '#/academia' }, { g: 'Ir a', t: 'Cartera financiera', s: 'Portal', h: '#/cartera' }, { g: 'Ir a', t: 'Pipeline comercial', s: 'CRM', h: '#/admin/pipeline' }], NAVX.cmdItems());
   $('#layer').innerHTML = `<div class="cmdk" onclick="if(event.target===this)closeLayer()"><div class="box"><input id="cmdq" placeholder="Buscar estudiantes, cursos, leads, órdenes, proyectos…" autocomplete="off"><div class="res" id="cmdres"></div></div></div>`; const q = $('#cmdq'); const draw = () => { const v = q.value.toLowerCase(); const r = items.filter(i => !v || (i.t + ' ' + i.s).toLowerCase().includes(v)).slice(0, 24); const grp = groupBy(r, 'g'); $('#cmdres').innerHTML = r.length ? Object.entries(grp).map(([g, l]) => `<div class="grp">${g}</div>${l.map(i => `<div class="it" onclick="closeLayer();location.hash='${i.h}'"><span>${esc(i.t)}</span><span class="muted small">${esc(i.s)}</span></div>`).join('')}`).join('') : empty('Nada por aquí', 'Prueba con otro nombre.'); }; q.oninput = draw; q.onkeydown = e => { if (e.key === 'Escape') closeLayer(); if (e.key === 'Enter') { const f = $('#cmdres .it'); if (f) f.click(); } }; draw(); q.focus(); }
 document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCmdK(); } if (e.key === 'Escape' && $('#layer').innerHTML) closeLayer(); });
 // Tema
@@ -2476,7 +2758,7 @@ function render() {
   if (S && !S.subs) S.subs = []; ['bancosimagenes','videosorganicos','grabacionprofesional','campanas','auditorias','iaempresarial','automatizacion'].forEach(k=>{if(S&&!S[k])S[k]=[];});
   const r = route(); const app = $('#app'); const first = r.seg[0];
   const priv = ROLE_OF[first];
-  if (priv) { const s = session(); if (!s) { app.innerHTML = Login('Inicia sesión para entrar a ' + ROLE_LABEL[priv] + '.'); return; } if (s.role !== priv && s.role !== 'superadmin') { app.innerHTML = Login(`Tu perfil (${ROLE_LABEL[s.role]}) no tiene acceso a ${ROLE_LABEL[priv]}.`); return; } app.innerHTML = Shell(priv, r); afterRender(); return; }
+  if (priv) { const s = session(); if (!s) { app.innerHTML = Login('Inicia sesión para entrar a ' + ROLE_LABEL[priv] + '.'); return; } if (s.role !== priv && s.role !== 'superadmin') { app.innerHTML = Login(`Tu perfil (${ROLE_LABEL[s.role]}) no tiene acceso a ${ROLE_LABEL[priv]}.`); return; } const _sc = document.querySelector('.side'), _st = _sc ? _sc.scrollTop : 0; app.innerHTML = Shell(priv, r); afterRender(); const _s2 = document.querySelector('.side'); if (_s2 && _st) _s2.scrollTop = _st; return; }
   if (first === 'ingreso') { app.innerHTML = Login(); afterRender(); return; }
   app.innerHTML = PublicShell(r); afterRender();
 }
@@ -2887,12 +3169,12 @@ function Shell(role, r) {
   const u = me(); const alerts = computeAlerts(); const mine = role === 'student' ? [] : (role === 'teacher' ? alerts.filter(a => a.prioridad === 'academico') : alerts); const nav = NAV[role]; const isOn = h => h === ROLE_HOME[role] ? r.path === h : r.path.startsWith(h);
   const switcher = u.role === 'superadmin' ? `<select class="select" style="min-height:36px;width:auto;font-size:12px" onchange="location.hash='#'+this.value">${Object.entries(ROLE_HOME).map(([k, h]) => `<option value="${h}" ${k === role ? 'selected' : ''}>${ROLE_LABEL[k]}</option>`).join('')}</select>` : '';
   const view = { student: StudentView, teacher: TeacherView, admin: AdminView, finance: FinanceView, superadmin: SuperView }[role](r, mine);
-  return `<div class="app ${sideCollapsed ? 'collapsed' : ''}"><aside class="side"><div class="brand">${Logo('light', 24)}<button class="icon-btn" style="background:rgba(255,255,255,.08);border:none;color:#fff;width:32px;height:32px" onclick="sideCollapsed=!sideCollapsed;localStorage.setItem('pf_side',sideCollapsed?'1':'0');render()" aria-label="Contraer menú">${I.menu}</button></div><div class="role">${ROLE_LABEL[role]}</div>${nav.map(([h, l, ic]) => `<a class="nav ${isOn(h) ? 'on' : ''}" href="#${h}" title="${l}">${I[ic]}<span>${l}</span>${h.endsWith('/alertas') && mine.length ? `<em class="cnt">${mine.length}</em>` : ''}</a>`).join('')}<div class="grow"></div><a class="nav" href="#/" title="Sitio público">${I.globe}<span>Sitio público</span></a><a class="nav" href="#/" onclick="logout()" title="Salir">${I.logout}<span>Cerrar sesión</span></a><div class="user">${avatar(u.nombre, '', 'v')}<div><b>${esc(u.nombre)}</b><span>${esc(u.sub)}</span></div></div></aside>
+  return `<div class="app ${role !== 'student' ? 'nvx ' : ''}${sideCollapsed ? 'collapsed' : ''}"><aside class="side"><div class="brand">${role !== 'student' ? Logo('light', 24).replace('href="#/"', 'href="#' + ROLE_HOME[role] + '"') : Logo('light', 24)}<button class="icon-btn" style="background:rgba(255,255,255,.08);border:none;color:#fff;width:32px;height:32px" onclick="sideCollapsed=!sideCollapsed;localStorage.setItem('pf_side',sideCollapsed?'1':'0');render()" aria-label="Contraer menú">${I.menu}</button></div><div class="role">${ROLE_LABEL[role]}</div>${role !== 'student' ? NAVX.side(role, r, mine) : nav.map(([h, l, ic]) => `<a class="nav ${isOn(h) ? 'on' : ''}" href="#${h}" title="${l}">${I[ic]}<span>${l}</span>${h.endsWith('/alertas') && mine.length ? `<em class="cnt">${mine.length}</em>` : ''}</a>`).join('')}<div class="grow"></div><a class="nav" href="#/" title="Sitio público">${I.globe}<span>Sitio público</span></a><a class="nav" href="#/" onclick="logout()" title="Salir">${I.logout}<span>Cerrar sesión</span></a><div class="user">${avatar(u.nombre, '', 'v')}<div><b>${esc(u.nombre)}</b><span>${esc(u.sub)}</span></div></div></aside>
   <div class="main"><div class="appbar"><div class="search" onclick="openCmdK()" role="button">${I.search}<span>Buscar estudiantes, clientes, cursos, órdenes…</span><kbd>Ctrl K</kbd></div>${role !== 'student' ? `<div class="period">${[['mes', 'Este mes'], ['trim', 'Trimestre'], ['sem', '6 meses']].map(([k, l]) => `<button class="${period === k ? 'on' : ''}" onclick="period='${k}';render()">${l}</button>`).join('')}</div>` : ''}<div style="flex:1"></div>${switcher}${SyncBadge()}<button class="icon-btn" onclick="setTheme(theme()==='dark'?'light':'dark')" aria-label="Cambiar tema">${theme() === 'dark' ? I.sun : I.moon}</button>${role !== 'student' ? `<button class="icon-btn" onclick="notifOpen=!notifOpen;render()" aria-label="Notificaciones">${I.bell}${mine.length ? `<span class="dot">${Math.min(99, mine.length)}</span>` : ''}</button>` : ''}<span style="display:none" class="mob-av">${avatar(u.nombre, 'sm', 'v')}</span></div>
-  ${notifOpen ? NotifPane(mine) : ''}<div class="content view">${view}</div></div>
+  ${notifOpen ? NotifPane(mine) : ''}<div class="content view">${role !== 'student' && r.path === ROLE_HOME[role] ? NAVX.hub(role) : ''}${view}</div></div>
   <nav class="bottombar">${nav.slice(0, 4).map(([h, l, ic]) => `<a href="#${h}" class="${isOn(h) ? 'on' : ''}">${I[ic]}${l}</a>`).join('')}<a href="#" class="${nav.slice(4).some(([h]) => isOn(h)) ? 'on' : ''}" onclick="event.preventDefault();moreSheet('${role}')">${I.more}Más</a></nav></div>`;
 }
-function moreSheet(role) { $('#layer').innerHTML = `<div class="overlay" style="align-items:flex-end;padding:0" onclick="if(event.target===this)closeLayer()"><div class="sheet"><div class="card-hd"><h4 style="margin:0">Más opciones</h4><button class="icon-btn" onclick="closeLayer()">${I.x}</button></div><div class="grid g2" style="gap:10px">${NAV[role].slice(4).map(([h, l, ic]) => `<a href="#${h}" class="uni" onclick="closeLayer()"><span class="ico">${I[ic]}</span><b>${l}</b></a>`).join('')}<a href="#/" class="uni" onclick="closeLayer()"><span class="ico">${I.globe}</span><b>Sitio público</b></a><a href="#/" class="uni" onclick="closeLayer();logout()"><span class="ico w">${I.logout}</span><b>Cerrar sesión</b></a></div></div></div>`; }
+function moreSheet(role) { if (role !== 'student') return NAVX.sheet(role); $('#layer').innerHTML = `<div class="overlay" style="align-items:flex-end;padding:0" onclick="if(event.target===this)closeLayer()"><div class="sheet"><div class="card-hd"><h4 style="margin:0">Más opciones</h4><button class="icon-btn" onclick="closeLayer()">${I.x}</button></div><div class="grid g2" style="gap:10px">${NAV[role].slice(4).map(([h, l, ic]) => `<a href="#${h}" class="uni" onclick="closeLayer()"><span class="ico">${I[ic]}</span><b>${l}</b></a>`).join('')}<a href="#/" class="uni" onclick="closeLayer()"><span class="ico">${I.globe}</span><b>Sitio público</b></a><a href="#/" class="uni" onclick="closeLayer();logout()"><span class="ico w">${I.logout}</span><b>Cerrar sesión</b></a></div></div></div>`; }
 function NotifPane(list) { const g = groupBy(list, 'prioridad'); const lbl = { critico: 'Crítico', urgente: 'Urgente', academico: 'Académico', proximo: 'Próximo', ok: 'Al día' }; return `<div class="notif-pane"><div class="card-hd" style="padding:14px 16px 0"><h4 style="margin:0">Notificaciones</h4><button class="icon-btn" style="width:32px;height:32px" onclick="notifOpen=false;render()">${I.x}</button></div>${list.length ? Object.entries(g).map(([p, l]) => `<div class="caption" style="padding:10px 16px 4px;font-weight:600">${lbl[p]} · ${l.length}</div>${l.slice(0, 6).map(AlertItem).join('')}`).join('') : empty('Todo al día', 'No hay alertas pendientes.')}<div style="padding:10px 16px"><a href="#/${session().role === 'admin' || session().role === 'superadmin' ? 'admin/alertas' : 'cartera/cobrar'}" class="btn btn-soft btn-sm" style="width:100%" onclick="notifOpen=false">Ver todas</a></div></div>`; }
 const AlertItem = a => `<div class="alert-it"><span class="pr pr-${a.prioridad}"></span><div style="flex:1"><div><b>${esc(a.tipo)}</b> <span class="caption">· ${unitName(a.unidad)}</span></div><div class="muted">${esc(a.mensaje)}</div><div class="row" style="margin-top:6px;gap:6px">${a.wa ? `<a class="btn btn-wa btn-xs" href="${a.wa}" target="_blank" rel="noopener">${I.wa} ${esc(a.accion)}</a>` : `<span class="caption">${esc(a.accion)}</span>`}<button class="btn btn-secondary btn-xs" onclick="attendAlert('${a.id}')">Atendida</button></div></div></div>`;
 const unitName = u => (UNITS.find(x => x.slug === u) || { n: u === 'fundacion' ? 'Fundación' : u }).n;
@@ -3072,7 +3354,7 @@ function AdminView(r, alerts) { const sub = r.seg[1] || ''; const v = { '': AdmH
 const myUnits = () => { const u = me(); return u.units ? UNITS.filter(x => u.units.includes(x.slug)) : UNITS; };
 function AdmHome() { const crumb = bc(['#/admin','Panel']);
   const units = myUnits(); const sales = units.map(u => ({ n: u.n, v: unitSales(u.slug) })); const byM = last6.map(m => sum(incomes().filter(i => i.fecha && monthKey(i.fecha) === m.k), 'valor')); const funnel = STAGES.slice(0, 5).map(s => S.leads.filter(l => l.etapa === s).length); const adv = ADVISORS.map(a => ({ n: a.nombre, v: sum(S.students.filter(s => s.asesorId === a.id), 'precioFinal') })).sort((a, b) => b.v - a.v); const dep = groupBy(S.students, 'departamento'); const mx = Math.max(1, ...Object.values(dep).map(l => l.length)); const alerts = computeAlerts().slice(0, 8);
-  return crumb + `<div class="quick-bar" style="margin-bottom:-8px"><span class="small muted" style="margin-right:8px">⚡</span><button class="btn btn-primary btn-sm" onclick="newMicroapp()">💻 Proyecto</button><button class="btn btn-secondary btn-sm" onclick="nuevoProspecto()">👤 Prospecto</button><a class="btn btn-secondary btn-sm" href="#/admin/semaforo">🚦 Semáforo</a><a class="btn btn-secondary btn-sm" href="#/admin/mensualidades">🔁 Cobros</a></div>` + ph('Panel comercial', `${S.leads.filter(l => !['Venta Efectiva','Pagado','Completado','Remarketing'].includes(l.etapa)).length} leads activos en el Pipeline Comercial PubliFuturo.`, `<a class="btn btn-primary" href="#/admin/pipeline">${I.plus} Nuevo lead</a>`) + `<div class="kpis">${stat('Ventas del periodo', fmt(sum(incomes().filter(i => inPeriod(i.fecha)), 'valor')), 12, byM)}${stat('Leads nuevos', S.leads.filter(l => inPeriod(l.fecha)).length, 8)}${stat('Conversión', Math.round(100 * S.leads.filter(l => l.etapa === 'Venta Efectiva' || l.etapa === 'Pagado' || l.etapa === 'Completado').length / S.leads.length) + ' %', 3)}${stat('Alertas urgentes', computeAlerts().filter(a => a.prioridad !== 'ok').length)}</div><div class="grid g2"><div class="card"><h4>Ventas por unidad de negocio</h4>${barChart(sales.map(s => s.n.split(' ')[0]), [{ n: 'Ventas', v: sales.map(s => s.v) }])}</div><div class="card"><h4>Ingresos mensuales</h4>${lineChart(last6.map(m => m.l), [{ n: 'Ingresos', v: byM }], { area: true })}</div><div class="card"><h4>Embudo comercial</h4>${barChart(STAGES.slice(0, 5).map(s => s.split(' ')[0]), [{ n: 'Leads', v: funnel, c: 'var(--violet)' }], { money: false })}<div class="caption">Tasa etapa a etapa: ${funnel.slice(1).map((v, i) => Math.round(100 * v / Math.max(1, funnel[i])) + ' %').join(' → ')}</div></div><div class="card"><h4>Ranking de asesores</h4>${adv.map((a, i) => `<div class="row between" style="padding:8px 0;border-bottom:1px solid var(--border)"><span class="row" style="gap:10px">${avatar(a.n, 'sm', ['', 'v', 'c'][i])}<b class="small">${a.n}</b></span><b class="num small">${fmt(a.v)}</b></div>`).join('')}</div><div class="card"><h4>Matrículas por departamento</h4><div class="heat">${Object.entries(dep).sort((a, b) => b[1].length - a[1].length).slice(0, 9).map(([d, l]) => `<div style="background:rgba(0,62,200,${.25 + .75 * l.length / mx})">${d}<br><span class="num">${l.length}</span></div>`).join('')}</div></div><div class="card"><div class="card-hd"><h4>Alertas más urgentes</h4><a class="small" href="#/admin/alertas">Ver todas</a></div>${alerts.map(a => `<div class="alert-it" style="padding:8px 0"><span class="pr pr-${a.prioridad}"></span><div style="flex:1"><b class="small">${esc(a.tipo)}</b> <span class="caption">· ${unitName(a.unidad)}</span><div class="caption">${esc(a.mensaje)}</div></div></div>`).join('')}</div></div>`; }
+  return crumb + `<div class="quick-bar" style="margin-bottom:14px"><span class="small muted" style="margin-right:8px">⚡</span><button class="btn btn-primary btn-sm" onclick="newMicroapp()">💻 Proyecto</button><button class="btn btn-secondary btn-sm" onclick="nuevoProspecto()">👤 Prospecto</button><a class="btn btn-secondary btn-sm" href="#/admin/semaforo">🚦 Semáforo</a><a class="btn btn-secondary btn-sm" href="#/admin/mensualidades">🔁 Cobros</a></div>` + ph('Panel comercial', `${S.leads.filter(l => !['Venta Efectiva','Pagado','Completado','Remarketing'].includes(l.etapa)).length} leads activos en el Pipeline Comercial PubliFuturo.`, `<a class="btn btn-primary" href="#/admin/pipeline">${I.plus} Nuevo lead</a>`) + `<div class="kpis">${stat('Ventas del periodo', fmt(sum(incomes().filter(i => inPeriod(i.fecha)), 'valor')), 12, byM)}${stat('Leads nuevos', S.leads.filter(l => inPeriod(l.fecha)).length, 8)}${stat('Conversión', Math.round(100 * S.leads.filter(l => l.etapa === 'Venta Efectiva' || l.etapa === 'Pagado' || l.etapa === 'Completado').length / S.leads.length) + ' %', 3)}${stat('Alertas urgentes', computeAlerts().filter(a => a.prioridad !== 'ok').length)}</div><div class="grid g2"><div class="card"><h4>Ventas por unidad de negocio</h4>${barChart(sales.map(s => s.n.split(' ')[0]), [{ n: 'Ventas', v: sales.map(s => s.v) }])}</div><div class="card"><h4>Ingresos mensuales</h4>${lineChart(last6.map(m => m.l), [{ n: 'Ingresos', v: byM }], { area: true })}</div><div class="card"><h4>Embudo comercial</h4>${barChart(STAGES.slice(0, 5).map(s => s.split(' ')[0]), [{ n: 'Leads', v: funnel, c: 'var(--violet)' }], { money: false })}<div class="caption">Tasa etapa a etapa: ${funnel.slice(1).map((v, i) => Math.round(100 * v / Math.max(1, funnel[i])) + ' %').join(' → ')}</div></div><div class="card"><h4>Ranking de asesores</h4>${adv.map((a, i) => `<div class="row between" style="padding:8px 0;border-bottom:1px solid var(--border)"><span class="row" style="gap:10px">${avatar(a.n, 'sm', ['', 'v', 'c'][i])}<b class="small">${a.n}</b></span><b class="num small">${fmt(a.v)}</b></div>`).join('')}</div><div class="card"><h4>Matrículas por departamento</h4><div class="heat">${Object.entries(dep).sort((a, b) => b[1].length - a[1].length).slice(0, 9).map(([d, l]) => `<div style="background:rgba(0,62,200,${.25 + .75 * l.length / mx})">${d}<br><span class="num">${l.length}</span></div>`).join('')}</div></div><div class="card"><div class="card-hd"><h4>Alertas más urgentes</h4><a class="small" href="#/admin/alertas">Ver todas</a></div>${alerts.map(a => `<div class="alert-it" style="padding:8px 0"><span class="pr pr-${a.prioridad}"></span><div style="flex:1"><b class="small">${esc(a.tipo)}</b> <span class="caption">· ${unitName(a.unidad)}</span><div class="caption">${esc(a.mensaje)}</div></div></div>`).join('')}</div></div>`; }
 let pipeView = 'kanban'; let pipeUnit = ''; let pipeCat = '';
 function AdmPipeline() {
   const leads = S.leads.filter(l => (!pipeUnit || l.unidad === pipeUnit) && (!pipeCat || l.cat === pipeCat));
@@ -3098,7 +3380,7 @@ function logInteraction(id, t) { if (!t || !t.trim()) return toast('Escribe la n
 function newLead() { modal(`<div class="stack"><div class="grid g2" style="gap:12px"><div class="field"><label>Nombre</label><input class="input" id="nl_n"></div><div class="field"><label>WhatsApp</label><input class="input" id="nl_t" inputmode="tel"></div><div class="field"><label>Ciudad</label><input class="input" id="nl_c" value="Ibagué"></div><div class="field"><label>Categoría</label><select class="select" id="nl_cat">${CAT_LIST.map(c => `<option value="${c.code}">${c.code} · ${c.n}</option>`).join('')}</select></div><div class="field"><label>Interés</label><input class="input" id="nl_i" placeholder="Producto o curso"></div><div class="field"><label>Valor potencial</label><input class="input" id="nl_v" inputmode="numeric" value="350000"></div><div class="field"><label>Origen</label><select class="select" id="nl_f">${SOURCES.map(s => `<option>${s}</option>`).join('')}</select></div><div class="field"><label>Asesor</label><select class="select" id="nl_a">${ADVISORS.map(a => `<option value="${a.id}">${a.nombre}</option>`).join('')}</select></div></div></div>`, { title: 'Nuevo lead', footer: `<button class="btn btn-secondary" onclick="closeLayer()">Cancelar</button><button class="btn btn-primary" onclick="(function(){const n=$('#nl_n').value.trim(),t=phone($('#nl_t').value);if(n.length<3||t.length!==10)return toast('Nombre y WhatsApp de 10 dígitos son obligatorios.','err');const code=$('#nl_cat').value;const cat=catOf(code);S.leads.unshift({id:'L'+String(S.leads.length+1).padStart(3,'0'),fecha:iso(TODAY),nombre:n,telefono:t,ciudad:$('#nl_c').value,departamento:'Tolima',cat:code,unidad:cat.unidad,interes:$('#nl_i').value||cat.n,valor:Number($('#nl_v').value)||0,fuente:$('#nl_f').value,utm:'manual',etapa:'Nuevo Cliente',asesorId:$('#nl_a').value,ultimoContacto:iso(TODAY),proximo:iso(addDays(TODAY,1)),interesNivel:'Medio',obs:'',historial:[{f:iso(TODAY),t:'Lead creado manualmente'}]});audit('Lead creado','Lead',n);save();closeLayer();render();toast('Lead creado','ok')})()">Crear lead</button>` }); }
 function convertLead(id) { const l = S.leads.find(x => x.id === id); const c = COURSES.find(x => x.unidad === l.unidad); if (c) { const groups = GROUPS.filter(g => g.cursoId === c.id && dayDiff(g.inicio) >= -1); modal(`<p class="small muted">Se creará la matrícula de <b>${esc(l.nombre)}</b> en <b>${c.nombre}</b> con su cronograma de pagos.</p><div class="stack"><div class="field"><label>Grupo</label><select class="select" id="cv_g">${groups.map(g => `<option value="${g.id}">${g.nombre} · ${fdate(g.inicio)} (${g.cupo - groupStudents(g.id).length} cupos)</option>`).join('')}</select></div><div class="grid g2" style="gap:12px"><div class="field"><label>Abono inicial</label><input class="input" id="cv_a" inputmode="numeric" value="${Math.round((c.mensual ? c.precio : c.precio) / (c.mensual ? 1 : 2))}"></div><div class="field"><label>Cuotas</label><select class="select" id="cv_q">${[1, 2, 3].map(q => `<option ${q === (c.mensual ? 2 : 2) ? 'selected' : ''}>${q}</option>`).join('')}</select></div></div></div>`, { title: 'Convertir en matrícula', footer: `<button class="btn btn-secondary" onclick="closeLayer()">Cancelar</button><button class="btn btn-primary" onclick="doConvert('${id}','${c.id}')">Crear matrícula</button>` }); } else { l.etapa = 'Venta Efectiva'; l.historial.unshift({ f: iso(TODAY), t: 'Venta Efectiva · registrar proyecto en la unidad ' + unitName(l.unidad) }); save(); closeLayer(); render(); toast('Venta registrada. Crea el proyecto en ' + unitName(l.unidad) + '.', 'ok'); } }
 function doConvert(lid, cid) { const l = S.leads.find(x => x.id === lid); const c = courseOf(cid); const g = groupOf($('#cv_g').value); if (!g) return toast('Selecciona un grupo.', 'err'); const total = c.mensual ? c.precio * c.meses : c.precio; const cuotas = Number($('#cv_q').value); const abono = Math.min(total, Number($('#cv_a').value) || 0); const id = 'E' + String(S.students.length + 1).padStart(3, '0'); S.students.push({ id, nombre: l.nombre, documento: '', telefono: l.telefono, correo: '', edad: null, ocupacion: '', ciudad: l.ciudad, departamento: l.departamento, cursoId: cid, grupoId: g.id, fechaMatricula: iso(TODAY), precio: total, descuento: 0, precioFinal: total, pagado: abono, saldo: total - abono, cuotas, metodoPago: 'Nequi', estado: 'Matriculado', fuente: l.fuente, asesorId: l.asesorId, unidad: c.unidad, obs: 'Convertido desde lead ' + lid }); let rest = total - abono; for (let q = 1; q <= cuotas; q++) { const v = q === 1 ? abono : Math.round(rest / (cuotas - 1)); S.payments.push({ id: `${id}-Q${q}`, estudianteId: id, cursoId: cid, unidad: c.unidad, concepto: cuotas === 1 ? 'Pago único' : (c.mensual ? 'Mensualidad ' : 'Cuota ') + q, cuota: q, programado: v, pagado: q === 1 ? abono : 0, saldo: q === 1 ? 0 : v, vencimiento: iso(addDays(new Date(g.inicio + 'T12:00:00'), (q - 1) * (c.mensual ? 30 : 20) - 2)), fechaPago: q === 1 ? iso(TODAY) : null, metodo: 'Nequi', estado: q === 1 ? 'Pagado' : 'Pendiente', asesorId: l.asesorId, comprobante: q === 1 ? 'CRM-' + rint(1000, 9999) : '' }); } l.etapa = 'Venta Efectiva'; l.historial.unshift({ f: iso(TODAY), t: 'Matrícula creada: ' + id + ' en ' + g.nombre }); audit('Lead convertido', 'Lead', lid, '', id); save(); closeLayer(); render(); toast(`Matrícula ${id} creada con ${cuotas} cuota(s)`, 'ok'); }
-function AdmUnits() { const units = myUnits(); return ph('Unidades de negocio', 'Once mini-portales con la misma estructura: indicadores, tabla operativa, alertas y gráficas.') + `<div class="uni-grid">${units.map(u => { const rows = unitRows(u); const al = computeAlerts().filter(a => a.unidad === u.slug && a.prioridad !== 'ok').length; return `<a class="uni" href="#/admin/unidad/${u.slug}"><span class="ico ${['c', 'v', '', 'g', 'w'][UNITS.indexOf(u) % 5]}">${I[u.ic]}</span><div style="min-width:0"><b>${u.n}</b><span>${rows.length} registros · ${fmt(unitSales(u.slug))}${al ? ` · <b style="color:var(--danger)">${al} alertas</b>` : ''}</span></div></a>`; }).join('')}</div>`; }
+function AdmUnits() { return NAVX.unitsView(); }
 let unitTab = 'tabla';
 function AdmUnit(r) { const u = unitBy(r.seg[2]); const crumb = u ? bc(['#/admin','Panel'],['#/admin/unidades','Unidades'],['',u.n]) : ''; if (!u) return NotFound(); if (me().units && !me().units.includes(u.slug)) return `<div class="card">${empty('Sin acceso a esta unidad', 'Pide a SuperAdmin que la asigne a tu perfil.')}</div>`; const rows = unitRows(u); const al = computeAlerts().filter(a => a.unidad === u.slug); const kp = u.kpis(rows); const hasK = !!u.kanban; const codes = catsForUnit(u.slug); const unitLeads = S.leads.filter(l => l.unidad === u.slug);
   const tabs = [['tabla', 'Operación'], ['pipeline', 'Pipeline de ventas']];
