@@ -1653,7 +1653,13 @@ select.doc-in{padding-right:8px}
   DOCS.afterCreate = id => { const m = proj(id); if (!m) return; modal(`<p style="margin-top:0">Proyecto <b>${esc(m.id)}</b> creado para <b>${esc(m.empresa || m.cliente)}</b>.</p><p class="muted">¿Quieres diligenciar ahora el <b>contrato</b> y los <b>requerimientos</b>? Se guardan en el sistema y se descargan en PDF.</p>`, { title: '📑 Documentos del proyecto', footer: `<button class="btn btn-secondary" onclick="closeLayer()">Más tarde</button><button class="btn btn-primary" onclick="closeLayer();location.hash='#/admin/documentos/${m.id}'">Diligenciar ahora</button>` }); };
 
   /* ---------- PDF ---------- */
-  function cargarPdfLib() { if (window.PDFLib) return Promise.resolve(window.PDFLib); return new Promise((ok, no) => { const s = document.createElement('script'); s.src = '/assets/js/pdf-lib.min.js'; s.onload = () => ok(window.PDFLib); s.onerror = () => no(new Error('No se pudo cargar el generador de PDF.')); document.head.appendChild(s); }); }
+  function cargarPdfLib() {
+    if (window.PDFLib) return Promise.resolve(window.PDFLib);
+    const src = ['/pdf-lib.min.js', '/assets/js/pdf-lib.min.js'];   // primero junto a index.html; si no está, en assets/js
+    const probar = i => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src[i]; s.onload = () => window.PDFLib ? ok(window.PDFLib) : no(); s.onerror = no; document.head.appendChild(s); })
+      .catch(() => i + 1 < src.length ? probar(i + 1) : Promise.reject(new Error('No se pudo cargar el generador de PDF: falta el archivo pdf-lib.min.js junto a index.html.')));
+    return probar(0);
+  }
   async function logoPng() {
     if (DOCS.logo !== undefined) return DOCS.logo;
     try { const img = new Image(); img.src = (typeof LOGO_LIGHT !== 'undefined' ? LOGO_LIGHT : '/assets/img/ef-logo.webp'); await img.decode(); const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight; c.getContext('2d').drawImage(img, 0, 0); const blob = await new Promise(r => c.toBlob(r, 'image/png')); DOCS.logo = new Uint8Array(await blob.arrayBuffer()); }
